@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { Plus, CheckSquare, Clock, AlertTriangle, User, Play, MoveRight, Tag } from 'lucide-react';
+import { Plus, CheckSquare, Clock, AlertTriangle, User, Play, Pause, Square, Layers, ShieldCheck, Lock } from 'lucide-react';
 
 export const TasksView = () => {
   const {
@@ -9,17 +9,26 @@ export const TasksView = () => {
     users,
     addTask,
     updateTaskStatus,
-    startTimer,
-    setActiveTab,
+    taskTimers,
+    startTaskTimer,
+    pauseTaskTimer,
+    saveTaskTimerLog,
+    subRoles,
+    categories,
+    selectedCategory,
     currentUser
   } = useApp();
 
   const [selectedProjectId, setSelectedProjectId] = useState('All');
+  const [selectedSubRoleFilter, setSelectedSubRoleFilter] = useState('All');
   const [showAddModal, setShowAddModal] = useState(false);
+
+  const isAdmin = currentUser.role === 'admin';
 
   // New Task Form
   const [taskTitle, setTaskTitle] = useState('');
   const [taskProjId, setTaskProjId] = useState(projects[0]?.id || 'proj_1');
+  const [taskSubRole, setTaskSubRole] = useState('Frontend');
   const [taskPriority, setTaskPriority] = useState('High');
   const [taskAssignee, setTaskAssignee] = useState(users[1]?.id || 'usr_2');
   const [taskEstHours, setTaskEstHours] = useState(8);
@@ -34,19 +43,26 @@ export const TasksView = () => {
     { id: 'Done', title: 'Done', color: 'border-emerald-200 bg-emerald-50/30' }
   ];
 
-  const filteredTasks = selectedProjectId === 'All'
-    ? tasks
-    : tasks.filter(t => t.projectId === selectedProjectId);
+  const filteredTasks = tasks.filter(t => {
+    const matchesCategory = selectedCategory === 'All' || t.category === selectedCategory;
+    const matchesProj = selectedProjectId === 'All' || t.projectId === selectedProjectId;
+    const matchesSubRole = selectedSubRoleFilter === 'All' || t.subRole === selectedSubRoleFilter;
+    return matchesCategory && matchesProj && matchesSubRole;
+  });
 
   const handleCreateTask = (e) => {
     e.preventDefault();
     if (!taskTitle) return;
 
+    const proj = projects.find(p => p.id === taskProjId);
     const assignee = users.find(u => u.id === taskAssignee);
+
     addTask({
       projectId: taskProjId,
+      category: proj ? proj.category : 'Full-Stack Web App',
+      subRole: taskSubRole,
       title: taskTitle,
-      description: taskDesc || 'Sprint task deliverable',
+      description: taskDesc || 'Sprint sub-role deliverable',
       priority: taskPriority,
       assigneeId: taskAssignee,
       assigneeName: assignee ? assignee.name : 'Unassigned',
@@ -68,36 +84,55 @@ export const TasksView = () => {
     }
   };
 
+  const formatTimer = (secs) => {
+    const mins = Math.floor(secs / 60);
+    const s = secs % 60;
+    return `${mins.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
+
   return (
     <div className="p-6 max-w-[1600px] mx-auto space-y-6">
       {/* Top Controls */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-            <CheckSquare className="w-6 h-6 text-indigo-600" /> Sprint Kanban Task Board
+            <CheckSquare className="w-6 h-6 text-indigo-600" /> Sprint Kanban & Task Stopwatches
           </h1>
-          <p className="text-xs text-slate-500">Track real-time engineering deliverables, assignees, and logged hours</p>
+          <p className="text-xs text-slate-500">Assign sub-role tasks (Frontend, Backend, DB, QA) across the 9-member dev team with individual task stopwatches</p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Sub-Role Layer Filter */}
+          <select
+            value={selectedSubRoleFilter}
+            onChange={(e) => setSelectedSubRoleFilter(e.target.value)}
+            className="px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-600 shadow-sm"
+          >
+            <option value="All">All Sub-Roles (Frontend, Backend, DB, QA)</option>
+            {subRoles.map(sr => (
+              <option key={sr} value={sr}>{sr}</option>
+            ))}
+          </select>
+
+          {/* Project Filter */}
           <select
             value={selectedProjectId}
             onChange={(e) => setSelectedProjectId(e.target.value)}
-            className="px-3.5 py-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-600 shadow-sm"
+            className="px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-600 shadow-sm"
           >
-            <option value="All">All Projects ({tasks.length} tasks)</option>
+            <option value="All">All Projects</option>
             {projects.map(p => (
               <option key={p.id} value={p.id}>{p.name}</option>
             ))}
           </select>
 
-          {currentUser.role !== 'client' && (
+          {isAdmin && (
             <button
               onClick={() => setShowAddModal(true)}
               className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-bold shadow-sm flex items-center gap-1.5 transition"
             >
               <Plus className="w-4 h-4" />
-              <span>New Task</span>
+              <span>Assign Sub-Role Task</span>
             </button>
           )}
         </div>
@@ -125,22 +160,23 @@ export const TasksView = () => {
                   </span>
                 </div>
 
-                {/* Column Task Cards */}
+                {/* Task Cards */}
                 <div className="space-y-3">
                   {colTasks.map((task) => {
                     const proj = projects.find(p => p.id === task.projectId);
+                    const timer = taskTimers[task.id] || { isRunning: false, elapsedSeconds: 0 };
 
                     return (
                       <div
                         key={task.id}
                         className="bg-white p-4 rounded-lg space-y-3 border border-slate-200 hover:border-indigo-500 shadow-sm transition group"
                       >
-                        <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-start justify-between gap-1">
                           <span className={`text-[9px] px-2 py-0.5 rounded font-bold border ${getPriorityStyle(task.priority)} uppercase`}>
                             {task.priority}
                           </span>
-                          <span className="text-[10px] text-indigo-600 font-semibold truncate max-w-[120px]">
-                            {proj ? proj.name : 'Project'}
+                          <span className="text-[10px] bg-slate-100 text-indigo-700 font-bold px-2 py-0.5 rounded border border-slate-200 truncate">
+                            {task.subRole || 'Frontend'}
                           </span>
                         </div>
 
@@ -152,49 +188,76 @@ export const TasksView = () => {
                           {task.description}
                         </p>
 
+                        {/* INDIVIDUAL TASK STOPWATCH WIDGET */}
+                        <div className="p-2 rounded-lg bg-slate-50 border border-slate-200 space-y-1.5">
+                          <div className="flex items-center justify-between text-[11px]">
+                            <span className="font-semibold text-slate-600 flex items-center gap-1">
+                              <span className={`w-1.5 h-1.5 rounded-full ${timer.isRunning ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'}`}></span>
+                              Task Timer:
+                            </span>
+                            <span className="font-mono font-bold text-slate-900">
+                              {formatTimer(timer.elapsedSeconds)}
+                            </span>
+                          </div>
+
+                          {isAdmin ? (
+                            <div className="flex items-center gap-1 pt-0.5">
+                              {timer.isRunning ? (
+                                <button
+                                  onClick={() => pauseTaskTimer(task.id)}
+                                  className="flex-1 py-1 bg-amber-600 hover:bg-amber-500 text-white rounded text-[10px] font-bold flex items-center justify-center gap-1"
+                                >
+                                  <Pause className="w-3 h-3" /> Pause
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={() => startTaskTimer(task.id)}
+                                  className="flex-1 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-[10px] font-bold flex items-center justify-center gap-1"
+                                >
+                                  <Play className="w-3 h-3 fill-current" /> Start Timer
+                                </button>
+                              )}
+                              <button
+                                onClick={() => saveTaskTimerLog(task.id)}
+                                className="px-2 py-1 bg-red-600 hover:bg-red-500 text-white rounded text-[10px] font-bold flex items-center gap-1"
+                                title="Save Log"
+                              >
+                                <Square className="w-3 h-3 fill-current" /> Save Log
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="text-[9px] text-slate-400 italic text-center">
+                              Timing Managed by Admin
+                            </div>
+                          )}
+                        </div>
+
                         {/* Hours breakdown */}
-                        <div className="flex items-center justify-between text-[10px] text-slate-500 pt-2 border-t border-slate-100">
+                        <div className="flex items-center justify-between text-[10px] text-slate-500 pt-1 border-t border-slate-100">
                           <span className="flex items-center gap-1 font-mono">
-                            <Clock className="w-3 h-3 text-cyan-600" />
-                            {task.loggedHours} / {task.estimatedHours} hrs
+                            Logged: <strong className="text-slate-900">{task.loggedHours} / {task.estimatedHours} hrs</strong>
                           </span>
                           <span className="text-slate-400">Due: {task.dueDate}</span>
                         </div>
 
-                        {/* Card Footer */}
+                        {/* Assignee & Status */}
                         <div className="flex items-center justify-between pt-1">
                           <div className="flex items-center gap-1.5 text-[10px] text-slate-700">
                             <div className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center text-[9px] border border-indigo-200">
                               {task.assigneeName ? task.assigneeName.charAt(0) : 'U'}
                             </div>
-                            <span className="truncate max-w-[80px] text-slate-600">{task.assigneeName}</span>
+                            <span className="truncate max-w-[90px] text-slate-800 font-medium">{task.assigneeName}</span>
                           </div>
 
-                          {/* Quick Actions */}
-                          <div className="flex items-center gap-1">
-                            {currentUser.role !== 'client' && (
-                              <button
-                                onClick={() => {
-                                  startTimer(task.projectId, task.id, `Timer for task: ${task.title}`);
-                                  setActiveTab('timetracking');
-                                }}
-                                className="p-1 rounded bg-indigo-50 hover:bg-indigo-600 text-indigo-600 hover:text-white transition border border-indigo-200"
-                                title="Start Stopwatch Timer"
-                              >
-                                <Play className="w-3 h-3 fill-current" />
-                              </button>
-                            )}
-
-                            <select
-                              value={task.status}
-                              onChange={(e) => updateTaskStatus(task.id, e.target.value)}
-                              className="text-[9px] bg-slate-50 border border-slate-200 text-slate-700 rounded px-1.5 py-1 focus:outline-none focus:border-indigo-600"
-                            >
-                              {columns.map(c => (
-                                <option key={c.id} value={c.id}>{c.title}</option>
-                              ))}
-                            </select>
-                          </div>
+                          <select
+                            value={task.status}
+                            onChange={(e) => updateTaskStatus(task.id, e.target.value)}
+                            className="text-[9px] bg-slate-50 border border-slate-200 text-slate-700 rounded px-1.5 py-1 focus:outline-none focus:border-indigo-600"
+                          >
+                            {columns.map(c => (
+                              <option key={c.id} value={c.id}>{c.title}</option>
+                            ))}
+                          </select>
                         </div>
                       </div>
                     );
@@ -206,13 +269,13 @@ export const TasksView = () => {
         })}
       </div>
 
-      {/* New Task Modal */}
+      {/* New Task Modal with Sub-Role & Dev Assignee */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white border border-slate-200 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div className="flex items-center justify-between pb-3 border-b border-slate-200">
-              <h3 className="text-base font-bold text-slate-900">Create Kanban Task</h3>
-              <button onClick={() => setShowAddModal(false)} className="text-slate-400 hover:text-slate-700 text-sm">✕</button>
+              <h3 className="text-base font-bold text-slate-900">Assign Sub-Role Task (Admin)</h3>
+              <button onClick={() => setShowAddModal(false)} className="text-slate-400 hover:text-slate-700 text-sm font-bold">✕</button>
             </div>
 
             <form onSubmit={handleCreateTask} className="space-y-3.5 text-xs">
@@ -228,17 +291,32 @@ export const TasksView = () => {
                 />
               </div>
 
-              <div>
-                <label className="block text-slate-700 font-semibold mb-1">Target Project</label>
-                <select
-                  value={taskProjId}
-                  onChange={(e) => setTaskProjId(e.target.value)}
-                  className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-indigo-600"
-                >
-                  {projects.map(p => (
-                    <option key={p.id} value={p.id}>{p.name}</option>
-                  ))}
-                </select>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Target Project</label>
+                  <select
+                    value={taskProjId}
+                    onChange={(e) => setTaskProjId(e.target.value)}
+                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-indigo-600"
+                  >
+                    {projects.map(p => (
+                      <option key={p.id} value={p.id}>{p.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Sub-Role Layer</label>
+                  <select
+                    value={taskSubRole}
+                    onChange={(e) => setTaskSubRole(e.target.value)}
+                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-indigo-600 font-bold text-indigo-700"
+                  >
+                    {subRoles.map(sr => (
+                      <option key={sr} value={sr}>{sr}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
@@ -255,15 +333,16 @@ export const TasksView = () => {
                     <option value="Low">Low</option>
                   </select>
                 </div>
+
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">Assignee</label>
+                  <label className="block text-slate-700 font-semibold mb-1">Assign Dev (from 9 Team)</label>
                   <select
                     value={taskAssignee}
                     onChange={(e) => setTaskAssignee(e.target.value)}
                     className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-indigo-600"
                   >
                     {users.map(u => (
-                      <option key={u.id} value={u.id}>{u.name} ({u.role})</option>
+                      <option key={u.id} value={u.id}>{u.name} ({u.subRole || u.role})</option>
                     ))}
                   </select>
                 </div>
@@ -294,7 +373,7 @@ export const TasksView = () => {
                 <label className="block text-slate-700 font-semibold mb-1">Task Specification</label>
                 <textarea
                   rows="2"
-                  placeholder="Task details and acceptance criteria..."
+                  placeholder="Task details and sub-role deliverables..."
                   value={taskDesc}
                   onChange={(e) => setTaskDesc(e.target.value)}
                   className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-indigo-600"
@@ -313,7 +392,7 @@ export const TasksView = () => {
                   type="submit"
                   className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-lg transition"
                 >
-                  Add Task
+                  Assign Task & Enable Timer
                 </button>
               </div>
             </form>

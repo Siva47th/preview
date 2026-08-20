@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { Users, Plus, ShieldCheck, UserCheck, Code, DollarSign, Lock, Trash2, Edit3 } from 'lucide-react';
+import { Users, Plus, ShieldCheck, UserCheck, Code, DollarSign, Lock, Trash2, Layers } from 'lucide-react';
 
 export const AdminUsersView = () => {
-  const { users, addUser, updateUser, deleteUser, currentUser, categories } = useApp();
+  const { users, addUser, updateUser, deleteUser, currentUser, categories, subRoles } = useApp();
   const [showAddModal, setShowAddModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
 
   // Add Dev Form State
   const [newName, setNewName] = useState('');
   const [newEmail, setNewEmail] = useState('');
   const [newTitle, setNewTitle] = useState('');
-  const [newSpec, setNewSpec] = useState('Web Development');
-  const [newRate, setNewRate] = useState(120);
+  const [newSpec, setNewSpec] = useState('Full-Stack Web App');
+  const [newSubRole, setNewSubRole] = useState('Frontend');
+  const [newRate, setNewRate] = useState(125);
   const [newRole, setNewRole] = useState('dev');
+
+  const isAdmin = currentUser.role === 'admin';
 
   const handleAddDev = (e) => {
     e.preventDefault();
@@ -24,6 +26,7 @@ export const AdminUsersView = () => {
       email: newEmail,
       title: newTitle || 'Engineer',
       specialization: newSpec,
+      subRole: newSubRole,
       hourlyRate: Number(newRate),
       role: newRole
     });
@@ -40,23 +43,19 @@ export const AdminUsersView = () => {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-            <Users className="w-6 h-6 text-indigo-600" /> Admin User & Developer Management
+            <Users className="w-6 h-6 text-indigo-600" /> Admin 9-Member Dev Team Management
           </h1>
-          <p className="text-xs text-slate-500">Manage developer roles, field specializations, billable rates, and stopwatch permissions</p>
+          <p className="text-xs text-slate-500">Manage developer roles across Frontend, Backend, Database & DevOps, and QA sub-role layers</p>
         </div>
 
-        {currentUser.role === 'admin' ? (
+        {isAdmin && (
           <button
             onClick={() => setShowAddModal(true)}
             className="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-bold shadow-sm flex items-center gap-1.5 transition"
           >
             <Plus className="w-4 h-4" />
-            <span>Add New Developer</span>
+            <span>Add Team Member</span>
           </button>
-        ) : (
-          <div className="px-3 py-1.5 bg-amber-50 border border-amber-200 text-amber-800 rounded-lg text-xs font-semibold flex items-center gap-1">
-            <Lock className="w-3.5 h-3.5" /> Read-Only View (Admin Permissions Required)
-          </div>
         )}
       </div>
 
@@ -65,7 +64,7 @@ export const AdminUsersView = () => {
         <div className="flex items-center gap-3">
           <ShieldCheck className="w-5 h-5 text-indigo-600 shrink-0" />
           <div className="text-xs text-slate-700">
-            <strong className="text-indigo-900">Stopwatch Controls: Restricted to Agency Admin.</strong> Developers can view assigned jobs in Web Development, Automation, and App Development fields, while timing facilities remain managed by Admin.
+            <strong className="text-indigo-900">Per-Task Individual Stopwatches Active.</strong> Every project and task maintains its own independent timer counter under Admin control.
           </div>
         </div>
       </div>
@@ -97,10 +96,16 @@ export const AdminUsersView = () => {
                 Title: <strong className="text-slate-900">{usr.title}</strong>
               </div>
 
-              {/* Specialization Field Pill */}
-              <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 space-y-1 text-xs">
-                <div className="text-[10px] text-slate-500 uppercase font-semibold">Assigned Field</div>
-                <div className="font-bold text-indigo-600">{usr.specialization || 'Web Development'}</div>
+              {/* Sub-Role & Field Pills */}
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <div className="p-2 rounded bg-slate-50 border border-slate-200">
+                  <div className="text-[9px] text-slate-400 font-semibold uppercase">Category</div>
+                  <div className="font-bold text-slate-900 text-[11px] truncate">{usr.specialization || 'Full-Stack'}</div>
+                </div>
+                <div className="p-2 rounded bg-indigo-50 border border-indigo-200">
+                  <div className="text-[9px] text-indigo-700 font-semibold uppercase">Sub-Role</div>
+                  <div className="font-bold text-indigo-700 text-[11px] truncate">{usr.subRole || 'Frontend'}</div>
+                </div>
               </div>
 
               <div className="flex items-center justify-between text-xs text-slate-600 pt-1">
@@ -112,15 +117,15 @@ export const AdminUsersView = () => {
             </div>
 
             {/* Admin Controls */}
-            {currentUser.role === 'admin' && (
-              <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+            {isAdmin && (
+              <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs gap-2">
                 <select
-                  value={usr.specialization || 'Web Development'}
-                  onChange={(e) => updateUser(usr.id, { specialization: e.target.value })}
-                  className="px-2 py-1 bg-slate-50 border border-slate-200 text-slate-700 rounded text-[11px] focus:outline-none focus:border-indigo-600"
+                  value={usr.subRole || 'Frontend'}
+                  onChange={(e) => updateUser(usr.id, { subRole: e.target.value })}
+                  className="px-2 py-1 bg-slate-50 border border-slate-200 text-slate-700 rounded text-[11px] focus:outline-none focus:border-indigo-600 flex-1"
                 >
-                  {categories.map(c => (
-                    <option key={c} value={c}>{c}</option>
+                  {subRoles.map(sr => (
+                    <option key={sr} value={sr}>{sr}</option>
                   ))}
                 </select>
 
@@ -144,7 +149,7 @@ export const AdminUsersView = () => {
         <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white border border-slate-200 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div className="flex items-center justify-between pb-3 border-b border-slate-200">
-              <h3 className="text-base font-bold text-slate-900">Add New Team Member</h3>
+              <h3 className="text-base font-bold text-slate-900">Add 9-Member Dev Team Specialist</h3>
               <button onClick={() => setShowAddModal(false)} className="text-slate-400 hover:text-slate-700 text-xs font-bold">✕</button>
             </div>
 
@@ -154,7 +159,7 @@ export const AdminUsersView = () => {
                 <input
                   type="text"
                   required
-                  placeholder="e.g. David Miller"
+                  placeholder="e.g. Liam Parker"
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
                   className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-indigo-600"
@@ -166,34 +171,23 @@ export const AdminUsersView = () => {
                 <input
                   type="email"
                   required
-                  placeholder="david@freewheel.io"
+                  placeholder="liam@freewheel.io"
                   value={newEmail}
                   onChange={(e) => setNewEmail(e.target.value)}
                   className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-indigo-600"
                 />
               </div>
 
-              <div>
-                <label className="block text-slate-700 font-semibold mb-1">Job Title</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Fullstack Automation Dev"
-                  value={newTitle}
-                  onChange={(e) => setNewTitle(e.target.value)}
-                  className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-indigo-600"
-                />
-              </div>
-
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">Assigned Field</label>
+                  <label className="block text-slate-700 font-semibold mb-1">Sub-Role Layer</label>
                   <select
-                    value={newSpec}
-                    onChange={(e) => setNewSpec(e.target.value)}
+                    value={newSubRole}
+                    onChange={(e) => setNewSubRole(e.target.value)}
                     className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-indigo-600"
                   >
-                    {categories.map(c => (
-                      <option key={c} value={c}>{c}</option>
+                    {subRoles.map(sr => (
+                      <option key={sr} value={sr}>{sr}</option>
                     ))}
                   </select>
                 </div>
@@ -207,18 +201,6 @@ export const AdminUsersView = () => {
                     className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-indigo-600"
                   />
                 </div>
-              </div>
-
-              <div>
-                <label className="block text-slate-700 font-semibold mb-1">System Role</label>
-                <select
-                  value={newRole}
-                  onChange={(e) => setNewRole(e.target.value)}
-                  className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-indigo-600"
-                >
-                  <option value="dev">Developer (Dev)</option>
-                  <option value="admin">Agency Admin</option>
-                </select>
               </div>
 
               <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-200">
