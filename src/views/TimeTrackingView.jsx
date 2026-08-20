@@ -15,12 +15,14 @@ export const TimeTrackingView = () => {
     currentUser,
     createInvoiceFromTimeLogs,
     setActiveTab,
-    categories,
-    subRoles
+    servicesCatalog
   } = useApp();
 
   const [selectedProjFilter, setSelectedProjFilter] = useState('All');
   const [selectedSubRoleFilter, setSelectedSubRoleFilter] = useState('All');
+
+  // Derive all available layers from servicesCatalog
+  const allLayers = servicesCatalog.flatMap(s => s.layers);
   const [showManualModal, setShowManualModal] = useState(false);
 
   const isAdmin = currentUser.role === 'admin';
@@ -235,9 +237,9 @@ export const TimeTrackingView = () => {
               onChange={(e) => setSelectedSubRoleFilter(e.target.value)}
               className="px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900 focus:outline-none focus:border-indigo-600"
             >
-              <option value="All">All Sub-Roles</option>
-              {subRoles.map(sr => (
-                <option key={sr} value={sr}>{sr}</option>
+              <option value="All">All Layers</option>
+              {[...new Set(allLayers)].map(lr => (
+                <option key={lr} value={lr}>{lr}</option>
               ))}
             </select>
 

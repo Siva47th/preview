@@ -3,7 +3,10 @@ import { useApp } from '../context/AppContext';
 import { Users, Plus, ShieldCheck, UserCheck, Code, DollarSign, Lock, Trash2, Layers } from 'lucide-react';
 
 export const AdminUsersView = () => {
-  const { users, addUser, updateUser, deleteUser, currentUser, categories, subRoles } = useApp();
+  const { users, addUser, updateUser, deleteUser, currentUser, servicesCatalog } = useApp();
+
+  // Derive sub-role layers from servicesCatalog
+  const subRoles = [...new Set(servicesCatalog.flatMap(s => s.layers))];
   const [showAddModal, setShowAddModal] = useState(false);
 
   // Add Dev Form State

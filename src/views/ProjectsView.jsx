@@ -10,9 +10,11 @@ export const ProjectsView = () => {
     currentUser,
     servicesCatalog,
     selectedServiceId,
-    subRoles,
     users
   } = useApp();
+
+  // Derive all sub-role layers from servicesCatalog
+  const subRoles = [...new Set(servicesCatalog.flatMap(s => s.layers))];
 
   const [filterStatus, setFilterStatus] = useState('All');
   const [showAddModal, setShowAddModal] = useState(false);

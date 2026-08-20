@@ -7,7 +7,7 @@ export const ShowcaseView = () => {
   const [selectedSolution, setSelectedSolution] = useState(null);
   const [filterCategory, setFilterCategory] = useState('All');
 
-  const categories = ['All', 'Mobile & Cloud Architecture', 'AI & Enterprise Automation', 'Full-Stack Web App'];
+  const categories = ['All', 'Full-Stack Web Development', 'App Development', 'AI & Cloud Automation'];
 
   const filteredShowcase = filterCategory === 'All'
     ? showcase
