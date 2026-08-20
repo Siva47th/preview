@@ -11,9 +11,6 @@ import {
   Zap,
   UserCheck,
   Users,
-  Play,
-  Pause,
-  Square,
   Layers
 } from 'lucide-react';
 
@@ -24,16 +21,10 @@ export const Sidebar = () => {
     currentUser,
     setCurrentUser,
     users,
-    activeTimer,
-    pauseTimer,
-    startTimer,
-    stopAndSaveTimer,
-    categories,
-    selectedCategory,
-    setSelectedCategory
+    servicesCatalog,
+    selectedServiceId,
+    setSelectedServiceId
   } = useApp();
-
-  const isAdmin = currentUser.role === 'admin';
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -45,16 +36,6 @@ export const Sidebar = () => {
     { id: 'showcase', label: 'Solutions Showcase', icon: Award },
     { id: 'clientportal', label: 'Client Open Explore', icon: ShieldCheck, badge: 'Preview' }
   ];
-
-  const formatTime = (totalSeconds) => {
-    const hrs = Math.floor(totalSeconds / 3600);
-    const mins = Math.floor((totalSeconds % 3600) / 60);
-    const secs = totalSeconds % 60;
-    if (hrs > 0) {
-      return `${hrs}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    }
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
 
   return (
     <aside className="w-64 bg-white border-r border-slate-200 flex flex-col justify-between shrink-0 min-h-screen select-none">
@@ -72,80 +53,33 @@ export const Sidebar = () => {
           </div>
         </div>
 
-        {/* Compact Admin Stopwatch Widget */}
-        {activeTimer && (
-          <div className="mx-3 my-2.5 p-2.5 rounded-lg bg-slate-50 border border-slate-200 space-y-1.5">
-            <div className="flex items-center justify-between text-xs text-slate-700">
-              <span className="flex items-center gap-1.5 text-[11px] font-semibold">
-                <span className={`w-2 h-2 rounded-full ${activeTimer.isRunning ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`}></span>
-                {activeTimer.isRunning ? 'Admin Timer' : 'Timer Paused'}
-              </span>
-              <span className="font-mono text-xs font-bold text-slate-900">
-                {formatTime(activeTimer.elapsedSeconds)}
-              </span>
-            </div>
-
-            {/* Controls only active for Admin */}
-            {isAdmin ? (
-              <div className="flex items-center gap-1 pt-0.5">
-                {activeTimer.isRunning ? (
-                  <button
-                    onClick={pauseTimer}
-                    className="flex-1 py-1 px-2 bg-amber-600 hover:bg-amber-500 text-white rounded text-[11px] font-semibold flex items-center justify-center gap-1 transition"
-                  >
-                    <Pause className="w-3 h-3" /> Pause
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => startTimer()}
-                    className="flex-1 py-1 px-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-[11px] font-semibold flex items-center justify-center gap-1 transition"
-                  >
-                    <Play className="w-3 h-3" /> Resume
-                  </button>
-                )}
-                <button
-                  onClick={stopAndSaveTimer}
-                  className="py-1 px-2 bg-red-600 hover:bg-red-500 text-white rounded text-[11px] font-semibold flex items-center justify-center gap-1 transition"
-                  title="Save Log"
-                >
-                  <Square className="w-3 h-3 fill-current" /> Save
-                </button>
-              </div>
-            ) : (
-              <div className="text-[10px] text-slate-400 italic text-center pt-0.5">
-                Managed by Admin
-              </div>
-            )}
-          </div>
-        )}
-
         {/* Job Fields Category Menu */}
         <div className="px-3 py-2 border-b border-slate-100">
           <div className="px-2 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
-            <Layers className="w-3 h-3 text-indigo-600" /> Job Fields Menu
+            <Layers className="w-3 h-3 text-indigo-600" /> Services Provided
           </div>
           <div className="space-y-0.5 mt-1">
             <button
-              onClick={() => setSelectedCategory('All')}
+              onClick={() => setSelectedServiceId('All')}
               className={`w-full text-left px-2.5 py-1 rounded text-xs font-medium transition ${
-                selectedCategory === 'All'
+                selectedServiceId === 'All'
                   ? 'bg-indigo-50 text-indigo-700 font-semibold'
                   : 'text-slate-600 hover:bg-slate-100'
               }`}
             >
-              All Categories
+              All Services
             </button>
-            {categories.map((cat) => (
+            {servicesCatalog.map((service) => (
               <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
+                key={service.id}
+                onClick={() => setSelectedServiceId(service.name)}
                 className={`w-full text-left px-2.5 py-1 rounded text-xs font-medium transition ${
-                  selectedCategory === cat
+                  selectedServiceId === service.name
                     ? 'bg-indigo-50 text-indigo-700 font-semibold'
                     : 'text-slate-600 hover:bg-slate-100'
                 }`}
               >
-                {cat}
+                {service.name}
               </button>
             ))}
           </div>

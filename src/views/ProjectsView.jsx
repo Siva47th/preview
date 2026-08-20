@@ -8,8 +8,8 @@ export const ProjectsView = () => {
     addProject,
     setActiveTab,
     currentUser,
-    categories,
-    selectedCategory,
+    servicesCatalog,
+    selectedServiceId,
     subRoles,
     users
   } = useApp();
@@ -21,7 +21,7 @@ export const ProjectsView = () => {
 
   // Form State
   const [newProjName, setNewProjName] = useState('');
-  const [newCategory, setNewCategory] = useState('Full-Stack Web App');
+  const [newCategory, setNewCategory] = useState('Full-Stack Web Development');
   const [newClientName, setNewClientName] = useState('Apex Corporation');
   const [newBudget, setNewBudget] = useState(65000);
   const [newRate, setNewRate] = useState(135);
@@ -30,16 +30,16 @@ export const ProjectsView = () => {
 
   // Sub-Role Dev Assignments Map
   const [assignedDevs, setAssignedDevs] = useState({
-    'Frontend': 'usr_2',
-    'Backend': 'usr_4',
+    'Frontend Engineering': 'usr_2',
+    'Backend Architecture': 'usr_4',
     'Database & DevOps': 'usr_5',
     'QA & Automation': 'usr_9'
   });
 
   const filteredProjects = projects.filter(p => {
-    const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
+    const matchesService = selectedServiceId === 'All' || p.service === selectedServiceId;
     const matchesStatus = filterStatus === 'All' || p.status === filterStatus;
-    return matchesCategory && matchesStatus;
+    return matchesService && matchesStatus;
   });
 
   const handleSubmit = (e) => {
@@ -48,7 +48,7 @@ export const ProjectsView = () => {
 
     addProject({
       name: newProjName,
-      category: newCategory,
+      service: newCategory,
       clientName: newClientName,
       description: newDesc || 'Full-stack software deliverable with assigned dev roles',
       status: 'In Progress',
@@ -57,10 +57,10 @@ export const ProjectsView = () => {
       startDate: new Date().toISOString().split('T')[0],
       deadline: newDeadline,
       assignedDevs: {
-        'Frontend': [assignedDevs['Frontend']],
-        'Backend': [assignedDevs['Backend']],
-        'Database & DevOps': [assignedDevs['Database & DevOps']],
-        'QA & Automation': [assignedDevs['QA & Automation']]
+        'Frontend Engineering': [assignedDevs['Frontend Engineering'] || 'usr_2'],
+        'Backend Architecture': [assignedDevs['Backend Architecture'] || 'usr_4'],
+        'Database & DevOps': [assignedDevs['Database & DevOps'] || 'usr_5'],
+        'QA & Automation': [assignedDevs['QA & Automation'] || 'usr_9']
       },
       tags: ['Full-Stack', 'React', 'Node.js', 'PostgreSQL']
     });
@@ -111,7 +111,7 @@ export const ProjectsView = () => {
         </div>
 
         <div className="text-xs text-slate-500 font-medium">
-          Category Filter: <strong className="text-indigo-600">{selectedCategory}</strong> ({filteredProjects.length} projects)
+          Service filter: <strong className="text-indigo-600">{selectedServiceId}</strong> ({filteredProjects.length} projects)
         </div>
       </div>
 
@@ -126,7 +126,7 @@ export const ProjectsView = () => {
               <div className="flex items-start justify-between">
                 <div>
                   <span className="text-[10px] uppercase font-bold tracking-wider text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">
-                    {project.category || 'Full-Stack Web App'}
+                    {project.service || 'Full-Stack Web Development'}
                   </span>
                   <h3 className="text-base font-bold text-slate-900 mt-1.5">{project.name}</h3>
                 </div>
@@ -163,7 +163,7 @@ export const ProjectsView = () => {
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   {subRoles.map((role) => {
                     const devList = project.assignedDevs?.[role] || [];
-                    const assignedDevName = users.find(u => devList.includes(u.id))?.name || (role === 'Frontend' ? 'Sarah Jenkins' : role === 'Backend' ? 'David Chen' : role === 'Database & DevOps' ? 'Priya Sharma' : 'Ananya Gupta');
+                    const assignedDevName = users.find(u => devList.includes(u.id))?.name || (role === 'Frontend Engineering' ? 'Sarah Jenkins' : role === 'Backend Architecture' ? 'David Chen' : role === 'Database & DevOps' ? 'Priya Sharma' : 'Ananya Gupta');
 
                     return (
                       <div key={role} className="p-2 rounded bg-slate-50 border border-slate-200 space-y-0.5">
@@ -226,14 +226,14 @@ export const ProjectsView = () => {
               </div>
 
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Field Category</label>
+                <label className="block text-slate-700 font-semibold mb-1">Service Provided</label>
                 <select
                   value={newCategory}
                   onChange={(e) => setNewCategory(e.target.value)}
                   className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-indigo-600"
                 >
-                  {categories.map(c => (
-                    <option key={c} value={c}>{c}</option>
+                  {servicesCatalog.map(s => (
+                    <option key={s.id} value={s.name}>{s.name}</option>
                   ))}
                 </select>
               </div>
@@ -246,7 +246,7 @@ export const ProjectsView = () => {
                     <div key={role}>
                       <label className="block text-[10px] text-indigo-700 font-bold mb-0.5">{role}</label>
                       <select
-                        value={assignedDevs[role]}
+                        value={assignedDevs[role] || ''}
                         onChange={(e) => setAssignedDevs({ ...assignedDevs, [role]: e.target.value })}
                         className="w-full p-2 bg-white border border-slate-200 rounded text-xs text-slate-900 focus:outline-none focus:border-indigo-600"
                       >
