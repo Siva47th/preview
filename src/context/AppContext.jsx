@@ -1,8 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import {
   INITIAL_USERS,
-  INITIAL_CATEGORIES,
-  INITIAL_SUB_ROLES,
+  SERVICES_CATALOG,
   INITIAL_PROJECTS,
   INITIAL_TASKS,
   INITIAL_TIME_LOGS,
@@ -16,59 +15,57 @@ const AppContext = createContext();
 export const AppProvider = ({ children }) => {
   // 9-Member Dev Team & Active User State
   const [users, setUsers] = useState(() => {
-    const saved = localStorage.getItem('fw_users_v3');
+    const saved = localStorage.getItem('fw_users_v4');
     return saved ? JSON.parse(saved) : INITIAL_USERS;
   });
 
   const [currentUser, setCurrentUser] = useState(() => {
-    const saved = localStorage.getItem('fw_user_v3');
+    const saved = localStorage.getItem('fw_user_v4');
     return saved ? JSON.parse(saved) : INITIAL_USERS[0]; // Default: Alex Vance (Admin)
   });
 
-  // Job Categories & Sub-Role Layers
-  const [categories] = useState(INITIAL_CATEGORIES);
-  const [subRoles] = useState(INITIAL_SUB_ROLES);
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [selectedSubRole, setSelectedSubRole] = useState('All');
+  // Services Catalog & Active Service State
+  const [servicesCatalog] = useState(SERVICES_CATALOG);
+  const [selectedServiceId, setSelectedServiceId] = useState('All');
 
   // Active View Tab
   const [activeTab, setActiveTab] = useState('dashboard');
 
   // Core Data Stores
   const [projects, setProjects] = useState(() => {
-    const saved = localStorage.getItem('fw_projects_v3');
+    const saved = localStorage.getItem('fw_projects_v4');
     return saved ? JSON.parse(saved) : INITIAL_PROJECTS;
   });
 
   const [tasks, setTasks] = useState(() => {
-    const saved = localStorage.getItem('fw_tasks_v3');
+    const saved = localStorage.getItem('fw_tasks_v4');
     return saved ? JSON.parse(saved) : INITIAL_TASKS;
   });
 
   const [timeLogs, setTimeLogs] = useState(() => {
-    const saved = localStorage.getItem('fw_timelogs_v3');
+    const saved = localStorage.getItem('fw_timelogs_v4');
     return saved ? JSON.parse(saved) : INITIAL_TIME_LOGS;
   });
 
   const [invoices, setInvoices] = useState(() => {
-    const saved = localStorage.getItem('fw_invoices_v3');
+    const saved = localStorage.getItem('fw_invoices_v4');
     return saved ? JSON.parse(saved) : INITIAL_INVOICES;
   });
 
   const [showcase] = useState(INITIAL_SHOWCASE);
   const [activities, setActivities] = useState(INITIAL_ACTIVITIES);
 
-  // INDIVIDUAL PER-TASK / PER-PROJECT STOPWATCHES MAP
+  // INDIVIDUAL PER-TASK STOPWATCHES MAP
   // Key: taskId -> { isRunning: boolean, elapsedSeconds: number, startTime: number }
   const [taskTimers, setTaskTimers] = useState(() => {
-    const saved = localStorage.getItem('fw_task_timers_v3');
+    const saved = localStorage.getItem('fw_task_timers_v4');
     if (saved) return JSON.parse(saved);
-    // Initialize default timer states for sample tasks
     return {
       'tsk_101': { isRunning: false, elapsedSeconds: 2450, startTime: null },
       'tsk_102': { isRunning: false, elapsedSeconds: 1820, startTime: null },
       'tsk_103': { isRunning: false, elapsedSeconds: 900, startTime: null },
       'tsk_104': { isRunning: false, elapsedSeconds: 0, startTime: null },
+      'tsk_301': { isRunning: false, elapsedSeconds: 600, startTime: null },
       'tsk_201': { isRunning: false, elapsedSeconds: 3100, startTime: null }
     };
   });
@@ -78,38 +75,38 @@ export const AppProvider = ({ children }) => {
     {
       id: 'msg_1',
       sender: 'bot',
-      text: "Hello! I'm Freewheel AI. Each project and task has its own individual stopwatch. Admin can manage stopwatches and assign 9 team devs across Frontend, Backend, Database, and QA roles.",
+      text: "Hello! I'm Freewheel AI. Admin manages hierarchical tasks layer-by-layer (Service -> Layer -> Specific Task), assigns 9 dev team members, and controls individual task stopwatches.",
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
   ]);
 
   // Persistence Effects
   useEffect(() => {
-    localStorage.setItem('fw_users_v3', JSON.stringify(users));
+    localStorage.setItem('fw_users_v4', JSON.stringify(users));
   }, [users]);
 
   useEffect(() => {
-    localStorage.setItem('fw_user_v3', JSON.stringify(currentUser));
+    localStorage.setItem('fw_user_v4', JSON.stringify(currentUser));
   }, [currentUser]);
 
   useEffect(() => {
-    localStorage.setItem('fw_projects_v3', JSON.stringify(projects));
+    localStorage.setItem('fw_projects_v4', JSON.stringify(projects));
   }, [projects]);
 
   useEffect(() => {
-    localStorage.setItem('fw_tasks_v3', JSON.stringify(tasks));
+    localStorage.setItem('fw_tasks_v4', JSON.stringify(tasks));
   }, [tasks]);
 
   useEffect(() => {
-    localStorage.setItem('fw_timelogs_v3', JSON.stringify(timeLogs));
+    localStorage.setItem('fw_timelogs_v4', JSON.stringify(timeLogs));
   }, [timeLogs]);
 
   useEffect(() => {
-    localStorage.setItem('fw_invoices_v3', JSON.stringify(invoices));
+    localStorage.setItem('fw_invoices_v4', JSON.stringify(invoices));
   }, [invoices]);
 
   useEffect(() => {
-    localStorage.setItem('fw_task_timers_v3', JSON.stringify(taskTimers));
+    localStorage.setItem('fw_task_timers_v4', JSON.stringify(taskTimers));
   }, [taskTimers]);
 
   // INDIVIDUAL TASK TIMERS TICKER EFFECT
@@ -186,8 +183,8 @@ export const AppProvider = ({ children }) => {
     const newLog = {
       id: `log_${Date.now()}`,
       projectId: task?.projectId || 'proj_1',
-      category: proj ? proj.category : 'Full-Stack Web App',
-      subRole: task ? task.subRole : 'Frontend',
+      service: task?.service || 'Full-Stack Web Development',
+      layer: task?.layer || 'Frontend Engineering',
       projectName: proj ? proj.name : 'Project',
       taskId: taskId,
       taskTitle: task ? task.title : 'Task',
@@ -198,18 +195,16 @@ export const AppProvider = ({ children }) => {
       billable: true,
       invoiced: false,
       date: new Date().toISOString().split('T')[0],
-      notes: customNotes || `Admin logged ${(durationMins / 60).toFixed(1)} hrs on ${task ? task.title : 'Task'}`
+      notes: customNotes || `Admin logged ${(durationMins / 60).toFixed(1)} hrs on [${task?.layer}] ${task ? task.title : 'Task'}`
     };
 
     setTimeLogs(prev => [newLog, ...prev]);
 
-    // Update logged hours on task
     setTasks(prev => prev.map(t => t.id === taskId ? {
       ...t,
       loggedHours: +(t.loggedHours + (durationMins / 60)).toFixed(1)
     } : t));
 
-    // Reset individual task timer
     setTaskTimers(prev => ({
       ...prev,
       [taskId]: { isRunning: false, elapsedSeconds: 0, startTime: null }
@@ -218,7 +213,7 @@ export const AppProvider = ({ children }) => {
     setActivities(prev => [{
       id: `act_${Date.now()}`,
       user: `${currentUser.name} (Admin)`,
-      action: `logged ${(durationMins / 60).toFixed(1)} hrs on individual task:`,
+      action: `logged ${(durationMins / 60).toFixed(1)} hrs on task:`,
       target: task ? task.title : 'Task',
       time: 'Just now'
     }, ...prev]);
@@ -231,8 +226,8 @@ export const AppProvider = ({ children }) => {
       role: 'dev',
       avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80',
       hourlyRate: 120,
-      specialization: 'Full-Stack Web App',
-      subRole: 'Frontend',
+      specialization: 'Full-Stack Web Development',
+      subRole: 'Frontend Engineering',
       ...userData
     };
     setUsers(prev => [...prev, newUser]);
@@ -252,13 +247,8 @@ export const AppProvider = ({ children }) => {
     const newProj = {
       id: `proj_${Date.now()}`,
       completionPercentage: 0,
-      category: projectData.category || 'Full-Stack Web App',
-      assignedDevs: projectData.assignedDevs || {
-        'Frontend': [],
-        'Backend': [],
-        'Database & DevOps': [],
-        'QA & Automation': []
-      },
+      service: projectData.service || 'Full-Stack Web Development',
+      assignedDevs: projectData.assignedDevs || {},
       ...projectData
     };
     setProjects(prev => [newProj, ...prev]);
@@ -274,18 +264,26 @@ export const AppProvider = ({ children }) => {
       id: newTaskId,
       loggedHours: 0,
       status: 'Backlog',
-      category: taskData.category || 'Full-Stack Web App',
-      subRole: taskData.subRole || 'Frontend',
+      service: taskData.service || 'Full-Stack Web Development',
+      layer: taskData.layer || 'Frontend Engineering',
       ...taskData
     };
 
     setTasks(prev => [newTask, ...prev]);
 
-    // Initialize individual stopwatch state for new task
     setTaskTimers(prev => ({
       ...prev,
       [newTaskId]: { isRunning: false, elapsedSeconds: 0, startTime: null }
     }));
+  };
+
+  const updateTaskAssignee = (taskId, newAssigneeId) => {
+    const assignee = users.find(u => u.id === newAssigneeId);
+    setTasks(prev => prev.map(t => t.id === taskId ? {
+      ...t,
+      assigneeId: newAssigneeId,
+      assigneeName: assignee ? assignee.name : 'Unassigned'
+    } : t));
   };
 
   const updateTaskStatus = (taskId, newStatus) => {
@@ -297,7 +295,7 @@ export const AppProvider = ({ children }) => {
     const newLog = {
       id: `log_${Date.now()}`,
       projectName: proj ? proj.name : 'Project',
-      category: proj ? proj.category : 'Full-Stack Web App',
+      service: proj ? proj.service : 'Full-Stack Web Development',
       hourlyRate: proj ? proj.hourlyRate : 125,
       billable: true,
       invoiced: false,
@@ -317,7 +315,7 @@ export const AppProvider = ({ children }) => {
       const hours = +(l.durationMinutes / 60).toFixed(2);
       const amount = hours * l.hourlyRate;
       return {
-        description: `[${l.subRole || 'Dev'}] ${l.taskTitle || 'Deliverable'} - ${l.notes || 'Engineering work'}`,
+        description: `[${l.layer || 'Dev'}] ${l.taskTitle || 'Deliverable'} - ${l.notes || 'Engineering work'}`,
         hours,
         rate: l.hourlyRate,
         amount
@@ -379,13 +377,12 @@ export const AppProvider = ({ children }) => {
       let botResponse = "I've analyzed your query. ";
       const textLower = userText.toLowerCase();
 
-      if (textLower.includes('timer') || textLower.includes('stopwatch')) {
-        const activeTimersCount = Object.keys(taskTimers).filter(id => taskTimers[id]?.isRunning).length;
-        botResponse += `Every project and task has its own individual stopwatch. Currently ${activeTimersCount} task stopwatch(es) are actively recording time under Admin control.`;
-      } else if (textLower.includes('team') || textLower.includes('dev') || textLower.includes('role')) {
-        botResponse += `Your 9-member dev team (Sarah, Marcus, David, Priya, James, Elena, Carlos, Ananya, and Alex) can be assigned to Frontend, Backend, Database & DevOps, or QA roles for every full-stack project.`;
+      if (textLower.includes('service') || textLower.includes('hierarch')) {
+        botResponse += `Freewheel provides 3 primary services: Full-Stack Web Development, App Development, and AI & Cloud Automation. Each service expands into sub-service layers (e.g. Frontend, Backend, Database, QA) with layer-by-layer task stopwatches.`;
+      } else if (textLower.includes('admin') || textLower.includes('stopwatch')) {
+        botResponse += `Agency Admin (Alex Vance) has exclusive access controls to assign tasks layer-by-layer across the 9 dev team members and manage individual task stopwatches.`;
       } else {
-        botResponse += `As your Freewheel AI copilot, I can help summarize individual project stopwatches, check sub-role dev assignments, or review unbilled time logs.`;
+        botResponse += `As your Freewheel agentic assistant, I can help you navigate hierarchical service layers, review dev role assignments, or inspect active task stopwatches.`;
       }
 
       const botMsg = {
@@ -407,12 +404,9 @@ export const AppProvider = ({ children }) => {
       deleteUser,
       currentUser,
       setCurrentUser,
-      categories,
-      subRoles,
-      selectedCategory,
-      setSelectedCategory,
-      selectedSubRole,
-      setSelectedSubRole,
+      servicesCatalog,
+      selectedServiceId,
+      setSelectedServiceId,
       activeTab,
       setActiveTab,
       projects,
@@ -420,6 +414,7 @@ export const AppProvider = ({ children }) => {
       updateProject,
       tasks,
       addTask,
+      updateTaskAssignee,
       updateTaskStatus,
       timeLogs,
       addTimeLog,

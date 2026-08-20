@@ -1,15 +1,22 @@
-export const INITIAL_CATEGORIES = [
-  'Full-Stack Web App',
-  'Web Development',
-  'Automation',
-  'App Development'
-];
-
-export const INITIAL_SUB_ROLES = [
-  'Frontend',
-  'Backend',
-  'Database & DevOps',
-  'QA & Automation'
+export const SERVICES_CATALOG = [
+  {
+    id: 'srv_fullstack',
+    name: 'Full-Stack Web Development',
+    description: 'End-to-end web software covering UI frontend, API backend, database, and test automation.',
+    layers: ['Frontend Engineering', 'Backend Architecture', 'Database & DevOps', 'QA & Automation']
+  },
+  {
+    id: 'srv_app',
+    name: 'App Development',
+    description: 'Cross-platform mobile apps for iOS and Android with native payment SDKs and cloud syncing.',
+    layers: ['iOS & Android UI', 'Mobile API Services', 'App Store & Deployment']
+  },
+  {
+    id: 'srv_automation',
+    name: 'AI & Cloud Automation',
+    description: 'Enterprise AI bot pipelines, automated telemetry, and Kubernetes cloud infrastructure.',
+    layers: ['AI Bot Pipeline', 'Cloud Orchestration', 'CI/CD Test Automation']
+  }
 ];
 
 export const INITIAL_USERS = [
@@ -20,8 +27,8 @@ export const INITIAL_USERS = [
     role: 'admin',
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
     title: 'Lead Architect & Agency Founder',
-    specialization: 'Full-Stack Architecture',
-    subRole: 'Backend',
+    specialization: 'Full-Stack Web Development',
+    subRole: 'Backend Architecture',
     hourlyRate: 150
   },
   {
@@ -31,8 +38,8 @@ export const INITIAL_USERS = [
     role: 'dev',
     avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80',
     title: 'Senior Frontend Engineer',
-    specialization: 'Web Development',
-    subRole: 'Frontend',
+    specialization: 'Full-Stack Web Development',
+    subRole: 'Frontend Engineering',
     hourlyRate: 125
   },
   {
@@ -42,8 +49,8 @@ export const INITIAL_USERS = [
     role: 'dev',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
     title: 'Automation & AI Specialist',
-    specialization: 'Automation',
-    subRole: 'Backend',
+    specialization: 'AI & Cloud Automation',
+    subRole: 'AI Bot Pipeline',
     hourlyRate: 135
   },
   {
@@ -53,8 +60,8 @@ export const INITIAL_USERS = [
     role: 'dev',
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
     title: 'Senior Backend Engineer',
-    specialization: 'Full-Stack Web App',
-    subRole: 'Backend',
+    specialization: 'Full-Stack Web Development',
+    subRole: 'Backend Architecture',
     hourlyRate: 130
   },
   {
@@ -64,7 +71,7 @@ export const INITIAL_USERS = [
     role: 'dev',
     avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
     title: 'Database Architect & DevOps',
-    specialization: 'Full-Stack Web App',
+    specialization: 'Full-Stack Web Development',
     subRole: 'Database & DevOps',
     hourlyRate: 140
   },
@@ -74,9 +81,9 @@ export const INITIAL_USERS = [
     email: 'james.w@freewheel.io',
     role: 'dev',
     avatar: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=150&auto=format&fit=crop&q=80',
-    title: 'React Native & Mobile Dev',
+    title: 'React Native & Mobile Specialist',
     specialization: 'App Development',
-    subRole: 'Frontend',
+    subRole: 'iOS & Android UI',
     hourlyRate: 120
   },
   {
@@ -86,8 +93,8 @@ export const INITIAL_USERS = [
     role: 'dev',
     avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
     title: 'API & Security Engineer',
-    specialization: 'Full-Stack Web App',
-    subRole: 'Backend',
+    specialization: 'Full-Stack Web Development',
+    subRole: 'Backend Architecture',
     hourlyRate: 135
   },
   {
@@ -97,8 +104,8 @@ export const INITIAL_USERS = [
     role: 'dev',
     avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&auto=format&fit=crop&q=80',
     title: 'UI/UX & Frontend Developer',
-    specialization: 'Web Development',
-    subRole: 'Frontend',
+    specialization: 'Full-Stack Web Development',
+    subRole: 'Frontend Engineering',
     hourlyRate: 115
   },
   {
@@ -107,8 +114,8 @@ export const INITIAL_USERS = [
     email: 'ananya.g@freewheel.io',
     role: 'dev',
     avatar: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=150&auto=format&fit=crop&q=80',
-    title: 'QA & Test Automation Engineer',
-    specialization: 'Automation',
+    title: 'QA & Test Automation Specialist',
+    specialization: 'Full-Stack Web Development',
     subRole: 'QA & Automation',
     hourlyRate: 110
   }
@@ -117,55 +124,29 @@ export const INITIAL_USERS = [
 export const INITIAL_SHOWCASE = [
   {
     id: 'show_1',
-    title: 'Full-Stack FinTech Mobile Banking Platform',
+    title: 'Full-Stack FinTech Mobile Banking Suite',
     client: 'Apex Corporation',
-    category: 'Full-Stack Web App',
+    category: 'Full-Stack Web Development',
     year: '2025',
     budget: '$120,000',
     duration: '14 Weeks',
-    summary: 'Delivered an end-to-end full-stack banking suite with React Native mobile frontend, Node.js microservices backend, PostgreSQL database, and automated Playwright QA.',
+    summary: 'Delivered a full-stack banking suite with React Native mobile frontend, Node.js microservices backend, PostgreSQL database, and automated Playwright QA.',
     heroImage: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&auto=format&fit=crop&q=80',
     metrics: [
       { label: 'Transaction Latency', value: '< 80ms' },
       { label: 'User Adoption Rate', value: '+310%' },
       { label: 'Security Score', value: '99.9%' }
     ],
-    techStack: ['React Native', 'Node.js', 'PostgreSQL', 'Redis', 'Docker'],
+    techStack: ['React Native', 'Node.js', 'PostgreSQL', 'Redis'],
     testimonial: {
-      quote: "Freewheel's 9-member dev team assigned roles across frontend, backend, and database flawlessly with individual stopwatch tracking.",
+      quote: "Freewheel's layer-by-layer task assignment across frontend, backend, and database gave our stakeholders 100% clarity.",
       author: "Marcus Thorne, CTO at Apex Corp"
     },
     deliverables: [
-      'Frontend Mobile Apple/Google Pay Native Integration',
+      'Frontend Mobile Apple/Google Pay Integration',
       'Backend Microservices & OAuth JWT Tokens',
       'Database AWS RDS Failover & Read Replicas',
       'Automated E2E Playwright Security Suite'
-    ]
-  },
-  {
-    id: 'show_2',
-    title: 'AI Automated Supply Chain Operations',
-    client: 'LogiGlobal Freight Systems',
-    category: 'Automation',
-    year: '2025',
-    budget: '$85,000',
-    duration: '8 Weeks',
-    summary: 'Engineered an AI-powered fleet dispatch algorithm reducing route fuel waste by 24% with real-time telemetry analytics.',
-    heroImage: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&auto=format&fit=crop&q=80',
-    metrics: [
-      { label: 'Fuel Cost Savings', value: '$450K/yr' },
-      { label: 'Route Optimization', value: '12x Faster' },
-      { label: 'Dispatch Errors', value: '-94%' }
-    ],
-    techStack: ['Python', 'FastAPI', 'PyTorch', 'Docker'],
-    testimonial: {
-      quote: "Precise sub-role assignments and per-task timing gave our team unprecedented clarity.",
-      author: "Elena Rostova, VP Operations"
-    },
-    deliverables: [
-      'Predictive Traffic & Weather AI Engine',
-      'Driver Mobile Companion Portal',
-      'Executive Telemetry Dashboard'
     ]
   }
 ];
@@ -174,9 +155,9 @@ export const INITIAL_PROJECTS = [
   {
     id: 'proj_1',
     name: 'Full-Stack E-Commerce Platform',
-    category: 'Full-Stack Web App',
+    service: 'Full-Stack Web Development',
     clientName: 'Apex Corporation',
-    description: 'Complete full-stack platform covering React frontend UI, Node.js API backend, PostgreSQL database, and QA automation suite.',
+    description: 'Complete full-stack platform covering Frontend UI, Backend APIs, Database RDS, and Playwright QA automation.',
     status: 'In Progress',
     budget: 65000,
     hourlyRate: 135,
@@ -184,17 +165,17 @@ export const INITIAL_PROJECTS = [
     deadline: '2026-09-30',
     completionPercentage: 65,
     assignedDevs: {
-      'Frontend': ['usr_2', 'usr_8'],
-      'Backend': ['usr_4', 'usr_7'],
+      'Frontend Engineering': ['usr_2', 'usr_8'],
+      'Backend Architecture': ['usr_4', 'usr_7'],
       'Database & DevOps': ['usr_5'],
       'QA & Automation': ['usr_9']
     },
-    tags: ['React', 'Node.js', 'PostgreSQL', 'Playwright']
+    tags: ['Full-Stack', 'React', 'Node.js', 'PostgreSQL']
   },
   {
     id: 'proj_2',
-    name: 'Cloud Automation & AI Engine',
-    category: 'Automation',
+    name: 'Cloud AI Telemetry & Bot Pipeline',
+    service: 'AI & Cloud Automation',
     clientName: 'LogiGlobal Freight',
     description: 'Automating multi-cloud Kubernetes clusters with Python FastAPI and AI predictive dispatching.',
     status: 'In Progress',
@@ -204,23 +185,23 @@ export const INITIAL_PROJECTS = [
     deadline: '2026-10-15',
     completionPercentage: 40,
     assignedDevs: {
-      'Backend': ['usr_3'],
-      'Database & DevOps': ['usr_5'],
-      'QA & Automation': ['usr_9']
+      'AI Bot Pipeline': ['usr_3'],
+      'Cloud Orchestration': ['usr_5'],
+      'CI/CD Test Automation': ['usr_9']
     },
     tags: ['Python', 'Kubernetes', 'AWS', 'Docker']
   }
 ];
 
 export const INITIAL_TASKS = [
-  // Full-Stack E-Commerce Tasks by Sub-Role
+  // Full-Stack Web Development Service Tasks (Layered)
   {
     id: 'tsk_101',
     projectId: 'proj_1',
-    category: 'Full-Stack Web App',
-    subRole: 'Frontend',
-    title: 'React Checkout UI & Stripe SDK Integration',
-    description: 'Build responsive checkout drawer with native payment gateway hooks.',
+    service: 'Full-Stack Web Development',
+    layer: 'Frontend Engineering',
+    title: 'Develop Responsive Web Shopping Cart & Stripe Payment SDK',
+    description: 'Construct modular React checkout components with Stripe payment intent hooks.',
     status: 'In Progress',
     priority: 'High',
     assigneeId: 'usr_2',
@@ -232,10 +213,10 @@ export const INITIAL_TASKS = [
   {
     id: 'tsk_102',
     projectId: 'proj_1',
-    category: 'Full-Stack Web App',
-    subRole: 'Backend',
-    title: 'OAuth JWT Authentication & Session Endpoints',
-    description: 'Develop secure refresh token rotation and RBAC middleware.',
+    service: 'Full-Stack Web Development',
+    layer: 'Backend Architecture',
+    title: 'Build OAuth JWT Session Authentication & RBAC Middleware',
+    description: 'Develop secure refresh token rotation and endpoint authorization guards.',
     status: 'In Progress',
     priority: 'Urgent',
     assigneeId: 'usr_4',
@@ -247,10 +228,10 @@ export const INITIAL_TASKS = [
   {
     id: 'tsk_103',
     projectId: 'proj_1',
-    category: 'Full-Stack Web App',
-    subRole: 'Database & DevOps',
-    title: 'PostgreSQL Schema ERD & RDS Failover Replica',
-    description: 'Provision automated snapshot backups and dual-zone VPC peering.',
+    service: 'Full-Stack Web Development',
+    layer: 'Database & DevOps',
+    title: 'Provision PostgreSQL Schema ERD & AWS RDS Read Replicas',
+    description: 'Set up automated snapshot strategy and multi-AZ failover cluster.',
     status: 'In Review',
     priority: 'High',
     assigneeId: 'usr_5',
@@ -262,10 +243,10 @@ export const INITIAL_TASKS = [
   {
     id: 'tsk_104',
     projectId: 'proj_1',
-    category: 'Full-Stack Web App',
-    subRole: 'QA & Automation',
-    title: 'Playwright E2E Checkout Flow & Security Suite',
-    description: 'Script automated cross-browser test suite for signup to invoice checkout.',
+    service: 'Full-Stack Web Development',
+    layer: 'QA & Automation',
+    title: 'Script Playwright E2E Test Suite for Signup to Payment Checkout',
+    description: 'Automate cross-browser regression testing and security audit assertions.',
     status: 'To Do',
     priority: 'Medium',
     assigneeId: 'usr_9',
@@ -274,13 +255,29 @@ export const INITIAL_TASKS = [
     loggedHours: 4.0,
     dueDate: '2026-08-30'
   },
-  // Cloud Automation Tasks
+  // App Development Service Tasks (Layered)
+  {
+    id: 'tsk_301',
+    projectId: 'proj_1',
+    service: 'App Development',
+    layer: 'iOS & Android UI',
+    title: 'React Native Cross-Platform Navigation & Dark Theme Views',
+    description: 'Configure bottom tab navigation and smooth screen transitions.',
+    status: 'In Progress',
+    priority: 'High',
+    assigneeId: 'usr_6',
+    assigneeName: 'James Wilson',
+    estimatedHours: 25,
+    loggedHours: 10.0,
+    dueDate: '2026-09-01'
+  },
+  // AI & Cloud Automation Service Tasks (Layered)
   {
     id: 'tsk_201',
     projectId: 'proj_2',
-    category: 'Automation',
-    subRole: 'Backend',
-    title: 'FastAPI Telemetry Stream & Bot Dispatcher',
+    service: 'AI & Cloud Automation',
+    layer: 'AI Bot Pipeline',
+    title: 'FastAPI Async Telemetry Stream & AI Predictive Bot Dispatcher',
     description: 'Construct async Python endpoints for real-time fleet telemetry.',
     status: 'In Progress',
     priority: 'Urgent',
@@ -296,36 +293,36 @@ export const INITIAL_TIME_LOGS = [
   {
     id: 'log_1',
     projectId: 'proj_1',
-    category: 'Full-Stack Web App',
-    subRole: 'Frontend',
+    service: 'Full-Stack Web Development',
+    layer: 'Frontend Engineering',
     projectName: 'Full-Stack E-Commerce Platform',
     taskId: 'tsk_101',
-    taskTitle: 'React Checkout UI & Stripe SDK Integration',
+    taskTitle: 'Develop Responsive Web Shopping Cart & Stripe Payment SDK',
     userId: 'usr_2',
     userName: 'Sarah Jenkins',
-    durationMinutes: 720, // 12 hrs
+    durationMinutes: 720,
     hourlyRate: 125,
     billable: true,
     invoiced: false,
     date: '2026-08-19',
-    notes: 'Configured checkout components and Stripe payment intents.'
+    notes: 'Built shopping cart state and Stripe payment intent hooks.'
   },
   {
     id: 'log_2',
     projectId: 'proj_1',
-    category: 'Full-Stack Web App',
-    subRole: 'Backend',
+    service: 'Full-Stack Web Development',
+    layer: 'Backend Architecture',
     projectName: 'Full-Stack E-Commerce Platform',
     taskId: 'tsk_102',
-    taskTitle: 'OAuth JWT Authentication & Session Endpoints',
+    taskTitle: 'Build OAuth JWT Session Authentication & RBAC Middleware',
     userId: 'usr_4',
     userName: 'David Chen',
-    durationMinutes: 870, // 14.5 hrs
+    durationMinutes: 870,
     hourlyRate: 130,
     billable: true,
     invoiced: false,
     date: '2026-08-20',
-    notes: 'Implemented JWT token refresh rotation and route guards.'
+    notes: 'Implemented JWT token refresh rotation and middleware authorization.'
   }
 ];
 
@@ -346,15 +343,15 @@ export const INITIAL_INVOICES = [
     taxAmount: 1500.00,
     totalAmount: 16500.00,
     items: [
-      { description: 'Frontend Checkout UI & State Architecture', hours: 60, rate: 125, amount: 7500 },
-      { description: 'Backend Microservices & JWT Session Security', hours: 57.6, rate: 130, amount: 7500 }
+      { description: '[Frontend Engineering] Responsive Cart & Payment Integration', hours: 60, rate: 125, amount: 7500 },
+      { description: '[Backend Architecture] OAuth JWT Session Security Endpoints', hours: 57.6, rate: 130, amount: 7500 }
     ],
     notes: 'Payment due within 15 days via ACH or Direct Wire.'
   }
 ];
 
 export const INITIAL_ACTIVITIES = [
-  { id: 'act_1', user: 'Alex Vance (Admin)', action: 'started individual stopwatch on task:', target: 'React Checkout UI (Frontend)', time: '5 mins ago' },
-  { id: 'act_2', user: 'Alex Vance (Admin)', action: 'assigned sub-role Database & DevOps to:', target: 'Priya Sharma', time: '1 hour ago' },
-  { id: 'act_3', user: 'Alex Vance (Admin)', action: 'created Full-Stack project:', target: 'Full-Stack E-Commerce Platform', time: 'Yesterday' }
+  { id: 'act_1', user: 'Alex Vance (Admin)', action: 'started task stopwatch on:', target: 'React Shopping Cart (Frontend Engineering)', time: '5 mins ago' },
+  { id: 'act_2', user: 'Alex Vance (Admin)', action: 'assigned task in Database & DevOps to:', target: 'Priya Sharma', time: '1 hour ago' },
+  { id: 'act_3', user: 'Alex Vance (Admin)', action: 'created Full-Stack Service Job:', target: 'Full-Stack E-Commerce Platform', time: 'Yesterday' }
 ];
