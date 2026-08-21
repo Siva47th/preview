@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { Users, Plus, ShieldCheck, UserCheck, Code, DollarSign, Lock, Trash2, Layers } from 'lucide-react';
+import { Users, Plus, ShieldCheck, UserCheck, Code, IndianRupee, Lock, Trash2, Layers } from 'lucide-react';
 
 export const AdminUsersView = () => {
   const { users, addUser, updateUser, deleteUser, currentUser, servicesCatalog } = useApp();
@@ -112,7 +112,7 @@ export const AdminUsersView = () => {
               </div>
 
               <div className="flex items-center justify-between text-xs text-slate-600 pt-1">
-                <span>Hourly Rate: <strong className="text-slate-900">${usr.hourlyRate}/hr</strong></span>
+                <span>Hourly Rate: <strong className="text-slate-900">₹{usr.hourlyRate.toLocaleString('en-IN')}/hr</strong></span>
                 <span className="text-[10px] text-slate-400">
                   {usr.role === 'admin' ? 'Timer Manager' : 'Dev Assignee'}
                 </span>
@@ -196,7 +196,7 @@ export const AdminUsersView = () => {
                 </div>
 
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">Hourly Rate ($)</label>
+                  <label className="block text-slate-700 font-semibold mb-1">Hourly Rate (₹)</label>
                   <input
                     type="number"
                     value={newRate}

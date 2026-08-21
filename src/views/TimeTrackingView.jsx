@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { Clock, Play, Pause, Square, Plus, DollarSign, Calendar, CheckCircle2, User, FileText, Lock, Layers } from 'lucide-react';
+import { Clock, Play, Pause, Square, Plus, IndianRupee, Calendar, CheckCircle2, User, FileText, Lock, Layers } from 'lucide-react';
 
 export const TimeTrackingView = () => {
   const {
@@ -191,10 +191,10 @@ export const TimeTrackingView = () => {
             {(timeLogs.filter(l => l.billable && !l.invoiced).reduce((acc, l) => acc + l.durationMinutes, 0) / 60).toFixed(1)} hrs
           </div>
           <div className="text-[11px] text-indigo-600 font-mono font-medium">
-            ${timeLogs
+            ₹{timeLogs
               .filter(l => l.billable && !l.invoiced)
               .reduce((acc, l) => acc + ((l.durationMinutes / 60) * l.hourlyRate), 0)
-              .toLocaleString()} unbilled value
+              .toLocaleString('en-IN')} unbilled value
           </div>
         </div>
 
@@ -289,8 +289,8 @@ export const TimeTrackingView = () => {
                       <div className="text-[11px] text-slate-500">{log.taskTitle}</div>
                     </td>
                     <td className="py-3 px-4 font-mono font-bold text-slate-900">{hours} hrs</td>
-                    <td className="py-3 px-4 text-slate-500">${log.hourlyRate}/hr</td>
-                    <td className="py-3 px-4 font-mono font-bold text-emerald-600">${val}</td>
+                    <td className="py-3 px-4 text-slate-500">₹{log.hourlyRate.toLocaleString('en-IN')}/hr</td>
+                    <td className="py-3 px-4 font-mono font-bold text-emerald-600">₹{Number(val).toLocaleString('en-IN')}</td>
                     <td className="py-3 px-4 text-right">
                       {log.invoiced ? (
                         <span className="text-[10px] px-2 py-0.5 rounded font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">

@@ -29,7 +29,7 @@ export const INITIAL_USERS = [
     title: 'Lead Architect & Agency Founder',
     specialization: 'Full-Stack Web Development',
     subRole: 'Backend Architecture',
-    hourlyRate: 150
+    hourlyRate: 12500
   },
   {
     id: 'usr_2',
@@ -40,7 +40,7 @@ export const INITIAL_USERS = [
     title: 'Senior Frontend Engineer',
     specialization: 'Full-Stack Web Development',
     subRole: 'Frontend Engineering',
-    hourlyRate: 125
+    hourlyRate: 10500
   },
   {
     id: 'usr_3',
@@ -51,7 +51,7 @@ export const INITIAL_USERS = [
     title: 'Automation & AI Specialist',
     specialization: 'AI & Cloud Automation',
     subRole: 'AI Bot Pipeline',
-    hourlyRate: 135
+    hourlyRate: 11300
   },
   {
     id: 'usr_4',
@@ -62,7 +62,7 @@ export const INITIAL_USERS = [
     title: 'Senior Backend Engineer',
     specialization: 'Full-Stack Web Development',
     subRole: 'Backend Architecture',
-    hourlyRate: 130
+    hourlyRate: 10900
   },
   {
     id: 'usr_5',
@@ -73,7 +73,7 @@ export const INITIAL_USERS = [
     title: 'Database Architect & DevOps',
     specialization: 'Full-Stack Web Development',
     subRole: 'Database & DevOps',
-    hourlyRate: 140
+    hourlyRate: 11700
   },
   {
     id: 'usr_6',
@@ -84,7 +84,7 @@ export const INITIAL_USERS = [
     title: 'React Native & Mobile Specialist',
     specialization: 'App Development',
     subRole: 'iOS & Android UI',
-    hourlyRate: 120
+    hourlyRate: 10000
   },
   {
     id: 'usr_7',
@@ -95,7 +95,7 @@ export const INITIAL_USERS = [
     title: 'API & Security Engineer',
     specialization: 'Full-Stack Web Development',
     subRole: 'Backend Architecture',
-    hourlyRate: 135
+    hourlyRate: 11300
   },
   {
     id: 'usr_8',
@@ -106,7 +106,7 @@ export const INITIAL_USERS = [
     title: 'UI/UX & Frontend Developer',
     specialization: 'Full-Stack Web Development',
     subRole: 'Frontend Engineering',
-    hourlyRate: 115
+    hourlyRate: 9600
   },
   {
     id: 'usr_9',
@@ -117,7 +117,7 @@ export const INITIAL_USERS = [
     title: 'QA & Test Automation Specialist',
     specialization: 'Full-Stack Web Development',
     subRole: 'QA & Automation',
-    hourlyRate: 110
+    hourlyRate: 9200
   }
 ];
 
@@ -128,7 +128,7 @@ export const INITIAL_SHOWCASE = [
     client: 'Apex Corporation',
     category: 'Full-Stack Web Development',
     year: '2025',
-    budget: '$120,000',
+    budget: '₹1,00,80,000',
     duration: '14 Weeks',
     summary: 'Delivered a full-stack banking suite with React Native mobile frontend, Node.js microservices backend, PostgreSQL database, and automated Playwright QA.',
     heroImage: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&auto=format&fit=crop&q=80',
@@ -159,8 +159,8 @@ export const INITIAL_PROJECTS = [
     clientName: 'Apex Corporation',
     description: 'Complete full-stack platform covering Frontend UI, Backend APIs, Database RDS, and Playwright QA automation.',
     status: 'In Progress',
-    budget: 65000,
-    hourlyRate: 135,
+    budget: 5460000,
+    hourlyRate: 11300,
     startDate: '2026-07-01',
     deadline: '2026-09-30',
     completionPercentage: 65,
@@ -179,8 +179,8 @@ export const INITIAL_PROJECTS = [
     clientName: 'LogiGlobal Freight',
     description: 'Automating multi-cloud Kubernetes clusters with Python FastAPI and AI predictive dispatching.',
     status: 'In Progress',
-    budget: 40000,
-    hourlyRate: 140,
+    budget: 3360000,
+    hourlyRate: 11700,
     startDate: '2026-08-01',
     deadline: '2026-10-15',
     completionPercentage: 40,
@@ -208,6 +208,9 @@ export const INITIAL_TASKS = [
     assigneeName: 'Sarah Jenkins',
     estimatedHours: 24,
     loggedHours: 12.0,
+    progress: 50,
+    pendingProgress: 75,
+    pendingApproval: true,
     dueDate: '2026-08-25'
   },
   {
@@ -223,6 +226,9 @@ export const INITIAL_TASKS = [
     assigneeName: 'David Chen',
     estimatedHours: 20,
     loggedHours: 14.5,
+    progress: 75,
+    pendingProgress: 75,
+    pendingApproval: false,
     dueDate: '2026-08-26'
   },
   {
@@ -238,6 +244,9 @@ export const INITIAL_TASKS = [
     assigneeName: 'Priya Sharma',
     estimatedHours: 16,
     loggedHours: 16.0,
+    progress: 85,
+    pendingProgress: 100,
+    pendingApproval: true,
     dueDate: '2026-08-27'
   },
   {
@@ -253,6 +262,9 @@ export const INITIAL_TASKS = [
     assigneeName: 'Ananya Gupta',
     estimatedHours: 18,
     loggedHours: 4.0,
+    progress: 20,
+    pendingProgress: 20,
+    pendingApproval: false,
     dueDate: '2026-08-30'
   },
   // App Development Service Tasks (Layered)
@@ -269,6 +281,9 @@ export const INITIAL_TASKS = [
     assigneeName: 'James Wilson',
     estimatedHours: 25,
     loggedHours: 10.0,
+    progress: 40,
+    pendingProgress: 40,
+    pendingApproval: false,
     dueDate: '2026-09-01'
   },
   // AI & Cloud Automation Service Tasks (Layered)
@@ -285,6 +300,9 @@ export const INITIAL_TASKS = [
     assigneeName: 'Marcus Reed',
     estimatedHours: 30,
     loggedHours: 18.0,
+    progress: 40,
+    pendingProgress: 65,
+    pendingApproval: true,
     dueDate: '2026-09-02'
   }
 ];
@@ -301,7 +319,7 @@ export const INITIAL_TIME_LOGS = [
     userId: 'usr_2',
     userName: 'Sarah Jenkins',
     durationMinutes: 720,
-    hourlyRate: 125,
+    hourlyRate: 10500,
     billable: true,
     invoiced: false,
     date: '2026-08-19',
@@ -318,7 +336,7 @@ export const INITIAL_TIME_LOGS = [
     userId: 'usr_4',
     userName: 'David Chen',
     durationMinutes: 870,
-    hourlyRate: 130,
+    hourlyRate: 10900,
     billable: true,
     invoiced: false,
     date: '2026-08-20',
@@ -338,15 +356,15 @@ export const INITIAL_INVOICES = [
     issueDate: '2026-08-15',
     dueDate: '2026-08-30',
     paidDate: null,
-    subtotal: 15000.00,
+    subtotal: 1260000,
     taxRate: 10,
-    taxAmount: 1500.00,
-    totalAmount: 16500.00,
+    taxAmount: 126000,
+    totalAmount: 1386000,
     items: [
-      { description: '[Frontend Engineering] Responsive Cart & Payment Integration', hours: 60, rate: 125, amount: 7500 },
-      { description: '[Backend Architecture] OAuth JWT Session Security Endpoints', hours: 57.6, rate: 130, amount: 7500 }
+      { description: '[Frontend Engineering] Responsive Cart & Payment Integration', hours: 60, rate: 10500, amount: 630000 },
+      { description: '[Backend Architecture] OAuth JWT Session Security Endpoints', hours: 57.6, rate: 10900, amount: 627840 }
     ],
-    notes: 'Payment due within 15 days via ACH or Direct Wire.'
+    notes: 'Payment due within 15 days via UPI, NEFT, or RTGS.'
   }
 ];
 

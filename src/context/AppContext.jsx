@@ -277,6 +277,18 @@ export const AppProvider = ({ children }) => {
     }));
   };
 
+  // Dynamic Project Completion Calculation Helper
+  const recalculateProjects = (currentTasks, currentProjects) => {
+    return currentProjects.map(proj => {
+      const projTasks = currentTasks.filter(t => t.projectId === proj.id);
+      if (!projTasks.length) return proj;
+      const avgProgress = Math.round(
+        projTasks.reduce((sum, t) => sum + (t.progress !== undefined ? t.progress : 0), 0) / projTasks.length
+      );
+      return { ...proj, completionPercentage: avgProgress };
+    });
+  };
+
   const updateTaskAssignee = (taskId, newAssigneeId) => {
     const assignee = users.find(u => u.id === newAssigneeId);
     setTasks(prev => prev.map(t => t.id === taskId ? {
@@ -287,7 +299,121 @@ export const AppProvider = ({ children }) => {
   };
 
   const updateTaskStatus = (taskId, newStatus) => {
-    setTasks(prev => prev.map(t => t.id === taskId ? { ...t, status: newStatus } : t));
+    setTasks(prevTasks => {
+      const newTasks = prevTasks.map(t => {
+        if (t.id === taskId) {
+          const newProg = newStatus === 'Done' ? 100 : (newStatus === 'In Review' ? 85 : (newStatus === 'In Progress' ? Math.max(t.progress || 0, 30) : 0));
+          return { ...t, status: newStatus, progress: newProg, pendingProgress: newProg, pendingApproval: false };
+        }
+        return t;
+      });
+      setProjects(prevProjects => recalculateProjects(newTasks, prevProjects));
+      return newTasks;
+    });
+  };
+
+  // Developer progress update request (Dev changes slider / status)
+  const updateTaskProgressRequest = (taskId, newProgress) => {
+    const progressVal = Number(newProgress);
+    setTasks(prevTasks => {
+      const newTasks = prevTasks.map(t => {
+        if (t.id === taskId) {
+          if (currentUser.role === 'admin') {
+            // Admin directly approves & saves
+            const newStatus = progressVal === 100 ? 'Done' : (progressVal > 0 ? 'In Progress' : 'To Do');
+            return {
+              ...t,
+              progress: progressVal,
+              pendingProgress: progressVal,
+              pendingApproval: false,
+              status: newStatus
+            };
+          } else {
+            // Dev requests progress update (Pending Admin Approval)
+            return {
+              ...t,
+              pendingProgress: progressVal,
+              pendingApproval: true
+            };
+          }
+        }
+        return t;
+      });
+      setProjects(prevProjects => recalculateProjects(newTasks, prevProjects));
+      return newTasks;
+    });
+
+    const targetTask = tasks.find(t => t.id === taskId);
+    if (currentUser.role !== 'admin') {
+      setActivities(prev => [{
+        id: `act_${Date.now()}`,
+        user: currentUser.name,
+        action: `requested ${progressVal}% progress update on task:`,
+        target: targetTask ? targetTask.title : 'Task',
+        time: 'Just now'
+      }, ...prev]);
+    }
+  };
+
+  // Admin saves and approves task progress
+  const approveTaskProgress = (taskId, customApprovedProgress) => {
+    setTasks(prevTasks => {
+      const newTasks = prevTasks.map(t => {
+        if (t.id === taskId) {
+          const approvedVal = customApprovedProgress !== undefined ? Number(customApprovedProgress) : t.pendingProgress;
+          const newStatus = approvedVal === 100 ? 'Done' : (approvedVal > 0 ? 'In Progress' : 'To Do');
+          return {
+            ...t,
+            progress: approvedVal,
+            pendingProgress: approvedVal,
+            pendingApproval: false,
+            status: newStatus
+          };
+        }
+        return t;
+      });
+      setProjects(prevProjects => recalculateProjects(newTasks, prevProjects));
+      return newTasks;
+    });
+
+    const targetTask = tasks.find(t => t.id === taskId);
+    setActivities(prev => [{
+      id: `act_${Date.now()}`,
+      user: `${currentUser.name} (Admin)`,
+      action: `saved & approved task progress update:`,
+      target: targetTask ? `${targetTask.title} (${customApprovedProgress !== undefined ? customApprovedProgress : targetTask.pendingProgress}%)` : 'Task',
+      time: 'Just now'
+    }, ...prev]);
+  };
+
+  // Admin batch saves and approves all pending progress requests
+  const approveAllPendingProgress = () => {
+    setTasks(prevTasks => {
+      const newTasks = prevTasks.map(t => {
+        if (t.pendingApproval) {
+          const approvedVal = t.pendingProgress;
+          const newStatus = approvedVal === 100 ? 'Done' : (approvedVal > 0 ? 'In Progress' : 'To Do');
+          return {
+            ...t,
+            progress: approvedVal,
+            pendingProgress: approvedVal,
+            pendingApproval: false,
+            status: newStatus
+          };
+        }
+        return t;
+      });
+      setProjects(prevProjects => recalculateProjects(newTasks, prevProjects));
+      return newTasks;
+    });
+
+    setActivities(prev => [{
+      id: `act_${Date.now()}`,
+      user: `${currentUser.name} (Admin)`,
+      action: 'saved & approved all pending developer progress updates',
+      target: 'Project Tasks Board',
+      time: 'Just now'
+    }, ...prev]);
   };
 
   const addTimeLog = (logData) => {
@@ -396,6 +522,11 @@ export const AppProvider = ({ children }) => {
     }, 600);
   };
 
+  // Sync project completion percentages with tasks on initial load & task changes
+  useEffect(() => {
+    setProjects(prevProjects => recalculateProjects(tasks, prevProjects));
+  }, [tasks]);
+
   return (
     <AppContext.Provider value={{
       users,
@@ -416,6 +547,9 @@ export const AppProvider = ({ children }) => {
       addTask,
       updateTaskAssignee,
       updateTaskStatus,
+      updateTaskProgressRequest,
+      approveTaskProgress,
+      approveAllPendingProgress,
       timeLogs,
       addTimeLog,
       taskTimers,

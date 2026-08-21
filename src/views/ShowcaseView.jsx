@@ -32,7 +32,7 @@ export const ShowcaseView = () => {
         {/* Quick Stats */}
         <div className="grid grid-cols-3 gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200 shrink-0">
           <div className="text-center px-2">
-            <div className="text-xl font-bold text-indigo-600">$270K+</div>
+            <div className="text-xl font-bold text-indigo-600">₹2.27Cr+</div>
             <div className="text-[10px] text-slate-500 font-semibold uppercase">Delivered Value</div>
           </div>
           <div className="text-center px-2 border-x border-slate-200">

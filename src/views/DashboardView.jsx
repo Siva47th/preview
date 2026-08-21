@@ -1,7 +1,7 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
 import {
-  DollarSign,
+  IndianRupee,
   FolderKanban,
   Clock,
   FileText,
@@ -83,11 +83,11 @@ export const DashboardView = () => {
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-500">Total Revenue Collected</span>
             <div className="w-9 h-9 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
-              <DollarSign className="w-5 h-5" />
+              <IndianRupee className="w-5 h-5" />
             </div>
           </div>
           <div>
-            <div className="text-2xl font-extrabold text-slate-900">${totalRevenue.toLocaleString()}</div>
+            <div className="text-2xl font-extrabold text-slate-900">₹{totalRevenue.toLocaleString('en-IN')}</div>
             <div className="text-[11px] text-emerald-600 mt-1 flex items-center gap-1 font-medium">
               <TrendingUp className="w-3.5 h-3.5" /> +18.4% from last sprint
             </div>
@@ -121,7 +121,7 @@ export const DashboardView = () => {
           <div>
             <div className="text-2xl font-extrabold text-slate-900">{totalHours} hrs</div>
             <div className="text-[11px] text-indigo-600 mt-1 font-mono font-medium">
-              ${unbilledVal.toLocaleString()} unbilled value
+              ₹{unbilledVal.toLocaleString('en-IN')} unbilled value
             </div>
           </div>
         </div>
@@ -135,7 +135,7 @@ export const DashboardView = () => {
             </div>
           </div>
           <div>
-            <div className="text-2xl font-extrabold text-slate-900">${pendingRevenue.toLocaleString()}</div>
+            <div className="text-2xl font-extrabold text-slate-900">₹{pendingRevenue.toLocaleString('en-IN')}</div>
             <div className="text-[11px] text-amber-600 mt-1">
               {invoices.filter(i => i.status === 'Sent').length} invoices awaiting payment
             </div>
@@ -176,7 +176,7 @@ export const DashboardView = () => {
                     <p className="text-xs text-slate-500 mt-0.5">{proj.clientName}</p>
                   </div>
                   <div className="text-right">
-                    <div className="text-xs font-mono font-bold text-indigo-600">${proj.budget.toLocaleString()}</div>
+                    <div className="text-xs font-mono font-bold text-indigo-600">₹{proj.budget.toLocaleString('en-IN')}</div>
                     <div className="text-[10px] text-slate-400">Deadline: {proj.deadline}</div>
                   </div>
                 </div>

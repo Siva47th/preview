@@ -106,7 +106,7 @@ export const ClientPortalView = () => {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-slate-500">Total Due:</span>
-                    <span className="font-mono font-bold text-emerald-700 text-sm">${inv.totalAmount.toLocaleString()}</span>
+                    <span className="font-mono font-bold text-emerald-700 text-sm">₹{inv.totalAmount.toLocaleString('en-IN')}</span>
                   </div>
 
                   {inv.status !== 'Paid' && (

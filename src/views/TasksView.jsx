@@ -11,6 +11,9 @@ export const TasksView = () => {
     addTask,
     updateTaskAssignee,
     updateTaskStatus,
+    updateTaskProgressRequest,
+    approveTaskProgress,
+    approveAllPendingProgress,
     taskTimers,
     startTaskTimer,
     pauseTaskTimer,
@@ -109,6 +112,41 @@ export const TasksView = () => {
           </select>
         </div>
       </div>
+
+      {/* ADMIN SAVE & APPROVE PROGRESS BANNER */}
+      {tasks.some(t => t.pendingApproval) && (
+        <div className="p-4 rounded-xl bg-amber-50 border border-amber-300 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-700 font-bold shrink-0">
+              <Sparkles className="w-5 h-5 animate-pulse" />
+            </div>
+            <div>
+              <div className="text-xs font-extrabold text-amber-900 flex items-center gap-2">
+                <span>Developer Progress Updates Pending Approval</span>
+                <span className="bg-amber-200 text-amber-900 text-[10px] px-2 py-0.5 rounded-full font-black">
+                  {tasks.filter(t => t.pendingApproval).length} Pending
+                </span>
+              </div>
+              <p className="text-[11px] text-amber-800 mt-0.5">
+                Developers have submitted progress updates. Save & approve to dynamically update project completion percentages.
+              </p>
+            </div>
+          </div>
+
+          {isAdmin ? (
+            <button
+              onClick={approveAllPendingProgress}
+              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-extrabold shadow flex items-center gap-1.5 transition shrink-0"
+            >
+              <ShieldCheck className="w-4 h-4" /> Save & Approve All Progress Updates
+            </button>
+          ) : (
+            <span className="text-[11px] text-amber-800 font-semibold italic bg-amber-100/60 px-3 py-1 rounded-lg border border-amber-200">
+              Awaiting Admin Review & Approval
+            </span>
+          )}
+        </div>
+      )}
 
       {/* LEVEL 1: SERVICES PROVIDED TABS */}
       <div className="flex items-center gap-2 overflow-x-auto border-b border-slate-200 pb-3">
@@ -238,6 +276,74 @@ export const TasksView = () => {
                               <User className="w-3.5 h-3.5 text-indigo-600" /> {task.assigneeName}
                             </div>
                           )}
+                        </div>
+
+                        {/* DYNAMIC TASK PROGRESS & ADMIN SAVE & APPROVE CONTROL */}
+                        <div className="p-2.5 rounded-lg bg-white border border-slate-200 space-y-2">
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="font-bold text-slate-700 text-[11px] flex items-center gap-1">
+                              <Sparkles className="w-3.5 h-3.5 text-indigo-600" /> Progress:
+                            </span>
+                            <span className="font-mono font-extrabold text-indigo-700 text-xs">
+                              {task.progress || 0}% Approved
+                            </span>
+                          </div>
+
+                          {/* Visual Progress Bar */}
+                          <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden border border-slate-200">
+                            <div
+                              className={`h-full transition-all duration-300 ${
+                                (task.progress || 0) === 100 ? 'bg-emerald-500' : 'bg-indigo-600'
+                              }`}
+                              style={{ width: `${task.progress || 0}%` }}
+                            ></div>
+                          </div>
+
+                          {/* Pending Admin Approval Badge */}
+                          {task.pendingApproval && (
+                            <div className="p-1.5 rounded bg-amber-50 border border-amber-200 text-[10px] text-amber-800 font-semibold flex items-center justify-between">
+                              <span>⏳ Dev requested: <strong>{task.pendingProgress}%</strong></span>
+                              <span className="text-[9px] bg-amber-200 text-amber-900 px-1.5 py-0.5 rounded font-extrabold">Pending</span>
+                            </div>
+                          )}
+
+                          {/* Interactive Slider & Approval Buttons */}
+                          <div className="space-y-1.5 pt-1">
+                            <div className="flex items-center justify-between text-[10px] text-slate-500">
+                              <span>{isAdmin ? 'Set / Review Progress:' : 'Update Task Progress:'}</span>
+                              <span className="font-mono font-bold text-slate-900">{task.pendingProgress ?? task.progress ?? 0}%</span>
+                            </div>
+                            <input
+                              type="range"
+                              min="0"
+                              max="100"
+                              step="5"
+                              value={task.pendingProgress ?? task.progress ?? 0}
+                              onChange={(e) => updateTaskProgressRequest(task.id, e.target.value)}
+                              className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                            />
+
+                            {isAdmin ? (
+                              <button
+                                onClick={() => approveTaskProgress(task.id)}
+                                className={`w-full py-1 rounded text-[11px] font-extrabold flex items-center justify-center gap-1 transition shadow-sm ${
+                                  task.pendingApproval
+                                    ? 'bg-emerald-600 hover:bg-emerald-500 text-white animate-pulse'
+                                    : 'bg-indigo-600 hover:bg-indigo-500 text-white'
+                                }`}
+                              >
+                                <ShieldCheck className="w-3.5 h-3.5" />
+                                <span>{task.pendingApproval ? `✓ Save & Approve Dev's ${task.pendingProgress}%` : 'Save & Approve Progress'}</span>
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() => updateTaskProgressRequest(task.id, task.pendingProgress ?? task.progress ?? 0)}
+                                className="w-full py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-[10px] font-bold transition flex items-center justify-center gap-1 border border-slate-300"
+                              >
+                                <span>Submit Progress Update</span>
+                              </button>
+                            )}
+                          </div>
                         </div>
 
                         {/* LEVEL 5: ADMIN-CONTROLLED PER-TASK STOPWATCH */}

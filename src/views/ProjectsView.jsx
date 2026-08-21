@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { Plus, FolderKanban, DollarSign, Calendar, Clock, CheckCircle2, Search, ArrowRight, Layers, Users, UserCheck } from 'lucide-react';
+import { Plus, FolderKanban, IndianRupee, Calendar, Clock, CheckCircle2, Search, ArrowRight, Layers, Users, UserCheck, Sparkles, ShieldCheck } from 'lucide-react';
 
 export const ProjectsView = () => {
   const {
@@ -10,7 +10,10 @@ export const ProjectsView = () => {
     currentUser,
     servicesCatalog,
     selectedServiceId,
-    users
+    users,
+    tasks,
+    approveAllPendingProgress,
+    approveTaskProgress
   } = useApp();
 
   // Derive all sub-role layers from servicesCatalog
@@ -94,6 +97,41 @@ export const ProjectsView = () => {
         )}
       </div>
 
+      {/* ADMIN SAVE & APPROVE PROGRESS BANNER */}
+      {tasks.some(t => t.pendingApproval) && (
+        <div className="p-4 rounded-xl bg-amber-50 border border-amber-300 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-700 font-bold shrink-0">
+              <Sparkles className="w-5 h-5 animate-pulse" />
+            </div>
+            <div>
+              <div className="text-xs font-extrabold text-amber-900 flex items-center gap-2">
+                <span>Developer Progress Updates Pending Admin Approval</span>
+                <span className="bg-amber-200 text-amber-900 text-[10px] px-2 py-0.5 rounded-full font-black">
+                  {tasks.filter(t => t.pendingApproval).length} Pending
+                </span>
+              </div>
+              <p className="text-[11px] text-amber-800 mt-0.5">
+                Developers have submitted task progress updates. Save & approve to dynamically update overall project completion percentages.
+              </p>
+            </div>
+          </div>
+
+          {isAdmin ? (
+            <button
+              onClick={approveAllPendingProgress}
+              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-extrabold shadow flex items-center gap-1.5 transition shrink-0"
+            >
+              <ShieldCheck className="w-4 h-4" /> Save & Approve All Progress Updates
+            </button>
+          ) : (
+            <span className="text-[11px] text-amber-800 font-semibold italic bg-amber-100/60 px-3 py-1 rounded-lg border border-amber-200">
+              Awaiting Admin Review & Approval
+            </span>
+          )}
+        </div>
+      )}
+
       {/* Filter Bar */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 pb-3">
         <div className="flex items-center gap-2">
@@ -143,19 +181,73 @@ export const ProjectsView = () => {
                 {project.description}
               </p>
 
-              {/* Progress */}
-              <div className="space-y-1">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-slate-500 font-medium">Sprint Completion</span>
-                  <span className="font-bold text-slate-900">{project.completionPercentage}%</span>
-                </div>
-                <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
-                  <div
-                    className="h-full bg-indigo-600 transition-all duration-300"
-                    style={{ width: `${project.completionPercentage}%` }}
-                  ></div>
-                </div>
-              </div>
+              {/* Dynamic Project Completion Calculation */}
+              {(() => {
+                const projTasks = tasks.filter(t => t.projectId === project.id);
+                const pendingProjTasks = projTasks.filter(t => t.pendingApproval);
+
+                return (
+                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-slate-700 font-bold flex items-center gap-1.5 text-xs">
+                        <Sparkles className="w-4 h-4 text-indigo-600" /> Dynamic Completion:
+                      </span>
+                      <span className="font-extrabold font-mono text-indigo-700 text-sm">{project.completionPercentage}%</span>
+                    </div>
+
+                    <div className="w-full h-2.5 rounded-full bg-slate-200 overflow-hidden border border-slate-300">
+                      <div
+                        className={`h-full transition-all duration-500 ${
+                          project.completionPercentage === 100 ? 'bg-emerald-500' : 'bg-indigo-600'
+                        }`}
+                        style={{ width: `${project.completionPercentage}%` }}
+                      ></div>
+                    </div>
+
+                    <div className="flex items-center justify-between text-[10px] text-slate-500 pt-0.5 font-medium">
+                      <span>Calculated live from <strong>{projTasks.length}</strong> sub-tasks</span>
+                      <span className="text-indigo-700 font-bold">
+                        {projTasks.filter(t => (t.progress || 0) === 100).length}/{projTasks.length} Completed
+                      </span>
+                    </div>
+
+                    {/* Pending Dev Progress Updates */}
+                    {pendingProjTasks.length > 0 && (
+                      <div className="mt-2 p-2 rounded-lg bg-amber-50 border border-amber-300 space-y-1.5">
+                        <div className="text-[11px] font-bold text-amber-900 flex items-center justify-between">
+                          <span>⏳ {pendingProjTasks.length} Dev Update(s) Pending Approval</span>
+                          {isAdmin && (
+                            <button
+                              onClick={() => pendingProjTasks.forEach(t => approveTaskProgress(t.id))}
+                              className="px-2 py-0.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-[10px] font-extrabold transition flex items-center gap-1 shadow-sm"
+                            >
+                              <ShieldCheck className="w-3 h-3" /> Approve All
+                            </button>
+                          )}
+                        </div>
+                        <div className="space-y-1 text-[10px] text-amber-800 font-medium">
+                          {pendingProjTasks.map(t => (
+                            <div key={t.id} className="flex items-center justify-between bg-white/90 p-1.5 rounded border border-amber-200">
+                              <span className="truncate max-w-[180px] font-semibold text-slate-900">{t.title}</span>
+                              <div className="flex items-center gap-1.5 shrink-0">
+                                <span className="font-mono text-slate-600">{t.progress}% → <strong className="text-amber-900">{t.pendingProgress}%</strong></span>
+                                {isAdmin && (
+                                  <button
+                                    onClick={() => approveTaskProgress(t.id)}
+                                    className="px-1.5 py-0.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-[9px] font-bold transition"
+                                  >
+                                    Approve
+                                  </button>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
 
               {/* Sub-Role Dev Assignment Matrix */}
               <div className="space-y-2 pt-2 border-t border-slate-100">
@@ -180,12 +272,12 @@ export const ProjectsView = () => {
               {/* Specs */}
               <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100 text-xs">
                 <div className="flex items-center gap-1.5 text-slate-600">
-                  <DollarSign className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Budget: <strong className="text-slate-900">${project.budget.toLocaleString()}</strong></span>
+                  <IndianRupee className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Budget: <strong className="text-slate-900">₹{project.budget.toLocaleString('en-IN')}</strong></span>
                 </div>
                 <div className="flex items-center gap-1.5 text-slate-600">
                   <Clock className="w-3.5 h-3.5 text-indigo-600" />
-                  <span>Rate: <strong className="text-slate-900">${project.hourlyRate}/hr</strong></span>
+                  <span>Rate: <strong className="text-slate-900">₹{project.hourlyRate.toLocaleString('en-IN')}/hr</strong></span>
                 </div>
               </div>
             </div>
@@ -263,7 +355,7 @@ export const ProjectsView = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">Total Budget ($)</label>
+                  <label className="block text-slate-700 font-semibold mb-1">Total Budget (₹)</label>
                   <input
                     type="number"
                     value={newBudget}
@@ -272,7 +364,7 @@ export const ProjectsView = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">Hourly Billable Rate ($)</label>
+                  <label className="block text-slate-700 font-semibold mb-1">Hourly Billable Rate (₹)</label>
                   <input
                     type="number"
                     value={newRate}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { FileText, DollarSign, Printer, CheckCircle, Clock, AlertCircle, Plus, Send } from 'lucide-react';
+import { FileText, IndianRupee, Printer, CheckCircle, Clock, AlertCircle, Plus, Send } from 'lucide-react';
 
 export const InvoicesView = () => {
   const { invoices, updateInvoiceStatus, projects, createInvoiceFromTimeLogs, currentUser } = useApp();
@@ -99,10 +99,10 @@ export const InvoicesView = () => {
                     <div>Issue: {inv.issueDate}</div>
                     <div className="text-slate-400">Due: {inv.dueDate}</div>
                   </td>
-                  <td className="py-3.5 px-4 text-slate-700 font-mono">${inv.subtotal.toLocaleString()}</td>
-                  <td className="py-3.5 px-4 text-slate-500 font-mono">${inv.taxAmount.toLocaleString()}</td>
+                  <td className="py-3.5 px-4 text-slate-700 font-mono">₹{inv.subtotal.toLocaleString('en-IN')}</td>
+                  <td className="py-3.5 px-4 text-slate-500 font-mono">₹{inv.taxAmount.toLocaleString('en-IN')}</td>
                   <td className="py-3.5 px-4 font-mono font-bold text-emerald-600 text-sm">
-                    ${inv.totalAmount.toLocaleString()}
+                    ₹{inv.totalAmount.toLocaleString('en-IN')}
                   </td>
                   <td className="py-3.5 px-4">
                     <span className={`text-[10px] px-2.5 py-1 rounded font-bold border ${getStatusBadge(inv.status)}`}>
@@ -196,8 +196,8 @@ export const InvoicesView = () => {
                       <tr key={idx}>
                         <td className="py-2.5 px-3">{item.description}</td>
                         <td className="py-2.5 px-3 text-center font-mono">{item.hours}</td>
-                        <td className="py-2.5 px-3 text-right font-mono">${item.rate}/hr</td>
-                        <td className="py-2.5 px-3 text-right font-mono font-bold text-slate-900">${item.amount.toLocaleString()}</td>
+                        <td className="py-2.5 px-3 text-right font-mono">₹{item.rate.toLocaleString('en-IN')}/hr</td>
+                        <td className="py-2.5 px-3 text-right font-mono font-bold text-slate-900">₹{item.amount.toLocaleString('en-IN')}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -209,15 +209,15 @@ export const InvoicesView = () => {
             <div className="flex flex-col items-end space-y-1 text-xs pt-2">
               <div className="w-64 flex justify-between text-slate-500">
                 <span>Subtotal:</span>
-                <span className="font-mono text-slate-900">${selectedInvoice.subtotal.toLocaleString()}</span>
+                <span className="font-mono text-slate-900">₹{selectedInvoice.subtotal.toLocaleString('en-IN')}</span>
               </div>
               <div className="w-64 flex justify-between text-slate-500">
                 <span>Tax Rate (10%):</span>
-                <span className="font-mono text-slate-900">${selectedInvoice.taxAmount.toLocaleString()}</span>
+                <span className="font-mono text-slate-900">₹{selectedInvoice.taxAmount.toLocaleString('en-IN')}</span>
               </div>
               <div className="w-64 flex justify-between pt-2 border-t border-slate-200 font-bold text-sm text-slate-900">
                 <span>Total Amount Due:</span>
-                <span className="font-mono text-emerald-600">${selectedInvoice.totalAmount.toLocaleString()}</span>
+                <span className="font-mono text-emerald-600">₹{selectedInvoice.totalAmount.toLocaleString('en-IN')}</span>
               </div>
             </div>
 
