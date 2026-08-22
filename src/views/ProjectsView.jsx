@@ -6,6 +6,7 @@ export const ProjectsView = () => {
   const {
     projects,
     addProject,
+    closeAndArchiveProject,
     setActiveTab,
     currentUser,
     servicesCatalog,
@@ -243,6 +244,18 @@ export const ProjectsView = () => {
                             </div>
                           ))}
                         </div>
+                      </div>
+                    )}
+
+                    {/* Admin Close Project Button */}
+                    {isAdmin && project.completionPercentage === 100 && !project.archived && (
+                      <div className="pt-2 border-t border-slate-200">
+                        <button
+                          onClick={() => closeAndArchiveProject(project.id)}
+                          className="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-extrabold shadow flex items-center justify-center gap-1.5 transition"
+                        >
+                          <CheckCircle className="w-4 h-4" /> Close Project & Archive to History
+                        </button>
                       </div>
                     )}
                   </div>

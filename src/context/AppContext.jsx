@@ -557,6 +557,31 @@ export const AppProvider = ({ children }) => {
     }, 600);
   };
 
+  // Admin closes & archives completed project
+  const closeAndArchiveProject = (projectId) => {
+    setProjects(prevProjects => {
+      return prevProjects.map(p => {
+        if (p.id === projectId) {
+          return {
+            ...p,
+            status: 'Completed',
+            archived: true,
+            completionPercentage: 100
+          };
+        }
+        return p;
+      });
+    });
+
+    setActivities(prev => [{
+      id: `act_${Date.now()}`,
+      user: `${currentUser.name} (Admin)`,
+      action: 'closed and archived completed project to history:',
+      target: projects.find(p => p.id === projectId)?.name || 'Project',
+      time: 'Just now'
+    }, ...prev]);
+  };
+
   // Sync project completion percentages with tasks on initial load & task changes
   useEffect(() => {
     setProjects(prevProjects => recalculateProjects(tasks, prevProjects));
@@ -578,6 +603,7 @@ export const AppProvider = ({ children }) => {
       projects,
       addProject,
       updateProject,
+      closeAndArchiveProject,
       tasks,
       addTask,
       updateTaskAssignee,

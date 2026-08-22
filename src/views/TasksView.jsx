@@ -14,6 +14,7 @@ export const TasksView = () => {
     updateTaskProgressRequest,
     approveTaskProgress,
     approveAllPendingProgress,
+    closeAndArchiveProject,
     taskTimers,
     startTaskTimer,
     pauseTaskTimer,
@@ -25,6 +26,7 @@ export const TasksView = () => {
   const [selectedProjectId, setSelectedProjectId] = useState('All');
   const [showAddModal, setShowAddModal] = useState(false);
   const [modalLayerTarget, setModalLayerTarget] = useState('Frontend');
+  const [hideCompletedProjects, setHideCompletedProjects] = useState(true);
 
   const isAdmin = currentUser.role === 'admin';
 
@@ -40,11 +42,13 @@ export const TasksView = () => {
   // Selected Service metadata
   const currentServiceObj = servicesCatalog.find(s => s.name === activeServiceId) || servicesCatalog[0];
 
-  // Filter tasks for active service and selected project
+  // Filter tasks for active service, selected project, and non-archived status
   const serviceTasks = tasks.filter(t => {
+    const proj = projects.find(p => p.id === t.projectId);
     const matchesService = activeServiceId === 'All' || t.service === activeServiceId;
     const matchesProj = selectedProjectId === 'All' || t.projectId === selectedProjectId;
-    return matchesService && matchesProj;
+    const isNotArchived = !hideCompletedProjects || (proj ? proj.status !== 'Completed' && !proj.archived : true);
+    return matchesService && matchesProj && isNotArchived;
   });
 
   const handleCreateTask = (e) => {
@@ -99,6 +103,18 @@ export const TasksView = () => {
         </div>
 
         <div className="flex items-center gap-3">
+          {/* Hide/Show Closed Projects Toggle */}
+          <button
+            onClick={() => setHideCompletedProjects(!hideCompletedProjects)}
+            className={`px-3 py-2 rounded-lg text-xs font-bold border transition flex items-center gap-1.5 shadow-sm ${
+              hideCompletedProjects
+                ? 'bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200'
+                : 'bg-indigo-50 text-indigo-700 border-indigo-300'
+            }`}
+          >
+            <span>{hideCompletedProjects ? '👁️ Show Closed Project Tasks' : '🙈 Hide Closed Projects'}</span>
+          </button>
+
           {/* Project Filter */}
           <select
             value={selectedProjectId}
@@ -112,6 +128,40 @@ export const TasksView = () => {
           </select>
         </div>
       </div>
+
+      {/* ADMIN CLOSE & ARCHIVE COMPLETED PROJECTS BANNER */}
+      {isAdmin && projects.some(p => p.completionPercentage === 100 && !p.archived) && (
+        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-300 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg bg-emerald-100 border border-emerald-300 flex items-center justify-center text-emerald-700 font-bold shrink-0">
+              <CheckSquare className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="text-xs font-extrabold text-emerald-950 flex items-center gap-2">
+                <span>Completed Project Ready for Closing & Archive</span>
+                <span className="bg-emerald-200 text-emerald-950 text-[10px] px-2 py-0.5 rounded-full font-black">
+                  100% Done
+                </span>
+              </div>
+              <p className="text-[11px] text-emerald-800 mt-0.5">
+                Admin can close finished projects to remove their tasks from the active workspace board and archive them to Project History.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 flex-wrap">
+            {projects.filter(p => p.completionPercentage === 100 && !p.archived).map(p => (
+              <button
+                key={p.id}
+                onClick={() => closeAndArchiveProject(p.id)}
+                className="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg text-xs font-extrabold shadow flex items-center gap-1.5 transition shrink-0"
+              >
+                <CheckSquare className="w-4 h-4" /> Close & Archive {p.clientName}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* ADMIN SAVE & APPROVE PROGRESS BANNER */}
       {tasks.some(t => t.pendingApproval) && (
