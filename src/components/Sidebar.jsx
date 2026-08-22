@@ -34,8 +34,7 @@ export const Sidebar = () => {
     { id: 'timetracking', label: 'Time Tracking', icon: Clock },
     { id: 'invoices', label: 'Invoices & Billing', icon: FileText },
     { id: 'adminusers', label: 'Dev Management', icon: Users, badge: 'Admin' },
-    { id: 'showcase', label: 'Project History', icon: History },
-    { id: 'clientportal', label: 'Client Open Explore', icon: ShieldCheck, badge: 'Preview' }
+    { id: 'showcase', label: 'Project History', icon: History }
   ];
 
   return (

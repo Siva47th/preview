@@ -8,7 +8,6 @@ import { TasksView } from './views/TasksView';
 import { TimeTrackingView } from './views/TimeTrackingView';
 import { InvoicesView } from './views/InvoicesView';
 import { ShowcaseView } from './views/ShowcaseView';
-import { ClientPortalView } from './views/ClientPortalView';
 import { AdminUsersView } from './views/AdminUsersView';
 import { ChatbotWidget } from './views/ChatbotWidget';
 
@@ -24,7 +23,6 @@ const MainContent = () => {
       case 'invoices': return <InvoicesView />;
       case 'adminusers': return <AdminUsersView />;
       case 'showcase': return <ShowcaseView />;
-      case 'clientportal': return <ClientPortalView />;
       default: return <DashboardView />;
     }
   };

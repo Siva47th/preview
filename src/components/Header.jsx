@@ -16,7 +16,6 @@ export const Header = () => {
       case 'invoices': return { main: 'Invoicing & Financial Ledger', sub: 'Generate, send, and audit client invoices' };
       case 'adminusers': return { main: 'Dev Team Management', sub: 'Admin control for 9-member dev team and field assignments' };
       case 'showcase': return { main: 'Project History & Archive Audit', sub: 'Inspect completed client projects, sub-role team logs, and archived deliverables' };
-      case 'clientportal': return { main: 'Client Open Preview', sub: 'Restricted client-facing progress and billing interface' };
       default: return { main: 'Freewheel Workspace', sub: 'Agency Operations System' };
     }
   };
