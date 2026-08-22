@@ -144,7 +144,7 @@ export const InvoicesView = () => {
           <p className="text-xs text-slate-500">Generate, edit, and manage client invoices and payment status in real-time</p>
         </div>
 
-        {currentUser.role !== 'client' && (
+        {isAdmin && (
           <button
             onClick={() => setShowGenerateModal(true)}
             className="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-bold shadow-sm flex items-center gap-1.5 transition"
@@ -218,23 +218,13 @@ export const InvoicesView = () => {
                       View
                     </button>
 
+                    {/* Admin Only Payment Status Toggle */}
                     {isAdmin && (
-                      <button
-                        onClick={() => handleEditClick(inv)}
-                        className="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-800 text-slate-700 hover:text-white font-semibold transition text-xs"
-                        title="Edit Invoice"
-                      >
-                        <Edit3 className="w-3.5 h-3.5 inline" /> Edit
-                      </button>
-                    )}
-
-                    {/* Payment Status Action Button for All Non-Client Team Members */}
-                    {currentUser.role !== 'client' && (
                       inv.status !== 'Paid' ? (
                         <button
                           onClick={() => updateInvoiceStatus(inv.id, 'Paid')}
                           className="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold transition text-xs shadow-sm"
-                          title="Record client payment"
+                          title="Record client payment (Admin Only)"
                         >
                           Mark Paid
                         </button>
@@ -242,7 +232,7 @@ export const InvoicesView = () => {
                         <button
                           onClick={() => updateInvoiceStatus(inv.id, 'Sent')}
                           className="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition text-xs border border-slate-200"
-                          title="Reopen payment status to Sent"
+                          title="Reopen payment status to Sent (Admin Only)"
                         >
                           Mark Unpaid
                         </button>
@@ -251,9 +241,19 @@ export const InvoicesView = () => {
 
                     {isAdmin && (
                       <button
+                        onClick={() => handleEditClick(inv)}
+                        className="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-800 text-slate-700 hover:text-white font-semibold transition text-xs"
+                        title="Edit Invoice (Admin Only)"
+                      >
+                        <Edit3 className="w-3.5 h-3.5 inline" /> Edit
+                      </button>
+                    )}
+
+                    {isAdmin && (
+                      <button
                         onClick={() => handleDelete(inv.id, inv.invoiceNumber)}
                         className="px-2 py-1.5 rounded-lg bg-red-50 hover:bg-red-600 border border-red-200 hover:border-red-600 text-red-600 hover:text-white font-semibold transition text-xs"
-                        title="Delete Invoice"
+                        title="Delete Invoice (Admin Only)"
                       >
                         <Trash2 className="w-3.5 h-3.5 inline" />
                       </button>
@@ -279,8 +279,8 @@ export const InvoicesView = () => {
                 <span className="font-mono text-xs text-slate-500">ID: {selectedInvoice.id}</span>
               </div>
               <div className="flex items-center gap-2 flex-wrap">
-                {/* Non-Admin & Admin Payment Status Toggle */}
-                {currentUser.role !== 'client' && (
+                {/* Admin Only Payment Status Toggle inside Modal */}
+                {isAdmin && (
                   selectedInvoice.status !== 'Paid' ? (
                     <button
                       onClick={() => {
