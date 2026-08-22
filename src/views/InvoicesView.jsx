@@ -228,13 +228,25 @@ export const InvoicesView = () => {
                       </button>
                     )}
 
-                    {inv.status !== 'Paid' && currentUser.role !== 'client' && (
-                      <button
-                        onClick={() => updateInvoiceStatus(inv.id, 'Paid')}
-                        className="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold transition text-xs"
-                      >
-                        Mark Paid
-                      </button>
+                    {/* Payment Status Action Button for All Non-Client Team Members */}
+                    {currentUser.role !== 'client' && (
+                      inv.status !== 'Paid' ? (
+                        <button
+                          onClick={() => updateInvoiceStatus(inv.id, 'Paid')}
+                          className="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold transition text-xs shadow-sm"
+                          title="Record client payment"
+                        >
+                          Mark Paid
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => updateInvoiceStatus(inv.id, 'Sent')}
+                          className="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition text-xs border border-slate-200"
+                          title="Reopen payment status to Sent"
+                        >
+                          Mark Unpaid
+                        </button>
+                      )
                     )}
 
                     {isAdmin && (
@@ -266,7 +278,32 @@ export const InvoicesView = () => {
                 </span>
                 <span className="font-mono text-xs text-slate-500">ID: {selectedInvoice.id}</span>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 flex-wrap">
+                {/* Non-Admin & Admin Payment Status Toggle */}
+                {currentUser.role !== 'client' && (
+                  selectedInvoice.status !== 'Paid' ? (
+                    <button
+                      onClick={() => {
+                        updateInvoiceStatus(selectedInvoice.id, 'Paid');
+                        setSelectedInvoice({ ...selectedInvoice, status: 'Paid' });
+                      }}
+                      className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow-sm"
+                    >
+                      Mark as Paid
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        updateInvoiceStatus(selectedInvoice.id, 'Sent');
+                        setSelectedInvoice({ ...selectedInvoice, status: 'Sent' });
+                      }}
+                      className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold border border-slate-200 transition"
+                    >
+                      Mark as Unpaid (Sent)
+                    </button>
+                  )
+                )}
+
                 {isAdmin && (
                   <button
                     onClick={() => {
