@@ -15,12 +15,12 @@ const AppContext = createContext();
 export const AppProvider = ({ children }) => {
   // 9-Member Dev Team & Active User State
   const [users, setUsers] = useState(() => {
-    const saved = localStorage.getItem('fw_users_v4');
+    const saved = localStorage.getItem('fw_users_v5');
     return saved ? JSON.parse(saved) : INITIAL_USERS;
   });
 
   const [currentUser, setCurrentUser] = useState(() => {
-    const saved = localStorage.getItem('fw_user_v4');
+    const saved = localStorage.getItem('fw_user_v5');
     return saved ? JSON.parse(saved) : INITIAL_USERS[0]; // Default: Alex Vance (Admin)
   });
 
@@ -33,22 +33,22 @@ export const AppProvider = ({ children }) => {
 
   // Core Data Stores
   const [projects, setProjects] = useState(() => {
-    const saved = localStorage.getItem('fw_projects_v4');
+    const saved = localStorage.getItem('fw_projects_v5');
     return saved ? JSON.parse(saved) : INITIAL_PROJECTS;
   });
 
   const [tasks, setTasks] = useState(() => {
-    const saved = localStorage.getItem('fw_tasks_v4');
+    const saved = localStorage.getItem('fw_tasks_v5');
     return saved ? JSON.parse(saved) : INITIAL_TASKS;
   });
 
   const [timeLogs, setTimeLogs] = useState(() => {
-    const saved = localStorage.getItem('fw_timelogs_v4');
+    const saved = localStorage.getItem('fw_timelogs_v5');
     return saved ? JSON.parse(saved) : INITIAL_TIME_LOGS;
   });
 
   const [invoices, setInvoices] = useState(() => {
-    const saved = localStorage.getItem('fw_invoices_v4');
+    const saved = localStorage.getItem('fw_invoices_v5');
     return saved ? JSON.parse(saved) : INITIAL_INVOICES;
   });
 
@@ -58,9 +58,10 @@ export const AppProvider = ({ children }) => {
   // INDIVIDUAL PER-TASK STOPWATCHES MAP
   // Key: taskId -> { isRunning: boolean, elapsedSeconds: number, startTime: number }
   const [taskTimers, setTaskTimers] = useState(() => {
-    const saved = localStorage.getItem('fw_task_timers_v4');
+    const saved = localStorage.getItem('fw_task_timers_v5');
     if (saved) return JSON.parse(saved);
     return {
+      'tsk_100': { isRunning: false, elapsedSeconds: 960, startTime: null },
       'tsk_101': { isRunning: false, elapsedSeconds: 2450, startTime: null },
       'tsk_102': { isRunning: false, elapsedSeconds: 1820, startTime: null },
       'tsk_103': { isRunning: false, elapsedSeconds: 900, startTime: null },
@@ -82,31 +83,31 @@ export const AppProvider = ({ children }) => {
 
   // Persistence Effects
   useEffect(() => {
-    localStorage.setItem('fw_users_v4', JSON.stringify(users));
+    localStorage.setItem('fw_users_v5', JSON.stringify(users));
   }, [users]);
 
   useEffect(() => {
-    localStorage.setItem('fw_user_v4', JSON.stringify(currentUser));
+    localStorage.setItem('fw_user_v5', JSON.stringify(currentUser));
   }, [currentUser]);
 
   useEffect(() => {
-    localStorage.setItem('fw_projects_v4', JSON.stringify(projects));
+    localStorage.setItem('fw_projects_v5', JSON.stringify(projects));
   }, [projects]);
 
   useEffect(() => {
-    localStorage.setItem('fw_tasks_v4', JSON.stringify(tasks));
+    localStorage.setItem('fw_tasks_v5', JSON.stringify(tasks));
   }, [tasks]);
 
   useEffect(() => {
-    localStorage.setItem('fw_timelogs_v4', JSON.stringify(timeLogs));
+    localStorage.setItem('fw_timelogs_v5', JSON.stringify(timeLogs));
   }, [timeLogs]);
 
   useEffect(() => {
-    localStorage.setItem('fw_invoices_v4', JSON.stringify(invoices));
+    localStorage.setItem('fw_invoices_v5', JSON.stringify(invoices));
   }, [invoices]);
 
   useEffect(() => {
-    localStorage.setItem('fw_task_timers_v4', JSON.stringify(taskTimers));
+    localStorage.setItem('fw_task_timers_v5', JSON.stringify(taskTimers));
   }, [taskTimers]);
 
   // INDIVIDUAL TASK TIMERS TICKER EFFECT
