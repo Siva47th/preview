@@ -26,7 +26,6 @@ export const TasksView = () => {
   const [selectedProjectId, setSelectedProjectId] = useState('All');
   const [showAddModal, setShowAddModal] = useState(false);
   const [modalLayerTarget, setModalLayerTarget] = useState('Frontend');
-  const [hideCompletedProjects, setHideCompletedProjects] = useState(true);
 
   const isAdmin = currentUser.role === 'admin';
 
@@ -42,13 +41,11 @@ export const TasksView = () => {
   // Selected Service metadata
   const currentServiceObj = servicesCatalog.find(s => s.name === activeServiceId) || servicesCatalog[0];
 
-  // Filter tasks for active service, selected project, and non-archived status
+  // Filter tasks for active service and selected project (closed project tasks are permanently removed)
   const serviceTasks = tasks.filter(t => {
-    const proj = projects.find(p => p.id === t.projectId);
     const matchesService = activeServiceId === 'All' || t.service === activeServiceId;
     const matchesProj = selectedProjectId === 'All' || t.projectId === selectedProjectId;
-    const isNotArchived = !hideCompletedProjects || (proj ? proj.status !== 'Completed' && !proj.archived : true);
-    return matchesService && matchesProj && isNotArchived;
+    return matchesService && matchesProj;
   });
 
   const handleCreateTask = (e) => {
