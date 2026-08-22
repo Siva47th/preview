@@ -24,7 +24,7 @@ export const TasksView = () => {
   const [activeServiceId, setActiveServiceId] = useState(servicesCatalog[0]?.name || 'Web Development');
   const [selectedProjectId, setSelectedProjectId] = useState('All');
   const [showAddModal, setShowAddModal] = useState(false);
-  const [modalLayerTarget, setModalLayerTarget] = useState('Frontend Engineering');
+  const [modalLayerTarget, setModalLayerTarget] = useState('Frontend');
 
   const isAdmin = currentUser.role === 'admin';
 

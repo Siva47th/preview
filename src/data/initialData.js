@@ -2,8 +2,8 @@ export const SERVICES_CATALOG = [
   {
     id: 'srv_web',
     name: 'Web Development',
-    description: 'End-to-end web software covering UI frontend, API backend, database, and test automation.',
-    layers: ['Frontend Engineering', 'Backend Architecture', 'Database & DevOps', 'QA & Automation']
+    description: 'End-to-end web architecture covering UI/UX design, frontend, backend, database, and DevOps/Deployment.',
+    layers: ['UI/UX Design', 'Frontend', 'Backend', 'Database', 'DevOps/Deployment']
   },
   {
     id: 'srv_app',
@@ -28,7 +28,7 @@ export const INITIAL_USERS = [
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
     title: 'Lead Architect & Agency Founder',
     specialization: 'Web Development',
-    subRole: 'Backend Architecture',
+    subRole: 'Backend',
     hourlyRate: 12500
   },
   {
@@ -39,7 +39,7 @@ export const INITIAL_USERS = [
     avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80',
     title: 'Senior Frontend Engineer',
     specialization: 'Web Development',
-    subRole: 'Frontend Engineering',
+    subRole: 'Frontend',
     hourlyRate: 10500
   },
   {
@@ -61,7 +61,7 @@ export const INITIAL_USERS = [
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
     title: 'Senior Backend Engineer',
     specialization: 'Web Development',
-    subRole: 'Backend Architecture',
+    subRole: 'Backend',
     hourlyRate: 10900
   },
   {
@@ -72,7 +72,7 @@ export const INITIAL_USERS = [
     avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
     title: 'Database Architect & DevOps',
     specialization: 'Web Development',
-    subRole: 'Database & DevOps',
+    subRole: 'Database',
     hourlyRate: 11700
   },
   {
@@ -94,7 +94,7 @@ export const INITIAL_USERS = [
     avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
     title: 'API & Security Engineer',
     specialization: 'Web Development',
-    subRole: 'Backend Architecture',
+    subRole: 'Backend',
     hourlyRate: 11300
   },
   {
@@ -103,9 +103,9 @@ export const INITIAL_USERS = [
     email: 'carlos.m@freewheel.io',
     role: 'dev',
     avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&auto=format&fit=crop&q=80',
-    title: 'UI/UX & Frontend Developer',
+    title: 'UI/UX & Design Specialist',
     specialization: 'Web Development',
-    subRole: 'Frontend Engineering',
+    subRole: 'UI/UX Design',
     hourlyRate: 9600
   },
   {
@@ -114,9 +114,9 @@ export const INITIAL_USERS = [
     email: 'ananya.g@freewheel.io',
     role: 'dev',
     avatar: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=150&auto=format&fit=crop&q=80',
-    title: 'QA & Test Automation Specialist',
+    title: 'DevOps & Test Automation Specialist',
     specialization: 'Web Development',
-    subRole: 'QA & Automation',
+    subRole: 'DevOps/Deployment',
     hourlyRate: 9200
   }
 ];
@@ -131,25 +131,27 @@ export const INITIAL_PROJECT_HISTORY = [
     finalBilled: 10080000,
     totalLoggedHours: 580,
     hourlyRate: 12500,
-    summary: 'Delivered full-stack banking suite covering React Native frontend, Node.js microservices backend, PostgreSQL database, and automated Playwright security testing.',
+    summary: 'Delivered web banking suite covering UI/UX design, React frontend, Node.js microservices backend, PostgreSQL database, and automated DevOps deployment.',
     heroImage: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&auto=format&fit=crop&q=80',
     metrics: [
       { label: 'Latency SLA', value: '< 80ms' },
       { label: 'Hours Audited', value: '580 hrs' },
       { label: 'Security Score', value: '100% Pass' }
     ],
-    techStack: ['React Native', 'Node.js', 'PostgreSQL', 'Redis'],
+    techStack: ['React', 'Node.js', 'PostgreSQL', 'Docker'],
     layerBreakdown: [
-      { layer: 'Frontend Engineering', hours: 180, dev: 'Sarah Jenkins' },
-      { layer: 'Backend Architecture', hours: 210, dev: 'David Chen' },
-      { layer: 'Database & DevOps', hours: 110, dev: 'Priya Sharma' },
-      { layer: 'QA & Automation', hours: 80, dev: 'Ananya Gupta' }
+      { layer: 'UI/UX Design', hours: 80, dev: 'Carlos Mendez' },
+      { layer: 'Frontend', hours: 180, dev: 'Sarah Jenkins' },
+      { layer: 'Backend', hours: 210, dev: 'David Chen' },
+      { layer: 'Database', hours: 110, dev: 'Priya Sharma' },
+      { layer: 'DevOps/Deployment', hours: 80, dev: 'Ananya Gupta' }
     ],
     deliverables: [
-      'Mobile Apple/Google Pay Integration',
+      'Figma Web App Design Tokens & Wireframes',
+      'Frontend Mobile & Web Stripe Payment SDK',
       'OAuth JWT Session Security & Microservices',
       'PostgreSQL AWS RDS Multi-AZ Failover',
-      'Automated E2E Playwright Security Suite'
+      'Automated E2E Docker CI/CD Deployment'
     ]
   },
   {
@@ -220,18 +222,19 @@ export const INITIAL_PROJECTS = [
     name: 'Web Development E-Commerce Platform',
     service: 'Web Development',
     clientName: 'Apex Corporation',
-    description: 'Complete web development platform covering Frontend UI, Backend APIs, Database RDS, and Playwright QA automation.',
-    status: 'In Progress',
+    description: 'Complete web development platform covering UI/UX Design, Frontend, Backend, Database, and DevOps/Deployment.',
+    status: 'Completed',
     budget: 5460000,
     hourlyRate: 11300,
     startDate: '2026-07-01',
     deadline: '2026-09-30',
     completionPercentage: 100,
     assignedDevs: {
-      'Frontend Engineering': ['usr_2', 'usr_8'],
-      'Backend Architecture': ['usr_4', 'usr_7'],
-      'Database & DevOps': ['usr_5'],
-      'QA & Automation': ['usr_9']
+      'UI/UX Design': ['usr_8'],
+      'Frontend': ['usr_2'],
+      'Backend': ['usr_4', 'usr_7'],
+      'Database': ['usr_5'],
+      'DevOps/Deployment': ['usr_9']
     },
     tags: ['Web Dev', 'React', 'Node.js', 'PostgreSQL']
   },
@@ -276,12 +279,30 @@ export const INITIAL_PROJECTS = [
 ];
 
 export const INITIAL_TASKS = [
-  // Web Development Service Tasks (Layered)
+  // Web Development Service Tasks (5 Architectural Layers)
+  {
+    id: 'tsk_100',
+    projectId: 'proj_1',
+    service: 'Web Development',
+    layer: 'UI/UX Design',
+    title: 'Figma Web App Design Tokens & Wireframe System',
+    description: 'Design responsive layout prototypes, color palettes, and component design tokens.',
+    status: 'Done',
+    priority: 'High',
+    assigneeId: 'usr_8',
+    assigneeName: 'Carlos Mendez',
+    estimatedHours: 16,
+    loggedHours: 16.0,
+    progress: 100,
+    pendingProgress: 100,
+    pendingApproval: false,
+    dueDate: '2026-08-20'
+  },
   {
     id: 'tsk_101',
     projectId: 'proj_1',
     service: 'Web Development',
-    layer: 'Frontend Engineering',
+    layer: 'Frontend',
     title: 'Develop Responsive Web Shopping Cart & Stripe Payment SDK',
     description: 'Construct modular React checkout components with Stripe payment intent hooks.',
     status: 'Done',
@@ -299,7 +320,7 @@ export const INITIAL_TASKS = [
     id: 'tsk_102',
     projectId: 'proj_1',
     service: 'Web Development',
-    layer: 'Backend Architecture',
+    layer: 'Backend',
     title: 'Build OAuth JWT Session Authentication & RBAC Middleware',
     description: 'Develop secure refresh token rotation and endpoint authorization guards.',
     status: 'Done',
@@ -317,9 +338,9 @@ export const INITIAL_TASKS = [
     id: 'tsk_103',
     projectId: 'proj_1',
     service: 'Web Development',
-    layer: 'Database & DevOps',
-    title: 'Provision PostgreSQL Schema ERD & AWS RDS Read Replicas',
-    description: 'Set up automated snapshot strategy and multi-AZ failover cluster.',
+    layer: 'Database',
+    title: 'Provision PostgreSQL Schema ERD & Relational Data Models',
+    description: 'Set up automated snapshot strategy and database migration scripts.',
     status: 'Done',
     priority: 'High',
     assigneeId: 'usr_5',
@@ -335,9 +356,9 @@ export const INITIAL_TASKS = [
     id: 'tsk_104',
     projectId: 'proj_1',
     service: 'Web Development',
-    layer: 'QA & Automation',
-    title: 'Script Playwright E2E Test Suite for Signup to Payment Checkout',
-    description: 'Automate cross-browser regression testing and security audit assertions.',
+    layer: 'DevOps/Deployment',
+    title: 'Configure AWS RDS Read Replicas & Docker CI/CD Pipeline',
+    description: 'Automate containerized build deployments and Playwright security audits.',
     status: 'Done',
     priority: 'Medium',
     assigneeId: 'usr_9',
