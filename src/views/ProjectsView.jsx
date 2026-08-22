@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { Plus, FolderKanban, IndianRupee, Calendar, Clock, CheckCircle2, Search, ArrowRight, Layers, Users, UserCheck, Sparkles, ShieldCheck } from 'lucide-react';
+import { Plus, FolderKanban, IndianRupee, Calendar, Clock, CheckCircle, CheckCircle2, Search, ArrowRight, Layers, Users, UserCheck, Sparkles, ShieldCheck } from 'lucide-react';
 
 export const ProjectsView = () => {
   const {
