@@ -1,7 +1,7 @@
 export const SERVICES_CATALOG = [
   {
-    id: 'srv_fullstack',
-    name: 'Full-Stack Web Development',
+    id: 'srv_web',
+    name: 'Web Development',
     description: 'End-to-end web software covering UI frontend, API backend, database, and test automation.',
     layers: ['Frontend Engineering', 'Backend Architecture', 'Database & DevOps', 'QA & Automation']
   },
@@ -27,7 +27,7 @@ export const INITIAL_USERS = [
     role: 'admin',
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
     title: 'Lead Architect & Agency Founder',
-    specialization: 'Full-Stack Web Development',
+    specialization: 'Web Development',
     subRole: 'Backend Architecture',
     hourlyRate: 12500
   },
@@ -38,7 +38,7 @@ export const INITIAL_USERS = [
     role: 'dev',
     avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80',
     title: 'Senior Frontend Engineer',
-    specialization: 'Full-Stack Web Development',
+    specialization: 'Web Development',
     subRole: 'Frontend Engineering',
     hourlyRate: 10500
   },
@@ -60,7 +60,7 @@ export const INITIAL_USERS = [
     role: 'dev',
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
     title: 'Senior Backend Engineer',
-    specialization: 'Full-Stack Web Development',
+    specialization: 'Web Development',
     subRole: 'Backend Architecture',
     hourlyRate: 10900
   },
@@ -71,7 +71,7 @@ export const INITIAL_USERS = [
     role: 'dev',
     avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
     title: 'Database Architect & DevOps',
-    specialization: 'Full-Stack Web Development',
+    specialization: 'Web Development',
     subRole: 'Database & DevOps',
     hourlyRate: 11700
   },
@@ -93,7 +93,7 @@ export const INITIAL_USERS = [
     role: 'dev',
     avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
     title: 'API & Security Engineer',
-    specialization: 'Full-Stack Web Development',
+    specialization: 'Web Development',
     subRole: 'Backend Architecture',
     hourlyRate: 11300
   },
@@ -104,7 +104,7 @@ export const INITIAL_USERS = [
     role: 'dev',
     avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&auto=format&fit=crop&q=80',
     title: 'UI/UX & Frontend Developer',
-    specialization: 'Full-Stack Web Development',
+    specialization: 'Web Development',
     subRole: 'Frontend Engineering',
     hourlyRate: 9600
   },
@@ -115,7 +115,7 @@ export const INITIAL_USERS = [
     role: 'dev',
     avatar: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=150&auto=format&fit=crop&q=80',
     title: 'QA & Test Automation Specialist',
-    specialization: 'Full-Stack Web Development',
+    specialization: 'Web Development',
     subRole: 'QA & Automation',
     hourlyRate: 9200
   }
@@ -124,9 +124,9 @@ export const INITIAL_USERS = [
 export const INITIAL_PROJECT_HISTORY = [
   {
     id: 'hist_1',
-    title: 'Full-Stack FinTech Banking & Payment Suite',
+    title: 'FinTech Banking & Payment Suite',
     client: 'Apex Corporation',
-    service: 'Full-Stack Web Development',
+    service: 'Web Development',
     completionDate: 'Q4 2025 (Dec 2025)',
     finalBilled: 10080000,
     totalLoggedHours: 580,
@@ -217,23 +217,23 @@ export const INITIAL_SHOWCASE = INITIAL_PROJECT_HISTORY;
 export const INITIAL_PROJECTS = [
   {
     id: 'proj_1',
-    name: 'Full-Stack E-Commerce Platform',
-    service: 'Full-Stack Web Development',
+    name: 'Web Development E-Commerce Platform',
+    service: 'Web Development',
     clientName: 'Apex Corporation',
-    description: 'Complete full-stack platform covering Frontend UI, Backend APIs, Database RDS, and Playwright QA automation.',
+    description: 'Complete web development platform covering Frontend UI, Backend APIs, Database RDS, and Playwright QA automation.',
     status: 'In Progress',
     budget: 5460000,
     hourlyRate: 11300,
     startDate: '2026-07-01',
     deadline: '2026-09-30',
-    completionPercentage: 65,
+    completionPercentage: 100,
     assignedDevs: {
       'Frontend Engineering': ['usr_2', 'usr_8'],
       'Backend Architecture': ['usr_4', 'usr_7'],
       'Database & DevOps': ['usr_5'],
       'QA & Automation': ['usr_9']
     },
-    tags: ['Full-Stack', 'React', 'Node.js', 'PostgreSQL']
+    tags: ['Web Dev', 'React', 'Node.js', 'PostgreSQL']
   },
   {
     id: 'proj_2',
@@ -253,15 +253,34 @@ export const INITIAL_PROJECTS = [
       'CI/CD Test Automation': ['usr_9']
     },
     tags: ['Python', 'Kubernetes', 'AWS', 'Docker']
+  },
+  {
+    id: 'proj_3',
+    name: 'Cross-Platform Mobile App Suite',
+    service: 'App Development',
+    clientName: 'CarePulse Health',
+    description: 'Native cross-platform mobile application for iOS and Android with WebRTC calling.',
+    status: 'In Progress',
+    budget: 2800000,
+    hourlyRate: 10000,
+    startDate: '2026-08-15',
+    deadline: '2026-11-01',
+    completionPercentage: 40,
+    assignedDevs: {
+      'iOS & Android UI': ['usr_6'],
+      'Mobile API Services': ['usr_7'],
+      'App Store & Deployment': ['usr_1']
+    },
+    tags: ['React Native', 'iOS', 'Android', 'Mobile']
   }
 ];
 
 export const INITIAL_TASKS = [
-  // Full-Stack Web Development Service Tasks (Layered)
+  // Web Development Service Tasks (Layered)
   {
     id: 'tsk_101',
     projectId: 'proj_1',
-    service: 'Full-Stack Web Development',
+    service: 'Web Development',
     layer: 'Frontend Engineering',
     title: 'Develop Responsive Web Shopping Cart & Stripe Payment SDK',
     description: 'Construct modular React checkout components with Stripe payment intent hooks.',
@@ -279,7 +298,7 @@ export const INITIAL_TASKS = [
   {
     id: 'tsk_102',
     projectId: 'proj_1',
-    service: 'Full-Stack Web Development',
+    service: 'Web Development',
     layer: 'Backend Architecture',
     title: 'Build OAuth JWT Session Authentication & RBAC Middleware',
     description: 'Develop secure refresh token rotation and endpoint authorization guards.',
@@ -297,7 +316,7 @@ export const INITIAL_TASKS = [
   {
     id: 'tsk_103',
     projectId: 'proj_1',
-    service: 'Full-Stack Web Development',
+    service: 'Web Development',
     layer: 'Database & DevOps',
     title: 'Provision PostgreSQL Schema ERD & AWS RDS Read Replicas',
     description: 'Set up automated snapshot strategy and multi-AZ failover cluster.',
@@ -315,7 +334,7 @@ export const INITIAL_TASKS = [
   {
     id: 'tsk_104',
     projectId: 'proj_1',
-    service: 'Full-Stack Web Development',
+    service: 'Web Development',
     layer: 'QA & Automation',
     title: 'Script Playwright E2E Test Suite for Signup to Payment Checkout',
     description: 'Automate cross-browser regression testing and security audit assertions.',
@@ -330,22 +349,22 @@ export const INITIAL_TASKS = [
     pendingApproval: false,
     dueDate: '2026-08-30'
   },
-  // Additional Service Tasks (Layered)
+  // App Development Service Tasks (Layered)
   {
     id: 'tsk_301',
-    projectId: 'proj_1',
-    service: 'Full-Stack Web Development',
-    layer: 'Frontend Engineering',
-    title: 'React Native Cross-Platform Mobile & Web Interface Integration',
-    description: 'Configure mobile responsive web view components and smooth navigation.',
-    status: 'Done',
+    projectId: 'proj_3',
+    service: 'App Development',
+    layer: 'iOS & Android UI',
+    title: 'React Native iOS & Android Consultation App UI',
+    description: 'Construct native mobile navigation, dark theme UI, and WebRTC calling views.',
+    status: 'In Progress',
     priority: 'High',
     assigneeId: 'usr_6',
     assigneeName: 'James Wilson',
     estimatedHours: 25,
     loggedHours: 10.0,
-    progress: 100,
-    pendingProgress: 100,
+    progress: 40,
+    pendingProgress: 40,
     pendingApproval: false,
     dueDate: '2026-09-01'
   },

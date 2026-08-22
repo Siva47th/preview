@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { Plus, CheckSquare, Clock, AlertTriangle, User, Play, Pause, Square, Layers, ShieldCheck, Lock, ChevronDown, ChevronRight, UserCheck, Sparkles } from 'lucide-react';
+import { Plus, CheckSquare, Clock, AlertTriangle, User, Play, Pause, Square, Layers, ShieldCheck, Lock, ChevronDown, ChevronRight, UserCheck, Sparkles, FolderKanban } from 'lucide-react';
 
 export const TasksView = () => {
   const {
@@ -21,7 +21,7 @@ export const TasksView = () => {
     currentUser
   } = useApp();
 
-  const [activeServiceId, setActiveServiceId] = useState(servicesCatalog[0]?.name || 'Full-Stack Web Development');
+  const [activeServiceId, setActiveServiceId] = useState(servicesCatalog[0]?.name || 'Web Development');
   const [selectedProjectId, setSelectedProjectId] = useState('All');
   const [showAddModal, setShowAddModal] = useState(false);
   const [modalLayerTarget, setModalLayerTarget] = useState('Frontend Engineering');
@@ -231,7 +231,23 @@ export const TasksView = () => {
                         className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-3 hover:border-indigo-400 transition shadow-sm flex flex-col justify-between"
                       >
                         <div className="space-y-2">
-                          <div className="flex items-center justify-between">
+                          {/* PROMINENT PROJECT & CLIENT IDENTIFIER BADGE */}
+                          <div className="p-2 rounded-lg bg-indigo-50/80 border border-indigo-200 space-y-1">
+                            <div className="flex items-center gap-1.5 text-xs">
+                              <FolderKanban className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
+                              <span className="font-extrabold text-indigo-950 truncate text-[11px]">
+                                {proj ? proj.name : 'Web Development Platform'}
+                              </span>
+                            </div>
+                            <div className="flex items-center justify-between text-[10px] text-slate-600 pt-0.5 border-t border-indigo-100">
+                              <span className="font-semibold text-slate-500">Client:</span>
+                              <strong className="text-indigo-700 bg-white px-1.5 py-0.5 rounded border border-indigo-200">
+                                {proj ? proj.clientName : 'Apex Corporation'}
+                              </strong>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center justify-between pt-1">
                             <span className={`text-[9px] px-2 py-0.5 rounded font-bold border ${getPriorityBadge(task.priority)} uppercase`}>
                               {task.priority}
                             </span>
