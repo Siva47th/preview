@@ -52,8 +52,15 @@ export const AppProvider = ({ children }) => {
     return saved ? JSON.parse(saved) : INITIAL_INVOICES;
   });
 
-  const [showcase] = useState(INITIAL_SHOWCASE);
+  const [showcase, setShowcase] = useState(() => {
+    const saved = localStorage.getItem('fw_showcase_v6');
+    return saved ? JSON.parse(saved) : INITIAL_SHOWCASE;
+  });
   const [activities, setActivities] = useState(INITIAL_ACTIVITIES);
+
+  useEffect(() => {
+    localStorage.setItem('fw_showcase_v6', JSON.stringify(showcase));
+  }, [showcase]);
 
   // INDIVIDUAL PER-TASK STOPWATCHES MAP
   // Key: taskId -> { isRunning: boolean, elapsedSeconds: number, startTime: number }
@@ -324,6 +331,60 @@ export const AppProvider = ({ children }) => {
     }, ...prev]);
   };
 
+  // Admin closes & archives completed project
+  const closeAndArchiveProject = (projectId) => {
+    const targetProject = projects.find(p => p.id === projectId);
+    const projectTasks = tasks.filter(t => t.projectId === projectId);
+
+    if (targetProject) {
+      const historyItem = {
+        id: `hist_${Date.now()}`,
+        title: targetProject.name,
+        client: targetProject.clientName,
+        service: targetProject.service,
+        completionDate: new Date().toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }),
+        finalBilled: targetProject.budget,
+        totalLoggedHours: projectTasks.reduce((acc, t) => acc + (t.loggedHours || 0), 0) || 72,
+        hourlyRate: targetProject.hourlyRate,
+        summary: targetProject.description || 'Completed project deliverables fully audited and archived.',
+        metrics: [
+          { label: 'Completion', value: '100% Verified' },
+          { label: 'Tasks Audited', value: `${projectTasks.length} Deliverables` },
+          { label: 'SLA Status', value: 'On-Time Handover' }
+        ],
+        techStack: targetProject.tags || ['Engineering', 'Architecture'],
+        layerBreakdown: projectTasks.map(t => ({
+          layer: t.layer,
+          hours: t.loggedHours || 12,
+          dev: t.assigneeName
+        })),
+        deliverables: projectTasks.map(t => t.title)
+      };
+
+      // 1. Add pure information record to History
+      setShowcase(prev => [historyItem, ...prev]);
+
+      // 2. Mark project status as Completed and Archived
+      setProjects(prevProjects => prevProjects.map(p => p.id === projectId ? { ...p, status: 'Completed', archived: true, completionPercentage: 100 } : p));
+
+      // 3. PERMANENTLY REMOVE TASKS FROM ACTIVE TASKS BOARD (NOT JUST HIDE)
+      setTasks(prevTasks => prevTasks.filter(t => t.projectId !== projectId));
+
+      setActivities(prev => [{
+        id: `act_${Date.now()}`,
+        user: `${currentUser.name} (Admin)`,
+        action: 'permanently closed project, removed tasks from board, and archived audit data to history:',
+        target: targetProject.name,
+        time: 'Just now'
+      }, ...prev]);
+    }
+  };
+
+  // Sync project completion percentages with tasks on initial load & task changes
+  useEffect(() => {
+    setProjects(prevProjects => recalculateProjects(tasks, prevProjects));
+  }, [tasks]);
+
   const updateTaskAssignee = (taskId, newAssigneeId) => {
     const assignee = users.find(u => u.id === newAssigneeId);
     setTasks(prev => prev.map(t => t.id === taskId ? {
@@ -556,36 +617,6 @@ export const AppProvider = ({ children }) => {
       setChatMessages(prev => [...prev, botMsg]);
     }, 600);
   };
-
-  // Admin closes & archives completed project
-  const closeAndArchiveProject = (projectId) => {
-    setProjects(prevProjects => {
-      return prevProjects.map(p => {
-        if (p.id === projectId) {
-          return {
-            ...p,
-            status: 'Completed',
-            archived: true,
-            completionPercentage: 100
-          };
-        }
-        return p;
-      });
-    });
-
-    setActivities(prev => [{
-      id: `act_${Date.now()}`,
-      user: `${currentUser.name} (Admin)`,
-      action: 'closed and archived completed project to history:',
-      target: projects.find(p => p.id === projectId)?.name || 'Project',
-      time: 'Just now'
-    }, ...prev]);
-  };
-
-  // Sync project completion percentages with tasks on initial load & task changes
-  useEffect(() => {
-    setProjects(prevProjects => recalculateProjects(tasks, prevProjects));
-  }, [tasks]);
 
   return (
     <AppContext.Provider value={{

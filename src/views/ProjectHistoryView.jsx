@@ -95,32 +95,31 @@ export const ProjectHistoryView = () => {
             className="clean-card rounded-xl overflow-hidden bg-white border border-slate-200 flex flex-col justify-between hover:border-indigo-400 transition shadow-sm"
           >
             <div>
-              {/* Card Header Image */}
-              <div className="relative h-44 bg-slate-100 overflow-hidden border-b border-slate-200">
-                <img
-                  src={item.heroImage}
-                  alt={item.title}
-                  className="w-full h-full object-cover opacity-90 hover:opacity-100 transition"
-                />
-                <span className="absolute top-3 left-3 bg-emerald-700 text-white text-[9px] font-extrabold px-2.5 py-1 rounded shadow flex items-center gap-1 uppercase tracking-wider">
-                  <FolderCheck className="w-3 h-3" /> Archived & Handed Over
-                </span>
-                <span className="absolute bottom-3 right-3 bg-slate-900/90 text-white text-xs font-mono font-bold px-2.5 py-1 rounded border border-slate-700">
-                  ₹{(item.finalBilled || 10080000).toLocaleString('en-IN')}
-                </span>
+              {/* Card Header Data Banner (No Images - Pure Information Audit) */}
+              <div className="p-4 bg-slate-900 text-white space-y-2.5 border-b border-slate-800">
+                <div className="flex items-center justify-between text-[11px]">
+                  <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2.5 py-0.5 rounded font-extrabold flex items-center gap-1 uppercase tracking-wider text-[10px]">
+                    <FolderCheck className="w-3 h-3 text-emerald-400" /> Closed & Archived
+                  </span>
+                  <span className="font-mono text-slate-400 text-[11px] font-semibold">{item.completionDate}</span>
+                </div>
+
+                <div className="flex items-end justify-between gap-2 pt-1">
+                  <div className="min-w-0 flex-1">
+                    <span className="text-[10px] text-indigo-300 font-extrabold uppercase tracking-wider block truncate">{item.client}</span>
+                    <h3 className="text-sm font-extrabold text-white leading-snug line-clamp-2">{item.title}</h3>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <span className="text-[9px] text-slate-400 block font-semibold uppercase">Final Billed</span>
+                    <span className="font-mono font-black text-emerald-400 text-sm">
+                      ₹{(item.finalBilled || 10080000).toLocaleString('en-IN')}
+                    </span>
+                  </div>
+                </div>
               </div>
 
               {/* Card Body */}
               <div className="p-5 space-y-3.5">
-                <div>
-                  <div className="text-xs text-indigo-600 font-semibold mb-1 flex items-center justify-between">
-                    <span className="font-bold text-slate-900">{item.client}</span>
-                    <span className="text-[11px] font-mono text-slate-500">{item.completionDate}</span>
-                  </div>
-                  <h3 className="text-base font-bold text-slate-900 leading-snug">
-                    {item.title}
-                  </h3>
-                </div>
 
                 <p className="text-xs text-slate-600 leading-relaxed line-clamp-2">
                   {item.summary}

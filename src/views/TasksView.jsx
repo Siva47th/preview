@@ -103,26 +103,14 @@ export const TasksView = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          {/* Hide/Show Closed Projects Toggle */}
-          <button
-            onClick={() => setHideCompletedProjects(!hideCompletedProjects)}
-            className={`px-3 py-2 rounded-lg text-xs font-bold border transition flex items-center gap-1.5 shadow-sm ${
-              hideCompletedProjects
-                ? 'bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200'
-                : 'bg-indigo-50 text-indigo-700 border-indigo-300'
-            }`}
-          >
-            <span>{hideCompletedProjects ? '👁️ Show Closed Project Tasks' : '🙈 Hide Closed Projects'}</span>
-          </button>
-
           {/* Project Filter */}
           <select
             value={selectedProjectId}
             onChange={(e) => setSelectedProjectId(e.target.value)}
             className="px-3.5 py-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-600 shadow-sm"
           >
-            <option value="All">All Projects</option>
-            {projects.map(p => (
+            <option value="All">All Active Projects</option>
+            {projects.filter(p => !p.archived).map(p => (
               <option key={p.id} value={p.id}>{p.name}</option>
             ))}
           </select>
@@ -138,13 +126,13 @@ export const TasksView = () => {
             </div>
             <div>
               <div className="text-xs font-extrabold text-emerald-950 flex items-center gap-2">
-                <span>Completed Project Ready for Closing & Archive</span>
+                <span>Completed Project Ready for Closing & Permanent Task Cleanup</span>
                 <span className="bg-emerald-200 text-emerald-950 text-[10px] px-2 py-0.5 rounded-full font-black">
                   100% Done
                 </span>
               </div>
               <p className="text-[11px] text-emerald-800 mt-0.5">
-                Admin can close finished projects to remove their tasks from the active workspace board and archive them to Project History.
+                Admin can close finished projects to permanently remove their tasks off the active board and archive pure data logs to Project History.
               </p>
             </div>
           </div>
@@ -156,7 +144,7 @@ export const TasksView = () => {
                 onClick={() => closeAndArchiveProject(p.id)}
                 className="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg text-xs font-extrabold shadow flex items-center gap-1.5 transition shrink-0"
               >
-                <CheckSquare className="w-4 h-4" /> Close & Archive {p.clientName}
+                <CheckSquare className="w-4 h-4" /> Close Project & Clean Board ({p.clientName})
               </button>
             ))}
           </div>
