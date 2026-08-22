@@ -17,10 +17,8 @@ export const InvoicesView = () => {
     const inv = createInvoiceFromTimeLogs(genProjId);
     if (inv) {
       setSelectedInvoice(inv);
-      setShowGenerateModal(false);
-    } else {
-      alert("No unbilled time logs found for this project! Log some billable time first.");
     }
+    setShowGenerateModal(false);
   };
 
   const getStatusBadge = (status) => {
@@ -233,8 +231,8 @@ export const InvoicesView = () => {
       {showGenerateModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white border border-slate-200 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
-            <h3 className="text-base font-bold text-slate-900">Generate Invoice from Unbilled Time Logs</h3>
-            <p className="text-xs text-slate-500">Select a project with unbilled time logs to calculate line items automatically.</p>
+            <h3 className="text-base font-bold text-slate-900">Generate Invoice for Project</h3>
+            <p className="text-xs text-slate-500">Select a project to generate an invoice. Uses time logs if available, otherwise calculates from project budget & tasks.</p>
 
             <div>
               <label className="block text-xs text-slate-700 font-semibold mb-1">Target Project</label>
@@ -243,8 +241,8 @@ export const InvoicesView = () => {
                 onChange={(e) => setGenProjId(e.target.value)}
                 className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 text-xs"
               >
-                {projects.map(p => (
-                  <option key={p.id} value={p.id}>{p.name}</option>
+                {projects.filter(p => !p.archived).map(p => (
+                  <option key={p.id} value={p.id}>{p.name} — {p.clientName || 'Client'}</option>
                 ))}
               </select>
             </div>

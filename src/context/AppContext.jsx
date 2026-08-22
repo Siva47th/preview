@@ -529,20 +529,51 @@ export const AppProvider = ({ children }) => {
 
   const createInvoiceFromTimeLogs = (projectId) => {
     const proj = projects.find(p => p.id === projectId);
+    if (!proj) return null;
+
     const unbilledLogs = timeLogs.filter(l => l.projectId === projectId && l.billable && !l.invoiced);
 
-    if (unbilledLogs.length === 0) return null;
+    let items = [];
 
-    const items = unbilledLogs.map(l => {
-      const hours = +(l.durationMinutes / 60).toFixed(2);
-      const amount = hours * l.hourlyRate;
-      return {
-        description: `[${l.layer || 'Dev'}] ${l.taskTitle || 'Deliverable'} - ${l.notes || 'Engineering work'}`,
-        hours,
-        rate: l.hourlyRate,
-        amount
-      };
-    });
+    if (unbilledLogs.length > 0) {
+      // MODE 1: Generate from actual time logs
+      items = unbilledLogs.map(l => {
+        const hours = +(l.durationMinutes / 60).toFixed(2);
+        const amount = hours * l.hourlyRate;
+        return {
+          description: `[${l.layer || 'Dev'}] ${l.taskTitle || 'Deliverable'} - ${l.notes || 'Engineering work'}`,
+          hours,
+          rate: l.hourlyRate,
+          amount
+        };
+      });
+    } else {
+      // MODE 2: Generate direct project-based invoice from budget & assigned tasks
+      const projectTasks = tasks.filter(t => t.projectId === projectId);
+
+      if (projectTasks.length > 0) {
+        // Generate line items from project tasks
+        items = projectTasks.map(t => {
+          const hours = t.estimatedHours || 10;
+          const rate = proj.hourlyRate || 11300;
+          return {
+            description: `[${t.layer || 'Development'}] ${t.title}`,
+            hours,
+            rate,
+            amount: hours * rate
+          };
+        });
+      } else {
+        // No tasks either — generate a single line item from project budget
+        const budget = proj.budget || 500000;
+        items = [{
+          description: `${proj.service || 'Development'} — ${proj.name} (Project Scope)`,
+          hours: Math.round(budget / (proj.hourlyRate || 11300)),
+          rate: proj.hourlyRate || 11300,
+          amount: budget
+        }];
+      }
+    }
 
     const subtotal = items.reduce((acc, i) => acc + i.amount, 0);
     const taxRate = 10;
@@ -553,10 +584,10 @@ export const AppProvider = ({ children }) => {
     const newInvoice = {
       id: invoiceId,
       invoiceNumber: `INV-2026-${Math.floor(100 + Math.random() * 900)}`,
-      clientName: proj ? proj.clientName : 'Client Partner',
-      clientEmail: 'contact@partner.com',
+      clientName: proj.clientName || 'Client Partner',
+      clientEmail: `billing@${(proj.clientName || 'client').toLowerCase().replace(/[^a-z0-9]/g, '')}.com`,
       projectId: projectId,
-      projectName: proj ? proj.name : 'Project',
+      projectName: proj.name || 'Project',
       status: 'Sent',
       issueDate: new Date().toISOString().split('T')[0],
       dueDate: new Date(Date.now() + 14 * 86400000).toISOString().split('T')[0],
@@ -566,13 +597,24 @@ export const AppProvider = ({ children }) => {
       taxAmount,
       totalAmount,
       items,
-      notes: 'Payment due within 14 days of invoice issue.'
+      notes: 'Payment due within 14 days of invoice issue via NEFT, RTGS, or Corporate UPI.'
     };
 
     setInvoices(prev => [newInvoice, ...prev]);
 
-    const logIdsToMark = unbilledLogs.map(l => l.id);
-    setTimeLogs(prev => prev.map(l => logIdsToMark.includes(l.id) ? { ...l, invoiced: true, invoiceId } : l));
+    // Mark time logs as invoiced if they were used
+    if (unbilledLogs.length > 0) {
+      const logIdsToMark = unbilledLogs.map(l => l.id);
+      setTimeLogs(prev => prev.map(l => logIdsToMark.includes(l.id) ? { ...l, invoiced: true, invoiceId } : l));
+    }
+
+    setActivities(prev => [{
+      id: `act_${Date.now()}`,
+      user: `${currentUser.name} (Admin)`,
+      action: `generated invoice ${newInvoice.invoiceNumber} (₹${totalAmount.toLocaleString('en-IN')}) for:`,
+      target: proj.name,
+      time: 'Just now'
+    }, ...prev]);
 
     return newInvoice;
   };
