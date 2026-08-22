@@ -414,9 +414,9 @@ export const INITIAL_TIME_LOGS = [
   {
     id: 'log_1',
     projectId: 'proj_1',
-    service: 'Full-Stack Web Development',
-    layer: 'Frontend Engineering',
-    projectName: 'Full-Stack E-Commerce Platform',
+    service: 'Web Development',
+    layer: 'Frontend',
+    projectName: 'Web Development E-Commerce Platform',
     taskId: 'tsk_101',
     taskTitle: 'Develop Responsive Web Shopping Cart & Stripe Payment SDK',
     userId: 'usr_2',
@@ -424,16 +424,16 @@ export const INITIAL_TIME_LOGS = [
     durationMinutes: 720,
     hourlyRate: 10500,
     billable: true,
-    invoiced: false,
+    invoiced: true,
     date: '2026-08-19',
     notes: 'Built shopping cart state and Stripe payment intent hooks.'
   },
   {
     id: 'log_2',
     projectId: 'proj_1',
-    service: 'Full-Stack Web Development',
-    layer: 'Backend Architecture',
-    projectName: 'Full-Stack E-Commerce Platform',
+    service: 'Web Development',
+    layer: 'Backend',
+    projectName: 'Web Development E-Commerce Platform',
     taskId: 'tsk_102',
     taskTitle: 'Build OAuth JWT Session Authentication & RBAC Middleware',
     userId: 'usr_4',
@@ -441,9 +441,43 @@ export const INITIAL_TIME_LOGS = [
     durationMinutes: 870,
     hourlyRate: 10900,
     billable: true,
-    invoiced: false,
+    invoiced: true,
     date: '2026-08-20',
     notes: 'Implemented JWT token refresh rotation and middleware authorization.'
+  },
+  {
+    id: 'log_3',
+    projectId: 'proj_2',
+    service: 'AI & Cloud Automation',
+    layer: 'AI Bot Pipeline',
+    projectName: 'Cloud AI Telemetry & Bot Pipeline',
+    taskId: 'tsk_201',
+    taskTitle: 'FastAPI Async Telemetry Stream & AI Predictive Bot Dispatcher',
+    userId: 'usr_3',
+    userName: 'Marcus Reed',
+    durationMinutes: 1080,
+    hourlyRate: 11300,
+    billable: true,
+    invoiced: false,
+    date: '2026-08-21',
+    notes: 'Configured async Python telemetry endpoint stream for fleet tracking.'
+  },
+  {
+    id: 'log_4',
+    projectId: 'proj_3',
+    service: 'App Development',
+    layer: 'iOS & Android UI',
+    projectName: 'Cross-Platform Mobile App Suite',
+    taskId: 'tsk_301',
+    taskTitle: 'React Native iOS & Android Consultation App UI',
+    userId: 'usr_6',
+    userName: 'James Wilson',
+    durationMinutes: 600,
+    hourlyRate: 10000,
+    billable: true,
+    invoiced: false,
+    date: '2026-08-21',
+    notes: 'Constructed native tab bar navigation and consultation appointment view.'
   }
 ];
 
@@ -454,20 +488,61 @@ export const INITIAL_INVOICES = [
     clientName: 'Apex Corporation',
     clientEmail: 'contact@apexcorp.com',
     projectId: 'proj_1',
-    projectName: 'Full-Stack E-Commerce Platform',
-    status: 'Sent',
-    issueDate: '2026-08-15',
-    dueDate: '2026-08-30',
-    paidDate: null,
+    projectName: 'Web Development E-Commerce Platform',
+    status: 'Paid',
+    issueDate: '2026-08-01',
+    dueDate: '2026-08-15',
+    paidDate: '2026-08-14',
     subtotal: 1260000,
     taxRate: 10,
     taxAmount: 126000,
     totalAmount: 1386000,
     items: [
-      { description: '[Frontend Engineering] Responsive Cart & Payment Integration', hours: 60, rate: 10500, amount: 630000 },
-      { description: '[Backend Architecture] OAuth JWT Session Security Endpoints', hours: 57.6, rate: 10900, amount: 627840 }
+      { description: '[Frontend] Responsive Web Shopping Cart & Stripe Payment SDK', hours: 60, rate: 10500, amount: 630000 },
+      { description: '[Backend] OAuth JWT Session Security & RBAC Middleware', hours: 57.6, rate: 10900, amount: 627840 }
     ],
-    notes: 'Payment due within 15 days via UPI, NEFT, or RTGS.'
+    notes: 'Payment received via Bank Wire Transfer. Account settled.'
+  },
+  {
+    id: 'inv_1002',
+    invoiceNumber: 'INV-2026-002',
+    clientName: 'LogiGlobal Freight',
+    clientEmail: 'billing@logiglobal.com',
+    projectId: 'proj_2',
+    projectName: 'Cloud AI Telemetry & Bot Pipeline',
+    status: 'Sent',
+    issueDate: '2026-08-18',
+    dueDate: '2026-09-02',
+    paidDate: null,
+    subtotal: 1800000,
+    taxRate: 10,
+    taxAmount: 180000,
+    totalAmount: 1980000,
+    items: [
+      { description: '[AI Bot Pipeline] FastAPI Async Telemetry Stream & AI Predictive Bot Dispatcher', hours: 100, rate: 11300, amount: 1130000 },
+      { description: '[Cloud Orchestration] Kubernetes Multi-AZ Cloud Cluster Setup', hours: 57.2, rate: 11700, amount: 670000 }
+    ],
+    notes: 'Payment pending approval. Standard 15-day billing term via NEFT / RTGS.'
+  },
+  {
+    id: 'inv_1003',
+    invoiceNumber: 'INV-2026-003',
+    clientName: 'CarePulse Health',
+    clientEmail: 'accounts@carepulse.com',
+    projectId: 'proj_3',
+    projectName: 'Cross-Platform Mobile App Suite',
+    status: 'Sent',
+    issueDate: '2026-08-15',
+    dueDate: '2026-08-30',
+    paidDate: null,
+    subtotal: 1200000,
+    taxRate: 10,
+    taxAmount: 120000,
+    totalAmount: 1320000,
+    items: [
+      { description: '[iOS & Android UI] React Native Consultation App UI & Navigation', hours: 120, rate: 10000, amount: 1200000 }
+    ],
+    notes: 'Payment pending. Due within 15 days via NEFT, RTGS, or Corporate UPI.'
   }
 ];
 
