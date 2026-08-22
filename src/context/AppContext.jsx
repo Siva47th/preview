@@ -13,16 +13,65 @@ import {
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-  // 9-Member Dev Team & Active User State
+  // Authentication & Active User State
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return localStorage.getItem('fw_authed_v7') === 'true';
+  });
+
   const [users, setUsers] = useState(() => {
-    const saved = localStorage.getItem('fw_users_v6');
+    const saved = localStorage.getItem('fw_users_v7');
     return saved ? JSON.parse(saved) : INITIAL_USERS;
   });
 
   const [currentUser, setCurrentUser] = useState(() => {
-    const saved = localStorage.getItem('fw_user_v6');
+    const saved = localStorage.getItem('fw_user_v7');
     return saved ? JSON.parse(saved) : INITIAL_USERS[0]; // Default: Alex Vance (Admin)
   });
+
+  const login = (email, password) => {
+    const user = users.find(u =>
+      u.email.toLowerCase() === email.trim().toLowerCase() &&
+      (u.password || 'admin123') === password
+    );
+
+    if (user) {
+      setCurrentUser(user);
+      setIsAuthenticated(true);
+      localStorage.setItem('fw_authed_v7', 'true');
+      localStorage.setItem('fw_user_v7', JSON.stringify(user));
+      setActivities(prev => [{
+        id: `act_${Date.now()}`,
+        user: user.name,
+        action: 'logged into agency workspace session',
+        target: `${user.role.toUpperCase()} Portal`,
+        time: 'Just now'
+      }, ...prev]);
+      return { success: true, user };
+    }
+    return { success: false, error: 'Invalid email address or password' };
+  };
+
+  const logout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('fw_authed_v7');
+    setActivities(prev => [{
+      id: `act_${Date.now()}`,
+      user: currentUser ? currentUser.name : 'User',
+      action: 'logged out of agency workspace',
+      target: 'Login Portal',
+      time: 'Just now'
+    }, ...prev]);
+  };
+
+  const switchAccount = (userId) => {
+    const targetUser = users.find(u => u.id === userId);
+    if (targetUser) {
+      setCurrentUser(targetUser);
+      setIsAuthenticated(true);
+      localStorage.setItem('fw_authed_v7', 'true');
+      localStorage.setItem('fw_user_v7', JSON.stringify(targetUser));
+    }
+  };
 
   // Services Catalog & Active Service State
   const [servicesCatalog] = useState(SERVICES_CATALOG);
@@ -701,6 +750,10 @@ export const AppProvider = ({ children }) => {
 
   return (
     <AppContext.Provider value={{
+      isAuthenticated,
+      login,
+      logout,
+      switchAccount,
       users,
       addUser,
       updateUser,

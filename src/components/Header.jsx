@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { Search, Plus, Bell, Shield, Sparkles, Clock, CheckCircle2 } from 'lucide-react';
+import { Search, Plus, Bell, Shield, Sparkles, Clock, CheckCircle2, LogOut } from 'lucide-react';
 
 export const Header = () => {
-  const { activeTab, setActiveTab, currentUser, taskTimers } = useApp();
+  const { activeTab, setActiveTab, currentUser, taskTimers, logout } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
   const [showNotifications, setShowNotifications] = useState(false);
 
@@ -104,13 +104,24 @@ export const Header = () => {
           )}
         </div>
 
-        {/* User Role Pill */}
-        <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
-          <img src={currentUser.avatar} alt={currentUser.name} className="w-8 h-8 rounded-full object-cover border border-slate-300" />
-          <div className="hidden lg:block text-left">
-            <div className="text-xs font-semibold text-slate-900 leading-tight">{currentUser.name}</div>
-            <div className="text-[10px] text-slate-500 capitalize">{currentUser.role === 'admin' ? 'Agency Lead' : 'Engineer'}</div>
+        {/* User Profile & Logout */}
+        <div className="flex items-center gap-3 pl-3 border-l border-slate-200">
+          <div className="flex items-center gap-2">
+            <img src={currentUser.avatar} alt={currentUser.name} className="w-8 h-8 rounded-full object-cover border border-slate-300 shrink-0" />
+            <div className="hidden lg:block text-left">
+              <div className="text-xs font-bold text-slate-900 leading-tight">{currentUser.name}</div>
+              <div className="text-[10px] text-indigo-600 font-bold uppercase">{currentUser.role === 'admin' ? 'Agency Lead (Admin)' : `${currentUser.subRole || 'Engineer'}`}</div>
+            </div>
           </div>
+
+          <button
+            onClick={logout}
+            className="p-2 rounded-lg bg-red-50 hover:bg-red-600 text-red-600 hover:text-white transition flex items-center gap-1 text-xs font-bold"
+            title="Log Out of Workspace"
+          >
+            <LogOut className="w-4 h-4" />
+            <span className="hidden sm:inline text-[11px]">Log Out</span>
+          </button>
         </div>
       </div>
     </header>

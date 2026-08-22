@@ -9,10 +9,15 @@ import { TimeTrackingView } from './views/TimeTrackingView';
 import { InvoicesView } from './views/InvoicesView';
 import { ShowcaseView } from './views/ShowcaseView';
 import { AdminUsersView } from './views/AdminUsersView';
+import { LoginView } from './views/LoginView';
 import { ChatbotWidget } from './views/ChatbotWidget';
 
-const MainContent = () => {
-  const { activeTab } = useApp();
+const WorkspaceContent = () => {
+  const { isAuthenticated, activeTab } = useApp();
+
+  if (!isAuthenticated) {
+    return <LoginView />;
+  }
 
   const renderView = () => {
     switch (activeTab) {
@@ -28,12 +33,15 @@ const MainContent = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col min-w-0 min-h-screen bg-slate-50">
-      <Header />
-      <main className="flex-1 pb-16 overflow-y-auto bg-slate-50">
-        {renderView()}
-      </main>
-      <ChatbotWidget />
+    <div className="flex min-h-screen bg-slate-50 font-sans text-slate-900 antialiased selection:bg-indigo-600 selection:text-white">
+      <Sidebar />
+      <div className="flex-1 flex flex-col min-w-0 min-h-screen bg-slate-50">
+        <Header />
+        <main className="flex-1 pb-16 overflow-y-auto bg-slate-50">
+          {renderView()}
+        </main>
+        <ChatbotWidget />
+      </div>
     </div>
   );
 };
@@ -41,10 +49,7 @@ const MainContent = () => {
 export default function App() {
   return (
     <AppProvider>
-      <div className="flex min-h-screen bg-slate-50 font-sans text-slate-900 antialiased selection:bg-indigo-600 selection:text-white">
-        <Sidebar />
-        <MainContent />
-      </div>
+      <WorkspaceContent />
     </AppProvider>
   );
 }
