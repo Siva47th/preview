@@ -121,35 +121,98 @@ export const INITIAL_USERS = [
   }
 ];
 
-export const INITIAL_SHOWCASE = [
+export const INITIAL_PROJECT_HISTORY = [
   {
-    id: 'show_1',
-    title: 'Full-Stack FinTech Mobile Banking Suite',
+    id: 'hist_1',
+    title: 'Full-Stack FinTech Banking & Payment Suite',
     client: 'Apex Corporation',
-    category: 'Full-Stack Web Development',
-    year: '2025',
-    budget: '₹1,00,80,000',
-    duration: '14 Weeks',
-    summary: 'Delivered a full-stack banking suite with React Native mobile frontend, Node.js microservices backend, PostgreSQL database, and automated Playwright QA.',
+    service: 'Full-Stack Web Development',
+    completionDate: 'Q4 2025 (Dec 2025)',
+    finalBilled: 10080000,
+    totalLoggedHours: 580,
+    hourlyRate: 12500,
+    summary: 'Delivered full-stack banking suite covering React Native frontend, Node.js microservices backend, PostgreSQL database, and automated Playwright security testing.',
     heroImage: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&auto=format&fit=crop&q=80',
     metrics: [
-      { label: 'Transaction Latency', value: '< 80ms' },
-      { label: 'User Adoption Rate', value: '+310%' },
-      { label: 'Security Score', value: '99.9%' }
+      { label: 'Latency SLA', value: '< 80ms' },
+      { label: 'Hours Audited', value: '580 hrs' },
+      { label: 'Security Score', value: '100% Pass' }
     ],
     techStack: ['React Native', 'Node.js', 'PostgreSQL', 'Redis'],
-    testimonial: {
-      quote: "Freewheel's layer-by-layer task assignment across frontend, backend, and database gave our stakeholders 100% clarity.",
-      author: "Marcus Thorne, CTO at Apex Corp"
-    },
+    layerBreakdown: [
+      { layer: 'Frontend Engineering', hours: 180, dev: 'Sarah Jenkins' },
+      { layer: 'Backend Architecture', hours: 210, dev: 'David Chen' },
+      { layer: 'Database & DevOps', hours: 110, dev: 'Priya Sharma' },
+      { layer: 'QA & Automation', hours: 80, dev: 'Ananya Gupta' }
+    ],
     deliverables: [
-      'Frontend Mobile Apple/Google Pay Integration',
-      'Backend Microservices & OAuth JWT Tokens',
-      'Database AWS RDS Failover & Read Replicas',
+      'Mobile Apple/Google Pay Integration',
+      'OAuth JWT Session Security & Microservices',
+      'PostgreSQL AWS RDS Multi-AZ Failover',
       'Automated E2E Playwright Security Suite'
+    ]
+  },
+  {
+    id: 'hist_2',
+    title: 'Enterprise Logistics Telemetry & AI Dispatcher',
+    client: 'LogiGlobal Freight',
+    service: 'AI & Cloud Automation',
+    completionDate: 'Q3 2025 (Sep 2025)',
+    finalBilled: 4850000,
+    totalLoggedHours: 390,
+    hourlyRate: 11700,
+    summary: 'Automated fleet predictive dispatching and telemetry stream processing using Python FastAPI and Kubernetes cloud clusters.',
+    heroImage: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&auto=format&fit=crop&q=80',
+    metrics: [
+      { label: 'Route Efficiency', value: '+28%' },
+      { label: 'Hours Audited', value: '390 hrs' },
+      { label: 'Cluster Uptime', value: '99.99%' }
+    ],
+    techStack: ['Python FastAPI', 'Kubernetes', 'AWS', 'Docker'],
+    layerBreakdown: [
+      { layer: 'AI Bot Pipeline', hours: 160, dev: 'Marcus Reed' },
+      { layer: 'Cloud Orchestration', hours: 140, dev: 'Priya Sharma' },
+      { layer: 'CI/CD Test Automation', hours: 90, dev: 'Ananya Gupta' }
+    ],
+    deliverables: [
+      'FastAPI Async Telemetry Stream Endpoints',
+      'Kubernetes Multi-AZ Cloud Cluster Orchestration',
+      'Predictive Fleet Dispatch AI Model',
+      'Automated CI/CD Deployment Pipeline'
+    ]
+  },
+  {
+    id: 'hist_3',
+    title: 'Cross-Platform Telehealth & Patient Portal App',
+    client: 'CarePulse Health',
+    service: 'App Development',
+    completionDate: 'Q2 2025 (Jun 2025)',
+    finalBilled: 3500000,
+    totalLoggedHours: 320,
+    hourlyRate: 10000,
+    summary: 'Constructed HIPAA-compliant cross-platform mobile video consultation app for iOS and Android with WebRTC video calling.',
+    heroImage: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&auto=format&fit=crop&q=80',
+    metrics: [
+      { label: 'HIPAA Compliance', value: 'Verified' },
+      { label: 'Hours Audited', value: '320 hrs' },
+      { label: 'App Store Rating', value: '4.9 ★' }
+    ],
+    techStack: ['React Native', 'WebRTC', 'Node.js', 'AWS Health'],
+    layerBreakdown: [
+      { layer: 'iOS & Android UI', hours: 150, dev: 'James Wilson' },
+      { layer: 'Mobile API Services', hours: 110, dev: 'Elena Rostova' },
+      { layer: 'App Store & Deployment', hours: 60, dev: 'Alex Vance' }
+    ],
+    deliverables: [
+      'Encrypted WebRTC Video Consultation Module',
+      'Patient Appointment Booking & Reminders',
+      'HIPAA Compliant Health Record Integration',
+      'Apple App Store & Google Play Store Publishing'
     ]
   }
 ];
+
+export const INITIAL_SHOWCASE = INITIAL_PROJECT_HISTORY;
 
 export const INITIAL_PROJECTS = [
   {
@@ -267,14 +330,14 @@ export const INITIAL_TASKS = [
     pendingApproval: false,
     dueDate: '2026-08-30'
   },
-  // App Development Service Tasks (Layered)
+  // Additional Service Tasks (Layered)
   {
     id: 'tsk_301',
     projectId: 'proj_1',
-    service: 'App Development',
-    layer: 'iOS & Android UI',
-    title: 'React Native Cross-Platform Navigation & Dark Theme Views',
-    description: 'Configure bottom tab navigation and smooth screen transitions.',
+    service: 'Full-Stack Web Development',
+    layer: 'Frontend Engineering',
+    title: 'React Native Cross-Platform Mobile & Web Interface Integration',
+    description: 'Configure mobile responsive web view components and smooth navigation.',
     status: 'In Progress',
     priority: 'High',
     assigneeId: 'usr_6',

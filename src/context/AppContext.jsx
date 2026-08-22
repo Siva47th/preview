@@ -285,8 +285,42 @@ export const AppProvider = ({ children }) => {
       const avgProgress = Math.round(
         projTasks.reduce((sum, t) => sum + (t.progress !== undefined ? t.progress : 0), 0) / projTasks.length
       );
-      return { ...proj, completionPercentage: avgProgress };
+      const isAllDone = avgProgress === 100;
+      return {
+        ...proj,
+        completionPercentage: avgProgress,
+        status: isAllDone ? 'Completed' : (avgProgress > 0 ? 'In Progress' : proj.status)
+      };
     });
+  };
+
+  // Admin marks all tasks for a specific project as 100% and approves
+  const approveAllTasksForProject = (projectId) => {
+    setTasks(prevTasks => {
+      const newTasks = prevTasks.map(t => {
+        if (t.projectId === projectId) {
+          return {
+            ...t,
+            progress: 100,
+            pendingProgress: 100,
+            pendingApproval: false,
+            status: 'Done'
+          };
+        }
+        return t;
+      });
+      setProjects(prevProjects => recalculateProjects(newTasks, prevProjects));
+      return newTasks;
+    });
+
+    const proj = projects.find(p => p.id === projectId);
+    setActivities(prev => [{
+      id: `act_${Date.now()}`,
+      user: `${currentUser.name} (Admin)`,
+      action: 'marked all sub-tasks as 100% completed & approved for project:',
+      target: proj ? proj.name : 'Project',
+      time: 'Just now'
+    }, ...prev]);
   };
 
   const updateTaskAssignee = (taskId, newAssigneeId) => {

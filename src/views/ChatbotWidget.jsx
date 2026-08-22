@@ -117,11 +117,11 @@ export const ChatbotWidget = () => {
             <button
               onClick={() => {
                 setActiveTab('showcase');
-                handleQuickPrompt("Show delivered solutions showcase");
+                handleQuickPrompt("Inspect completed project history & past deliverables audit");
               }}
               className="px-2.5 py-1 rounded bg-slate-100 hover:bg-indigo-50 text-indigo-700 border border-slate-200 whitespace-nowrap transition font-medium"
             >
-              Solutions Showcase
+              Project History
             </button>
           </div>
 

@@ -15,7 +15,7 @@ export const Header = () => {
       case 'timetracking': return { main: 'Time Tracking & Field Audit', sub: 'Audit individual task stopwatches and billable hourly logs' };
       case 'invoices': return { main: 'Invoicing & Financial Ledger', sub: 'Generate, send, and audit client invoices' };
       case 'adminusers': return { main: 'Dev Team Management', sub: 'Admin control for 9-member dev team and field assignments' };
-      case 'showcase': return { main: 'Solutions Showcase', icon: Sparkles, sub: 'Explore delivered enterprise case studies & client benchmarks' };
+      case 'showcase': return { main: 'Project History & Archive Audit', sub: 'Inspect completed client projects, sub-role team logs, and archived deliverables' };
       case 'clientportal': return { main: 'Client Open Preview', sub: 'Restricted client-facing progress and billing interface' };
       default: return { main: 'Freewheel Workspace', sub: 'Agency Operations System' };
     }
@@ -35,8 +35,8 @@ export const Header = () => {
           <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
             {info.main}
             {activeTab === 'showcase' && (
-              <span className="text-xs bg-indigo-50 text-indigo-700 border border-indigo-200 px-2 py-0.5 rounded font-medium flex items-center gap-1">
-                <Sparkles className="w-3.5 h-3.5 text-indigo-600" /> Featured Solutions
+              <span className="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded font-medium flex items-center gap-1">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Management Archive
               </span>
             )}
           </h2>

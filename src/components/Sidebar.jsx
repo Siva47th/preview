@@ -11,7 +11,8 @@ import {
   Zap,
   UserCheck,
   Users,
-  Layers
+  Layers,
+  History
 } from 'lucide-react';
 
 export const Sidebar = () => {
@@ -33,7 +34,7 @@ export const Sidebar = () => {
     { id: 'timetracking', label: 'Time Tracking', icon: Clock },
     { id: 'invoices', label: 'Invoices & Billing', icon: FileText },
     { id: 'adminusers', label: 'Dev Management', icon: Users, badge: 'Admin' },
-    { id: 'showcase', label: 'Solutions Showcase', icon: Award },
+    { id: 'showcase', label: 'Project History', icon: History },
     { id: 'clientportal', label: 'Client Open Explore', icon: ShieldCheck, badge: 'Preview' }
   ];
 

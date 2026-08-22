@@ -12,7 +12,8 @@ import {
   Sparkles,
   User,
   Activity,
-  Plus
+  Plus,
+  History
 } from 'lucide-react';
 
 export const DashboardView = () => {
@@ -63,8 +64,8 @@ export const DashboardView = () => {
             onClick={() => setActiveTab('showcase')}
             className="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center gap-2 transition"
           >
-            <Sparkles className="w-4 h-4 text-indigo-600" />
-            <span>Showcase Solutions</span>
+            <History className="w-4 h-4 text-indigo-600" />
+            <span>Project History Archive</span>
           </button>
           <button
             onClick={() => setActiveTab('tasks')}
