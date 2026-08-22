@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { FileText, IndianRupee, Printer, CheckCircle, Clock, AlertCircle, Plus, Send } from 'lucide-react';
+import { FileText, IndianRupee, Printer, CheckCircle, Clock, AlertCircle, Plus, Send, Edit3, Trash2, Save, X, PlusCircle } from 'lucide-react';
 
 export const InvoicesView = () => {
-  const { invoices, updateInvoiceStatus, projects, createInvoiceFromTimeLogs, currentUser } = useApp();
+  const { invoices, updateInvoiceStatus, updateInvoice, deleteInvoice, projects, createInvoiceFromTimeLogs, currentUser } = useApp();
   const [filterStatus, setFilterStatus] = useState('All');
   const [selectedInvoice, setSelectedInvoice] = useState(null);
+  const [editingInvoice, setEditingInvoice] = useState(null);
   const [showGenerateModal, setShowGenerateModal] = useState(false);
   const [genProjId, setGenProjId] = useState(projects[0]?.id || 'proj_1');
+
+  const isAdmin = currentUser.role === 'admin';
 
   const filteredInvoices = filterStatus === 'All'
     ? invoices
@@ -19,6 +22,106 @@ export const InvoicesView = () => {
       setSelectedInvoice(inv);
     }
     setShowGenerateModal(false);
+  };
+
+  const handleEditClick = (inv) => {
+    // Deep clone invoice for editing
+    setEditingInvoice({
+      ...inv,
+      items: inv.items.map(item => ({ ...item }))
+    });
+  };
+
+  const handleItemChange = (index, field, value) => {
+    setEditingInvoice(prev => {
+      const newItems = [...prev.items];
+      newItems[index] = {
+        ...newItems[index],
+        [field]: field === 'hours' || field === 'rate' ? Number(value) || 0 : value
+      };
+      // Recalculate item amount
+      newItems[index].amount = (newItems[index].hours || 0) * (newItems[index].rate || 0);
+
+      // Recalculate totals
+      const subtotal = newItems.reduce((acc, i) => acc + i.amount, 0);
+      const taxAmount = +(subtotal * 0.10).toFixed(2);
+      const totalAmount = +(subtotal + taxAmount).toFixed(2);
+
+      return {
+        ...prev,
+        items: newItems,
+        subtotal,
+        taxAmount,
+        totalAmount
+      };
+    });
+  };
+
+  const handleAddItem = () => {
+    setEditingInvoice(prev => {
+      const newItems = [
+        ...prev.items,
+        { description: 'Additional Engineering Deliverable', hours: 5, rate: 11300, amount: 56500 }
+      ];
+      const subtotal = newItems.reduce((acc, i) => acc + i.amount, 0);
+      const taxAmount = +(subtotal * 0.10).toFixed(2);
+      const totalAmount = +(subtotal + taxAmount).toFixed(2);
+
+      return {
+        ...prev,
+        items: newItems,
+        subtotal,
+        taxAmount,
+        totalAmount
+      };
+    });
+  };
+
+  const handleRemoveItem = (index) => {
+    setEditingInvoice(prev => {
+      const newItems = prev.items.filter((_, idx) => idx !== index);
+      const subtotal = newItems.reduce((acc, i) => acc + i.amount, 0);
+      const taxAmount = +(subtotal * 0.10).toFixed(2);
+      const totalAmount = +(subtotal + taxAmount).toFixed(2);
+
+      return {
+        ...prev,
+        items: newItems,
+        subtotal,
+        taxAmount,
+        totalAmount
+      };
+    });
+  };
+
+  const handleSaveEdit = (e) => {
+    e.preventDefault();
+    if (!editingInvoice) return;
+
+    updateInvoice(editingInvoice.id, {
+      clientName: editingInvoice.clientName,
+      clientEmail: editingInvoice.clientEmail,
+      projectName: editingInvoice.projectName,
+      issueDate: editingInvoice.issueDate,
+      dueDate: editingInvoice.dueDate,
+      status: editingInvoice.status,
+      notes: editingInvoice.notes,
+      items: editingInvoice.items,
+      subtotal: editingInvoice.subtotal,
+      taxAmount: editingInvoice.taxAmount,
+      totalAmount: editingInvoice.totalAmount
+    });
+
+    setEditingInvoice(null);
+  };
+
+  const handleDelete = (invoiceId, invoiceNumber) => {
+    if (window.confirm(`Are you sure you want to delete invoice ${invoiceNumber}? This action cannot be undone.`)) {
+      deleteInvoice(invoiceId);
+      if (selectedInvoice && selectedInvoice.id === invoiceId) {
+        setSelectedInvoice(null);
+      }
+    }
   };
 
   const getStatusBadge = (status) => {
@@ -38,7 +141,7 @@ export const InvoicesView = () => {
           <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
             <FileText className="w-6 h-6 text-indigo-600" /> Invoicing & Billing Ledger
           </h1>
-          <p className="text-xs text-slate-500">Generate client invoices from unbilled hours and track payment statuses</p>
+          <p className="text-xs text-slate-500">Generate, edit, and manage client invoices and payment status in real-time</p>
         </div>
 
         {currentUser.role !== 'client' && (
@@ -47,7 +150,7 @@ export const InvoicesView = () => {
             className="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-bold shadow-sm flex items-center gap-1.5 transition"
           >
             <Plus className="w-4 h-4" />
-            <span>Generate Invoice from Time Logs</span>
+            <span>Generate Invoice for Project</span>
           </button>
         )}
       </div>
@@ -107,13 +210,23 @@ export const InvoicesView = () => {
                       {inv.status}
                     </span>
                   </td>
-                  <td className="py-3.5 px-4 text-right space-x-2">
+                  <td className="py-3.5 px-4 text-right space-x-1.5">
                     <button
                       onClick={() => setSelectedInvoice(inv)}
                       className="px-2.5 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-600 border border-indigo-200 hover:border-indigo-600 text-indigo-700 hover:text-white font-semibold transition text-xs"
                     >
-                      View Invoice
+                      View
                     </button>
+
+                    {isAdmin && (
+                      <button
+                        onClick={() => handleEditClick(inv)}
+                        className="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-800 text-slate-700 hover:text-white font-semibold transition text-xs"
+                        title="Edit Invoice"
+                      >
+                        <Edit3 className="w-3.5 h-3.5 inline" /> Edit
+                      </button>
+                    )}
 
                     {inv.status !== 'Paid' && currentUser.role !== 'client' && (
                       <button
@@ -121,6 +234,16 @@ export const InvoicesView = () => {
                         className="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold transition text-xs"
                       >
                         Mark Paid
+                      </button>
+                    )}
+
+                    {isAdmin && (
+                      <button
+                        onClick={() => handleDelete(inv.id, inv.invoiceNumber)}
+                        className="px-2 py-1.5 rounded-lg bg-red-50 hover:bg-red-600 border border-red-200 hover:border-red-600 text-red-600 hover:text-white font-semibold transition text-xs"
+                        title="Delete Invoice"
+                      >
+                        <Trash2 className="w-3.5 h-3.5 inline" />
                       </button>
                     )}
                   </td>
@@ -131,7 +254,7 @@ export const InvoicesView = () => {
         </div>
       </div>
 
-      {/* Printable Invoice Modal */}
+      {/* Printable Invoice View Modal */}
       {selectedInvoice && (
         <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white border border-slate-200 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-8 space-y-6 shadow-2xl text-slate-900">
@@ -144,6 +267,18 @@ export const InvoicesView = () => {
                 <span className="font-mono text-xs text-slate-500">ID: {selectedInvoice.id}</span>
               </div>
               <div className="flex items-center gap-3">
+                {isAdmin && (
+                  <button
+                    onClick={() => {
+                      const invToEdit = selectedInvoice;
+                      setSelectedInvoice(null);
+                      handleEditClick(invToEdit);
+                    }}
+                    className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-800 text-slate-700 hover:text-white text-xs font-semibold flex items-center gap-1.5"
+                  >
+                    <Edit3 className="w-4 h-4" /> Edit Invoice
+                  </button>
+                )}
                 <button
                   onClick={() => window.print()}
                   className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center gap-1.5"
@@ -194,8 +329,8 @@ export const InvoicesView = () => {
                       <tr key={idx}>
                         <td className="py-2.5 px-3">{item.description}</td>
                         <td className="py-2.5 px-3 text-center font-mono">{item.hours}</td>
-                        <td className="py-2.5 px-3 text-right font-mono">₹{item.rate.toLocaleString('en-IN')}/hr</td>
-                        <td className="py-2.5 px-3 text-right font-mono font-bold text-slate-900">₹{item.amount.toLocaleString('en-IN')}</td>
+                        <td className="py-2.5 px-3 text-right font-mono">₹{(item.rate || 0).toLocaleString('en-IN')}/hr</td>
+                        <td className="py-2.5 px-3 text-right font-mono font-bold text-slate-900">₹{(item.amount || 0).toLocaleString('en-IN')}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -224,6 +359,194 @@ export const InvoicesView = () => {
               Note: {selectedInvoice.notes}
             </div>
           </div>
+        </div>
+      )}
+
+      {/* ADMIN EDIT INVOICE MODAL */}
+      {editingInvoice && (
+        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <form onSubmit={handleSaveEdit} className="bg-white border border-slate-200 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6 space-y-5 shadow-2xl text-slate-900">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+              <div className="flex items-center gap-2">
+                <Edit3 className="w-5 h-5 text-indigo-600" />
+                <h3 className="text-base font-bold text-slate-900">Edit Invoice {editingInvoice.invoiceNumber}</h3>
+              </div>
+              <button type="button" onClick={() => setEditingInvoice(null)} className="text-slate-400 hover:text-slate-900 font-bold text-sm">✕</button>
+            </div>
+
+            {/* General Info Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+              <div>
+                <label className="block font-semibold text-slate-700 mb-1">Client Name</label>
+                <input
+                  type="text"
+                  value={editingInvoice.clientName}
+                  onChange={(e) => setEditingInvoice({ ...editingInvoice, clientName: e.target.value })}
+                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 font-semibold"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block font-semibold text-slate-700 mb-1">Client Email</label>
+                <input
+                  type="email"
+                  value={editingInvoice.clientEmail}
+                  onChange={(e) => setEditingInvoice({ ...editingInvoice, clientEmail: e.target.value })}
+                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 font-semibold"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block font-semibold text-slate-700 mb-1">Project Name</label>
+                <input
+                  type="text"
+                  value={editingInvoice.projectName}
+                  onChange={(e) => setEditingInvoice({ ...editingInvoice, projectName: e.target.value })}
+                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 font-semibold"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block font-semibold text-slate-700 mb-1">Payment Status</label>
+                <select
+                  value={editingInvoice.status}
+                  onChange={(e) => setEditingInvoice({ ...editingInvoice, status: e.target.value })}
+                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 font-bold"
+                >
+                  <option value="Draft">Draft</option>
+                  <option value="Sent">Sent (Pending Payment)</option>
+                  <option value="Paid">Paid</option>
+                  <option value="Overdue">Overdue</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block font-semibold text-slate-700 mb-1">Issue Date</label>
+                <input
+                  type="date"
+                  value={editingInvoice.issueDate}
+                  onChange={(e) => setEditingInvoice({ ...editingInvoice, issueDate: e.target.value })}
+                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block font-semibold text-slate-700 mb-1">Due Date</label>
+                <input
+                  type="date"
+                  value={editingInvoice.dueDate}
+                  onChange={(e) => setEditingInvoice({ ...editingInvoice, dueDate: e.target.value })}
+                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 font-mono"
+                />
+              </div>
+            </div>
+
+            {/* Line Items Dynamic Editor */}
+            <div className="space-y-3 pt-2">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold text-slate-900 uppercase tracking-wider">Line Item Deliverables</label>
+                <button
+                  type="button"
+                  onClick={handleAddItem}
+                  className="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded text-xs font-bold transition flex items-center gap-1"
+                >
+                  <PlusCircle className="w-3.5 h-3.5" /> Add Line Item
+                </button>
+              </div>
+
+              <div className="space-y-2 border border-slate-200 rounded-xl p-3 bg-slate-50 max-h-60 overflow-y-auto">
+                {editingInvoice.items.map((item, idx) => (
+                  <div key={idx} className="flex items-center gap-2 bg-white p-2 rounded-lg border border-slate-200 text-xs">
+                    <input
+                      type="text"
+                      placeholder="Description"
+                      value={item.description}
+                      onChange={(e) => handleItemChange(idx, 'description', e.target.value)}
+                      className="flex-1 p-1.5 bg-slate-50 border border-slate-200 rounded text-slate-900"
+                    />
+                    <div className="w-20">
+                      <span className="text-[9px] text-slate-400 block font-semibold">Hours</span>
+                      <input
+                        type="number"
+                        value={item.hours}
+                        onChange={(e) => handleItemChange(idx, 'hours', e.target.value)}
+                        className="w-full p-1.5 bg-slate-50 border border-slate-200 rounded text-center font-mono"
+                      />
+                    </div>
+                    <div className="w-24">
+                      <span className="text-[9px] text-slate-400 block font-semibold">Rate (₹)</span>
+                      <input
+                        type="number"
+                        value={item.rate}
+                        onChange={(e) => handleItemChange(idx, 'rate', e.target.value)}
+                        className="w-full p-1.5 bg-slate-50 border border-slate-200 rounded text-right font-mono"
+                      />
+                    </div>
+                    <div className="w-28 text-right font-mono font-bold text-slate-900 pr-1">
+                      <span className="text-[9px] text-slate-400 block font-semibold">Amount</span>
+                      ₹{(item.amount || 0).toLocaleString('en-IN')}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveItem(idx)}
+                      className="p-1 text-slate-400 hover:text-red-600 transition"
+                      title="Remove item"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Calculations Totals Preview */}
+            <div className="p-4 rounded-xl bg-slate-900 text-white flex items-center justify-between text-xs font-mono">
+              <div>
+                <span className="text-slate-400 block text-[10px]">SUBTOTAL</span>
+                <span className="font-bold">₹{editingInvoice.subtotal.toLocaleString('en-IN')}</span>
+              </div>
+              <div>
+                <span className="text-slate-400 block text-[10px]">TAX (10%)</span>
+                <span className="font-bold">₹{editingInvoice.taxAmount.toLocaleString('en-IN')}</span>
+              </div>
+              <div className="text-right">
+                <span className="text-slate-400 block text-[10px]">TOTAL AMOUNT</span>
+                <span className="font-extrabold text-emerald-400 text-base">₹{editingInvoice.totalAmount.toLocaleString('en-IN')}</span>
+              </div>
+            </div>
+
+            {/* Notes */}
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">Invoice Notes / Terms</label>
+              <textarea
+                value={editingInvoice.notes}
+                onChange={(e) => setEditingInvoice({ ...editingInvoice, notes: e.target.value })}
+                rows={2}
+                className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900"
+              />
+            </div>
+
+            {/* Footer Buttons */}
+            <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-200">
+              <button
+                type="button"
+                onClick={() => setEditingInvoice(null)}
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold rounded-lg text-xs transition flex items-center gap-1.5 shadow"
+              >
+                <Save className="w-4 h-4" /> Save Changes
+              </button>
+            </div>
+          </form>
         </div>
       )}
 

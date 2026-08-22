@@ -189,11 +189,10 @@ export const TasksView = () => {
           <button
             key={service.id}
             onClick={() => setActiveServiceId(service.name)}
-            className={`px-4 py-2.5 rounded-lg text-xs font-bold transition whitespace-nowrap flex items-center gap-2 ${
-              activeServiceId === service.name
+            className={`px-4 py-2.5 rounded-lg text-xs font-bold transition whitespace-nowrap flex items-center gap-2 ${activeServiceId === service.name
                 ? 'bg-indigo-600 text-white shadow-sm'
                 : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
-            }`}
+              }`}
           >
             <Layers className="w-4 h-4" />
             <span>{service.name}</span>
@@ -343,9 +342,8 @@ export const TasksView = () => {
                           {/* Visual Progress Bar */}
                           <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden border border-slate-200">
                             <div
-                              className={`h-full transition-all duration-300 ${
-                                (task.progress || 0) === 100 ? 'bg-emerald-500' : 'bg-indigo-600'
-                              }`}
+                              className={`h-full transition-all duration-300 ${(task.progress || 0) === 100 ? 'bg-emerald-500' : 'bg-indigo-600'
+                                }`}
                               style={{ width: `${task.progress || 0}%` }}
                             ></div>
                           </div>
@@ -377,11 +375,10 @@ export const TasksView = () => {
                             {isAdmin ? (
                               <button
                                 onClick={() => approveTaskProgress(task.id)}
-                                className={`w-full py-1 rounded text-[11px] font-extrabold flex items-center justify-center gap-1 transition shadow-sm ${
-                                  task.pendingApproval
+                                className={`w-full py-1 rounded text-[11px] font-extrabold flex items-center justify-center gap-1 transition shadow-sm ${task.pendingApproval
                                     ? 'bg-emerald-600 hover:bg-emerald-500 text-white animate-pulse'
                                     : 'bg-indigo-600 hover:bg-indigo-500 text-white'
-                                }`}
+                                  }`}
                               >
                                 <ShieldCheck className="w-3.5 h-3.5" />
                                 <span>{task.pendingApproval ? `✓ Save & Approve Dev's ${task.pendingProgress}%` : 'Save & Approve Progress'}</span>

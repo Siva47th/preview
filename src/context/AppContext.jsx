@@ -627,6 +627,45 @@ export const AppProvider = ({ children }) => {
     } : inv));
   };
 
+  // Admin fully updates invoice fields
+  const updateInvoice = (id, updatedFields) => {
+    setInvoices(prev => prev.map(inv => {
+      if (inv.id === id) {
+        const updated = { ...inv, ...updatedFields };
+        // Recalculate totals if items changed
+        if (updatedFields.items) {
+          updated.subtotal = updatedFields.items.reduce((acc, i) => acc + (i.amount || 0), 0);
+          updated.taxAmount = +(updated.subtotal * (updated.taxRate || 10) / 100).toFixed(2);
+          updated.totalAmount = +(updated.subtotal + updated.taxAmount).toFixed(2);
+        }
+        return updated;
+      }
+      return inv;
+    }));
+
+    setActivities(prev => [{
+      id: `act_${Date.now()}`,
+      user: `${currentUser.name} (Admin)`,
+      action: 'edited and updated invoice:',
+      target: invoices.find(i => i.id === id)?.invoiceNumber || 'Invoice',
+      time: 'Just now'
+    }, ...prev]);
+  };
+
+  // Admin deletes an invoice
+  const deleteInvoice = (id) => {
+    const target = invoices.find(i => i.id === id);
+    setInvoices(prev => prev.filter(inv => inv.id !== id));
+
+    setActivities(prev => [{
+      id: `act_${Date.now()}`,
+      user: `${currentUser.name} (Admin)`,
+      action: 'permanently deleted invoice:',
+      target: target?.invoiceNumber || 'Invoice',
+      time: 'Just now'
+    }, ...prev]);
+  };
+
   const sendChatMessage = (userText) => {
     const userMsg = {
       id: `msg_${Date.now()}`,
@@ -693,6 +732,8 @@ export const AppProvider = ({ children }) => {
       invoices,
       createInvoiceFromTimeLogs,
       updateInvoiceStatus,
+      updateInvoice,
+      deleteInvoice,
       showcase,
       activities,
       chatMessages,
