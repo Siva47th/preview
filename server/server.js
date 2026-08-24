@@ -51,7 +51,7 @@ const memoryStore = {
     { id: 'usr_6', name: 'Mukilan P', email: 'mukil3826@gmail.com', role: 'dev', subRole: 'Backend', password_hash: 'dev123' },
     { id: 'usr_7', name: 'Gunabalan P', email: 'gunag4659@gmail.com', role: 'dev', subRole: 'DevOps/Deployment', password_hash: 'dev123' },
     { id: 'usr_8', name: 'Lakshmana Narayanan S', email: 'narayananlakshmana5@gmail.com', role: 'dev', subRole: 'Frontend', password_hash: 'dev123' },
-    { id: 'usr_9', name: 'Sivasankaran E', email: 'sivasanakaranelu2006@gmail.com', role: 'dev', subRole: 'DevOps/Deployment', password_hash: 'dev123' }
+    { id: 'usr_9', name: 'Sivasankaran E', email: 'sivasankaranelu2006@gmail.com', role: 'dev', subRole: 'DevOps/Deployment', password_hash: 'dev123' }
   ],
   projects: [],
   tasks: [],

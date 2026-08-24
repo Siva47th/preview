@@ -117,5 +117,5 @@ VALUES
 ('usr_6', 'Mukilan P', 'mukil3826@gmail.com', 'developer', 'Backend', 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&q=80&w=250', 'dev123', 108.00),
 ('usr_7', 'Gunabalan P', 'gunag4659@gmail.com', 'developer', 'DevOps/Deployment', 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=250', 'dev123', 112.00),
 ('usr_8', 'Lakshmana Narayanan S', 'narayananlakshmana5@gmail.com', 'developer', 'Frontend', 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=250', 'dev123', 102.00),
-('usr_9', 'Sivasankaran E', 'sivasanakaranelu2006@gmail.com', 'developer', 'DevOps/Deployment', 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=250', 'dev123', 95.00)
-ON CONFLICT (id) DO NOTHING;
+('usr_9', 'Sivasankaran E', 'sivasankaranelu2006@gmail.com', 'developer', 'DevOps/Deployment', 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=250', 'dev123', 95.00)
+ON CONFLICT (id) DO UPDATE SET email = EXCLUDED.email;

@@ -119,7 +119,7 @@ export const INITIAL_USERS = [
   {
     id: 'usr_9',
     name: 'Sivasankaran E',
-    email: 'sivasanakaranelu2006@gmail.com',
+    email: 'sivasankaranelu2006@gmail.com',
     password: 'dev123',
     role: 'dev',
     avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
