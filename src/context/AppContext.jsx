@@ -25,7 +25,10 @@ export const AppProvider = ({ children }) => {
     if (!loaded || !Array.isArray(loaded) || loaded.length === 0) {
       return INITIAL_USERS;
     }
-    return loaded.map(u => u.id === 'usr_9' ? { ...u, email: 'sivasankaranelu2006@gmail.com' } : u);
+    return INITIAL_USERS.map(initU => {
+      const existing = loaded.find(u => u.id === initU.id || u.email.toLowerCase() === initU.email.toLowerCase());
+      return existing ? { ...existing, ...initU, avatar: existing.avatar || initU.avatar } : initU;
+    });
   });
 
   const [currentUser, setCurrentUser] = useState(() => {
@@ -33,7 +36,8 @@ export const AppProvider = ({ children }) => {
     if (!loaded || !loaded.id || !loaded.email) {
       return INITIAL_USERS[0];
     }
-    return loaded;
+    const matching = INITIAL_USERS.find(u => u.id === loaded.id || u.email.toLowerCase() === loaded.email.toLowerCase());
+    return matching ? { ...loaded, title: matching.title, subRole: matching.subRole, role: matching.role } : loaded;
   });
 
   const login = async (email, password) => {

@@ -43,7 +43,7 @@ if (databaseUrl) {
 // In-Memory Data Fallback Store (When PostgreSQL server is offline)
 const memoryStore = {
   users: [
-    { id: 'usr_1', name: 'Krishna Hari I', email: 'ikrishnaharipro@gmail.com', role: 'admin', subRole: 'Agency Manager', password_hash: 'admin123' },
+    { id: 'usr_1', name: 'Krishna Hari I', email: 'ikrishnaharipro@gmail.com', role: 'admin', subRole: 'Manager', password_hash: 'admin123' },
     { id: 'usr_2', name: 'Keshavraj C', email: 'keshavrajc2006@gmail.com', role: 'dev', subRole: 'Frontend', password_hash: 'dev123' },
     { id: 'usr_3', name: 'Meenatchisundaram S', email: 'meenatchisundaram0309@gmail.com', role: 'dev', subRole: 'Database', password_hash: 'dev123' },
     { id: 'usr_4', name: 'Mohamed Asif A N', email: 'mohamedasifan06@gmail.com', role: 'dev', subRole: 'UI/UX Design', password_hash: 'dev123' },
@@ -51,7 +51,7 @@ const memoryStore = {
     { id: 'usr_6', name: 'Mukilan P', email: 'mukil3826@gmail.com', role: 'dev', subRole: 'Backend', password_hash: 'dev123' },
     { id: 'usr_7', name: 'Gunabalan P', email: 'gunag4659@gmail.com', role: 'dev', subRole: 'DevOps/Deployment', password_hash: 'dev123' },
     { id: 'usr_8', name: 'Lakshmana Narayanan S', email: 'narayananlakshmana5@gmail.com', role: 'dev', subRole: 'Frontend', password_hash: 'dev123' },
-    { id: 'usr_9', name: 'Sivasankaran E', email: 'sivasankaranelu2006@gmail.com', role: 'dev', subRole: 'DevOps/Deployment', password_hash: 'dev123' }
+    { id: 'usr_9', name: 'Sivasankaran E', email: 'sivasankaranelu2006@gmail.com', role: 'dev', subRole: 'Testing', password_hash: 'dev123' }
   ],
   projects: [],
   tasks: [],

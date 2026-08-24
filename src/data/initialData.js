@@ -2,14 +2,14 @@ export const SERVICES_CATALOG = [
   {
     id: 'srv_web',
     name: 'Web Development',
-    description: 'End-to-end web architecture covering UI/UX design, frontend, backend, database, and DevOps/Deployment.',
-    layers: ['UI/UX Design', 'Frontend', 'Backend', 'Database', 'DevOps/Deployment']
+    description: 'End-to-end web architecture covering UI/UX design, frontend, backend, database, testing, and DevOps/Deployment.',
+    layers: ['UI/UX Design', 'Frontend', 'Backend', 'Database', 'Testing', 'DevOps/Deployment']
   },
   {
     id: 'srv_app',
     name: 'App Development',
     description: 'Cross-platform mobile apps for iOS and Android with native payment SDKs and cloud syncing.',
-    layers: ['iOS & Android UI', 'Mobile API Services', 'App Store & Deployment']
+    layers: ['iOS & Android UI', 'Mobile API Services', 'QA Testing', 'App Store & Deployment']
   },
   {
     id: 'srv_automation',
@@ -29,7 +29,7 @@ export const INITIAL_USERS = [
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
     title: 'Agency Manager (Admin)',
     specialization: 'Web Development',
-    subRole: 'Backend',
+    subRole: 'Manager',
     hourlyRate: 12500
   },
   {
@@ -75,7 +75,7 @@ export const INITIAL_USERS = [
     password: 'dev123',
     role: 'dev',
     avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop&q=80',
-    title: 'Backend Specialist',
+    title: 'Backend Developer',
     specialization: 'Web Development',
     subRole: 'Backend',
     hourlyRate: 10900
@@ -87,7 +87,7 @@ export const INITIAL_USERS = [
     password: 'dev123',
     role: 'dev',
     avatar: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=150&auto=format&fit=crop&q=80',
-    title: 'Backend Specialist',
+    title: 'Backend Developer',
     specialization: 'Web Development',
     subRole: 'Backend',
     hourlyRate: 10800
@@ -99,7 +99,7 @@ export const INITIAL_USERS = [
     password: 'dev123',
     role: 'dev',
     avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80',
-    title: 'DevOps Lead',
+    title: 'DevOps Engineer',
     specialization: 'AI & Cloud Automation',
     subRole: 'DevOps/Deployment',
     hourlyRate: 11200
@@ -125,7 +125,7 @@ export const INITIAL_USERS = [
     avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
     title: 'QA & Testing Engineer',
     specialization: 'Web Development',
-    subRole: 'DevOps/Deployment',
+    subRole: 'Testing',
     hourlyRate: 9500
   }
 ];
