@@ -56,7 +56,7 @@ export const TimeTrackingView = () => {
       userId: currentUser.id,
       userName: currentUser.name,
       durationMinutes: Math.round(Number(manualHours) * 60),
-      hourlyRate: proj ? proj.hourlyRate : 125,
+      hourlyRate: currentUser.hourlyRate || (proj ? (proj.hourlyRate || 10500) : 10500),
       billable: true,
       invoiced: false,
       date: manualDate,

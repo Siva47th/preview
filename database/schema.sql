@@ -109,13 +109,13 @@ CREATE INDEX IF NOT EXISTS idx_invoices_project ON invoices(project_id);
 -- SEED INITIAL DEV TEAM USERS & AUTH CREDENTIALS
 INSERT INTO users (id, name, email, role, sub_role, avatar, password_hash, hourly_rate)
 VALUES
-('usr_1', 'Krishna Hari I', 'ikrishnaharipro@gmail.com', 'admin', 'Manager', 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250', 'admin123', 125.00),
-('usr_2', 'Keshavraj C', 'keshavrajc2006@gmail.com', 'developer', 'Frontend', 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=250', 'dev123', 105.00),
-('usr_3', 'Meenatchisundaram S', 'meenatchisundaram0309@gmail.com', 'developer', 'Database', 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=250', 'dev123', 115.00),
-('usr_4', 'Mohamed Asif A N', 'mohamedasifan06@gmail.com', 'developer', 'UI/UX Design', 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=250', 'dev123', 98.00),
-('usr_5', 'Hariprasanth M', 'hariprasanthM60@gmail.com', 'developer', 'Backend', 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=250', 'dev123', 109.00),
-('usr_6', 'Mukilan P', 'mukil3826@gmail.com', 'developer', 'Backend', 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&q=80&w=250', 'dev123', 108.00),
-('usr_7', 'Gunabalan P', 'gunag4659@gmail.com', 'developer', 'DevOps/Deployment', 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=250', 'dev123', 112.00),
-('usr_8', 'Lakshmana Narayanan S', 'narayananlakshmana5@gmail.com', 'developer', 'Frontend', 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=250', 'dev123', 102.00),
-('usr_9', 'Sivasankaran E', 'sivasankaranelu2006@gmail.com', 'developer', 'Testing', 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=250', 'dev123', 95.00)
-ON CONFLICT (id) DO UPDATE SET email = EXCLUDED.email, sub_role = EXCLUDED.sub_role, role = EXCLUDED.role;
+('usr_1', 'Krishna Hari I', 'ikrishnaharipro@gmail.com', 'admin', 'Manager', 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250', 'admin123', 12500.00),
+('usr_2', 'Keshavraj C', 'keshavrajc2006@gmail.com', 'developer', 'Frontend', 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=250', 'dev123', 10500.00),
+('usr_3', 'Meenatchisundaram S', 'meenatchisundaram0309@gmail.com', 'developer', 'Database', 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=250', 'dev123', 11500.00),
+('usr_4', 'Mohamed Asif A N', 'mohamedasifan06@gmail.com', 'developer', 'UI/UX Design', 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=250', 'dev123', 9800.00),
+('usr_5', 'Hariprasanth M', 'hariprasanthM60@gmail.com', 'developer', 'Backend', 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=250', 'dev123', 10900.00),
+('usr_6', 'Mukilan P', 'mukil3826@gmail.com', 'developer', 'Backend', 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&q=80&w=250', 'dev123', 10800.00),
+('usr_7', 'Gunabalan P', 'gunag4659@gmail.com', 'developer', 'DevOps/Deployment', 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=250', 'dev123', 11200.00),
+('usr_8', 'Lakshmana Narayanan S', 'narayananlakshmana5@gmail.com', 'developer', 'Frontend', 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=250', 'dev123', 10200.00),
+('usr_9', 'Sivasankaran E', 'sivasankaranelu2006@gmail.com', 'developer', 'Testing', 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=250', 'dev123', 9500.00)
+ON CONFLICT (id) DO UPDATE SET email = EXCLUDED.email, sub_role = EXCLUDED.sub_role, role = EXCLUDED.role, hourly_rate = EXCLUDED.hourly_rate;
