@@ -4,6 +4,7 @@ import {
   User,
   Mail,
   Key,
+  Lock,
   CheckCircle2,
   X,
   Camera,
@@ -79,6 +80,8 @@ export const ProfileSettingsModal = ({ isOpen, onClose }) => {
 
   if (!isOpen || !currentUser) return null;
 
+  const isAdmin = currentUser?.role === 'admin';
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setStatusMessage(null);
@@ -93,7 +96,7 @@ export const ProfileSettingsModal = ({ isOpen, onClose }) => {
       email,
       title,
       subRole,
-      hourlyRate: Number(hourlyRate),
+      hourlyRate: isAdmin ? Number(hourlyRate) : (currentUser.hourlyRate || 10500),
       avatar
     };
 
@@ -306,17 +309,34 @@ export const ProfileSettingsModal = ({ isOpen, onClose }) => {
 
           {/* Hourly Rate */}
           <div>
-            <label className="block text-xs font-bold text-slate-900 mb-1">Hourly Billing Rate (₹/hr)</label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-xs font-bold text-slate-900">Hourly Billing Rate (₹/hr)</label>
+              {!isAdmin && (
+                <span className="text-[10px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <Lock className="w-3 h-3 text-amber-600" /> Admin Managed Only
+                </span>
+              )}
+            </div>
             <div className="relative">
               <IndianRupee className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
               <input
                 type="number"
+                disabled={!isAdmin}
                 value={hourlyRate}
                 onChange={(e) => setHourlyRate(e.target.value)}
                 placeholder="10500"
-                className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono font-bold text-slate-900 focus:outline-none focus:border-indigo-600 focus:bg-white transition"
+                className={`w-full pl-9 pr-3 py-2 border rounded-xl text-xs font-mono font-bold transition ${
+                  isAdmin
+                    ? 'bg-slate-50 border-slate-200 text-slate-900 focus:outline-none focus:border-indigo-600 focus:bg-white'
+                    : 'bg-slate-100 border-slate-200 text-slate-500 cursor-not-allowed select-none'
+                }`}
               />
             </div>
+            {!isAdmin && (
+              <p className="text-[10px] text-slate-400 mt-1">
+                Your hourly compensation rate is locked and can only be modified by the Agency Manager (Krishna Hari I).
+              </p>
+            )}
           </div>
 
           {/* Security Credentials / Change Password */}
