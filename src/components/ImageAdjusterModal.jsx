@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { X, ZoomIn, ZoomOut, RotateCw, Check, Move, Crop, Maximize, RefreshCw } from 'lucide-react';
 
-const VIEWPORT_SIZE = 360; // Base viewport dimension in px
-const OUTPUT_SIZE = 800;   // High-Resolution 800x800 Canvas Output
+const VIEWPORT_SIZE = 360;  // Viewport box width & height in px
+const CROP_CIRCLE_SIZE = 260; // Diameter of the circle crop guide in px
+const OUTPUT_SIZE = 600;    // Canvas output dimension in px
 
 export const ImageAdjusterModal = ({ imageSrc, isOpen, onCancel, onSave }) => {
   const [zoom, setZoom] = useState(1);
@@ -10,7 +11,7 @@ export const ImageAdjusterModal = ({ imageSrc, isOpen, onCancel, onSave }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-  const [imgDimensions, setImgDimensions] = useState({ width: VIEWPORT_SIZE, height: VIEWPORT_SIZE });
+  const [imgDimensions, setImgDimensions] = useState({ width: CROP_CIRCLE_SIZE, height: CROP_CIRCLE_SIZE });
 
   const imageRef = useRef(null);
 
@@ -19,25 +20,23 @@ export const ImageAdjusterModal = ({ imageSrc, isOpen, onCancel, onSave }) => {
     const img = imageRef.current;
     if (!img) return;
 
-    const naturalWidth = img.naturalWidth || 800;
-    const naturalHeight = img.naturalHeight || 800;
+    const naturalWidth = img.naturalWidth || 600;
+    const naturalHeight = img.naturalHeight || 600;
     const naturalAspect = naturalWidth / naturalHeight;
 
-    let baseW = VIEWPORT_SIZE;
-    let baseH = VIEWPORT_SIZE;
+    let baseW = CROP_CIRCLE_SIZE;
+    let baseH = CROP_CIRCLE_SIZE;
 
     if (naturalAspect >= 1) {
-      baseW = VIEWPORT_SIZE * naturalAspect;
-      baseH = VIEWPORT_SIZE;
-      setZoom(0.85);
+      baseW = CROP_CIRCLE_SIZE * naturalAspect;
+      baseH = CROP_CIRCLE_SIZE;
     } else {
-      baseW = VIEWPORT_SIZE;
-      baseH = VIEWPORT_SIZE / naturalAspect;
-      // For tall portrait photos, scale comfortably so face and hair fit inside the crop ring
-      setZoom(0.75);
+      baseW = CROP_CIRCLE_SIZE;
+      baseH = CROP_CIRCLE_SIZE / naturalAspect;
     }
 
     setImgDimensions({ width: baseW, height: baseH });
+    setZoom(1);
     setPosition({ x: 0, y: 0 });
   };
 
@@ -76,7 +75,7 @@ export const ImageAdjusterModal = ({ imageSrc, isOpen, onCancel, onSave }) => {
   const handleWheel = (e) => {
     e.preventDefault();
     const delta = e.deltaY > 0 ? -0.05 : 0.05;
-    setZoom(prev => Math.min(Math.max(parseFloat((prev + delta).toFixed(2)), 0.2), 3.5));
+    setZoom(prev => Math.min(Math.max(parseFloat((prev + delta).toFixed(2)), 0.3), 3.5));
   };
 
   // Touch handlers for mobile devices
@@ -98,7 +97,7 @@ export const ImageAdjusterModal = ({ imageSrc, isOpen, onCancel, onSave }) => {
     });
   };
 
-  // Pixel-perfect High-Resolution HTML5 Canvas Crop
+  // 100% Mathematically Exact 1:1 Canvas Crop
   const handleApplyCrop = () => {
     const canvas = document.createElement('canvas');
     canvas.width = OUTPUT_SIZE;
@@ -108,38 +107,42 @@ export const ImageAdjusterModal = ({ imageSrc, isOpen, onCancel, onSave }) => {
     const img = imageRef.current;
     if (!img) return;
 
-    // Enable ultra-high quality anti-aliasing / smoothing
+    // Enable high quality anti-aliasing
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';
 
-    // Dark sleek background
+    // Fill background
     ctx.fillStyle = '#0f172a';
     ctx.fillRect(0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
 
-    const scaleFactor = OUTPUT_SIZE / VIEWPORT_SIZE;
+    // Scale factor from Circle Guide in DOM to Canvas Output
+    const scaleFactor = OUTPUT_SIZE / CROP_CIRCLE_SIZE;
 
     ctx.save();
-    // Center of canvas
+    // 1. Move to center of the crop circle
     ctx.translate(OUTPUT_SIZE / 2, OUTPUT_SIZE / 2);
+
+    // 2. Apply drag translation
+    ctx.translate(position.x * scaleFactor, position.y * scaleFactor);
+
+    // 3. Apply rotation
     ctx.rotate((rotation * Math.PI) / 180);
-    ctx.scale(zoom, zoom);
 
-    const drawW = imgDimensions.width * scaleFactor;
-    const drawH = imgDimensions.height * scaleFactor;
-    const offsetX = position.x * scaleFactor;
-    const offsetY = position.y * scaleFactor;
+    // 4. Apply zoom scaling
+    ctx.scale(zoom * scaleFactor, zoom * scaleFactor);
 
+    // 5. Draw image centered
     ctx.drawImage(
       img,
-      -drawW / 2 + offsetX,
-      -drawH / 2 + offsetY,
-      drawW,
-      drawH
+      -imgDimensions.width / 2,
+      -imgDimensions.height / 2,
+      imgDimensions.width,
+      imgDimensions.height
     );
 
     ctx.restore();
 
-    // Export ultra-sharp high-quality image
+    // Export ultra-clear JPEG data URL
     const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.96);
     onSave(croppedDataUrl);
   };
@@ -159,8 +162,8 @@ export const ImageAdjusterModal = ({ imageSrc, isOpen, onCancel, onSave }) => {
               <Crop className="w-5 h-5 text-indigo-400" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white tracking-tight">Adjust & Crop Profile Photo</h3>
-              <p className="text-xs text-slate-400">Position inside the circle • Drag and zoom for a crystal-clear look</p>
+              <h3 className="text-base font-bold text-white tracking-tight">Adjust & Position Profile Photo</h3>
+              <p className="text-xs text-slate-400">Everything inside the circle will be saved as your profile picture</p>
             </div>
           </div>
           <button
@@ -182,7 +185,7 @@ export const ImageAdjusterModal = ({ imageSrc, isOpen, onCancel, onSave }) => {
           onTouchMove={handleTouchMove}
           onTouchEnd={handleMouseUp}
         >
-          {/* Base-sized, mathematically scaled image */}
+          {/* Base-sized image matching exact coordinate space */}
           <img
             ref={imageRef}
             src={imageSrc}
@@ -193,7 +196,7 @@ export const ImageAdjusterModal = ({ imageSrc, isOpen, onCancel, onSave }) => {
               height: `${imgDimensions.height}px`,
               minWidth: `${imgDimensions.width}px`,
               minHeight: `${imgDimensions.height}px`,
-              transform: `translate(${position.x}px, ${position.y}px) scale(${zoom}) rotate(${rotation}deg)`,
+              transform: `translate(${position.x}px, ${position.y}px) rotate(${rotation}deg) scale(${zoom})`,
               transition: isDragging ? 'none' : 'transform 0.05s ease-out',
               imageRendering: 'auto'
             }}
@@ -201,16 +204,19 @@ export const ImageAdjusterModal = ({ imageSrc, isOpen, onCancel, onSave }) => {
             draggable={false}
           />
 
-          {/* Circular Crop Guide Mask with Vignette */}
+          {/* Exact Circular Crop Guide Mask */}
           <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-            <div className="w-[280px] h-[280px] rounded-full border-2 border-indigo-400 shadow-[0_0_0_9999px_rgba(15,23,42,0.78)] ring-4 ring-indigo-400/20"></div>
+            <div
+              style={{ width: `${CROP_CIRCLE_SIZE}px`, height: `${CROP_CIRCLE_SIZE}px` }}
+              className="rounded-full border-2 border-indigo-400 shadow-[0_0_0_9999px_rgba(15,23,42,0.82)] ring-4 ring-indigo-400/20"
+            ></div>
           </div>
 
-          <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-slate-900/80 backdrop-blur text-[11px] text-slate-300 font-mono flex items-center gap-1.5 shadow">
+          <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-slate-900/85 backdrop-blur text-[11px] text-slate-300 font-mono flex items-center gap-1.5 shadow">
             <Move className="w-3.5 h-3.5 text-indigo-400 animate-pulse" /> Drag freely
           </div>
 
-          <div className="absolute bottom-3 right-3 px-2.5 py-1 rounded-full bg-slate-900/80 backdrop-blur text-[10px] text-indigo-300 font-mono shadow">
+          <div className="absolute bottom-3 right-3 px-2.5 py-1 rounded-full bg-slate-900/85 backdrop-blur text-[10px] text-indigo-300 font-mono shadow">
             Scroll to zoom
           </div>
         </div>
@@ -231,7 +237,7 @@ export const ImageAdjusterModal = ({ imageSrc, isOpen, onCancel, onSave }) => {
             <div className="flex items-center gap-3">
               <button
                 type="button"
-                onClick={() => setZoom(prev => Math.max(parseFloat((prev - 0.1).toFixed(2)), 0.2))}
+                onClick={() => setZoom(prev => Math.max(parseFloat((prev - 0.1).toFixed(2)), 0.3))}
                 className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition"
                 title="Zoom Out"
               >
@@ -239,7 +245,7 @@ export const ImageAdjusterModal = ({ imageSrc, isOpen, onCancel, onSave }) => {
               </button>
               <input
                 type="range"
-                min="0.2"
+                min="0.3"
                 max="3.5"
                 step="0.02"
                 value={zoom}
@@ -257,19 +263,19 @@ export const ImageAdjusterModal = ({ imageSrc, isOpen, onCancel, onSave }) => {
             </div>
           </div>
 
-          {/* Preset Buttons */}
+          {/* Quick Fit, Rotate & Reset Controls */}
           <div className="flex items-center justify-between pt-2 border-t border-slate-800/80 text-xs">
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => {
-                  setZoom(0.65);
+                  setZoom(0.85);
                   setPosition({ x: 0, y: 0 });
                 }}
                 className="px-3 py-1.5 bg-slate-800 hover:bg-indigo-600/30 hover:border-indigo-500/40 border border-slate-700 text-slate-300 hover:text-white rounded-lg transition flex items-center gap-1.5 text-xs font-semibold"
-                title="Fit full head and shoulders"
+                title="Center and fit face inside circle"
               >
-                <Maximize className="w-3.5 h-3.5 text-indigo-400" /> Fit Full Portrait
+                <Maximize className="w-3.5 h-3.5 text-indigo-400" /> Center Frame
               </button>
               <button
                 type="button"
@@ -309,7 +315,7 @@ export const ImageAdjusterModal = ({ imageSrc, isOpen, onCancel, onSave }) => {
             className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white rounded-xl text-xs font-extrabold shadow-lg shadow-indigo-600/30 transition flex items-center gap-2"
           >
             <Check className="w-4 h-4" />
-            <span>Apply Crisp HD Crop</span>
+            <span>Apply Crop & Set Photo</span>
           </button>
         </div>
       </div>
