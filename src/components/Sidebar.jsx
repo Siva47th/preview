@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import {
   LayoutDashboard,
@@ -12,8 +12,10 @@ import {
   Users,
   Layers,
   History,
-  CircleUser
+  CircleUser,
+  ZoomIn
 } from 'lucide-react';
+import { AvatarZoomModal } from './AvatarZoomModal';
 
 export const Sidebar = () => {
   const {
@@ -24,6 +26,8 @@ export const Sidebar = () => {
     selectedServiceId,
     setSelectedServiceId
   } = useApp();
+
+  const [showZoom, setShowZoom] = useState(false);
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -122,9 +126,16 @@ export const Sidebar = () => {
       <div className="p-3 border-t border-slate-200 bg-slate-50">
         <div className="p-2.5 rounded-xl bg-white border border-slate-200 shadow-sm">
           <div className="flex items-center gap-2.5">
-            <div className="relative shrink-0">
-              <img src={currentUser.avatar} alt={currentUser.name} className="w-9 h-9 rounded-full object-cover border-2 border-indigo-600" />
+            <div
+              onClick={() => setShowZoom(true)}
+              className="relative shrink-0 group cursor-pointer"
+              title="Click to Zoom Profile Picture"
+            >
+              <img src={currentUser.avatar} alt={currentUser.name} className="w-9 h-9 rounded-full object-cover border-2 border-indigo-600 group-hover:opacity-85 transition" />
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white absolute -bottom-0.5 -right-0.5"></span>
+              <div className="absolute inset-0 bg-slate-950/40 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition">
+                <ZoomIn className="w-3 h-3 text-white" />
+              </div>
             </div>
             <div className="min-w-0 flex-1">
               <div className="text-xs font-bold text-slate-900 truncate">{currentUser.name}</div>
@@ -138,6 +149,13 @@ export const Sidebar = () => {
           </div>
         </div>
       </div>
+
+      {/* Avatar Zoom Lightbox Modal */}
+      <AvatarZoomModal
+        user={currentUser}
+        isOpen={showZoom}
+        onClose={() => setShowZoom(false)}
+      />
     </aside>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { Users, Plus, ShieldCheck, UserCheck, Code, IndianRupee, Lock, Trash2, Layers, Key, Edit3, Save, Eye, EyeOff, ShieldAlert } from 'lucide-react';
+import { Users, Plus, ShieldCheck, UserCheck, Code, IndianRupee, Lock, Trash2, Layers, Key, Edit3, Save, Eye, EyeOff, ShieldAlert, ZoomIn } from 'lucide-react';
+import { AvatarZoomModal } from '../components/AvatarZoomModal';
 
 export const AdminUsersView = () => {
   const { users, addUser, updateUser, deleteUser, currentUser, servicesCatalog } = useApp();
@@ -10,6 +11,7 @@ export const AdminUsersView = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [showPasswordMap, setShowPasswordMap] = useState({});
+  const [zoomedUser, setZoomedUser] = useState(null);
 
   // Add Dev Form State
   const [newName, setNewName] = useState('');
@@ -139,7 +141,16 @@ export const AdminUsersView = () => {
             <div className="space-y-3">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <img src={usr.avatar} alt={usr.name} className="w-10 h-10 rounded-full object-cover border border-slate-200 shrink-0" />
+                  <div
+                    onClick={() => setZoomedUser(usr)}
+                    className="relative group cursor-pointer shrink-0"
+                    title={`Click to zoom ${usr.name}'s profile picture`}
+                  >
+                    <img src={usr.avatar} alt={usr.name} className="w-11 h-11 rounded-full object-cover border-2 border-slate-200 group-hover:border-indigo-600 transition shadow-sm" />
+                    <div className="absolute inset-0 bg-slate-950/40 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition">
+                      <ZoomIn className="w-4 h-4 text-white" />
+                    </div>
+                  </div>
                   <div>
                     <h3 className="text-sm font-bold text-slate-900">{usr.name}</h3>
                     <p className="text-xs text-slate-500 font-mono">{usr.email}</p>
@@ -422,6 +433,13 @@ export const AdminUsersView = () => {
           </div>
         </div>
       )}
+
+      {/* Profile Picture Fullscreen HD Zoom Modal */}
+      <AvatarZoomModal
+        user={zoomedUser}
+        isOpen={!!zoomedUser}
+        onClose={() => setZoomedUser(null)}
+      />
     </div>
   );
 };
