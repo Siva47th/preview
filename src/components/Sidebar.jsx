@@ -9,10 +9,10 @@ import {
   Award,
   ShieldCheck,
   Zap,
-  UserCheck,
   Users,
   Layers,
-  History
+  History,
+  CircleUser
 } from 'lucide-react';
 
 export const Sidebar = () => {
@@ -20,8 +20,6 @@ export const Sidebar = () => {
     activeTab,
     setActiveTab,
     currentUser,
-    setCurrentUser,
-    users,
     servicesCatalog,
     selectedServiceId,
     setSelectedServiceId
@@ -120,41 +118,27 @@ export const Sidebar = () => {
         </nav>
       </div>
 
-      {/* Role Switcher (Admin & Dev Roles Only) */}
+      {/* Logged-In User Card */}
       <div className="p-3 border-t border-slate-200 bg-slate-50">
-        <div className="px-2 py-1 mb-1.5 text-[10px] text-slate-500 font-semibold uppercase tracking-wider flex items-center gap-1">
-          <UserCheck className="w-3 h-3 text-indigo-600" /> Switch Active Account
-        </div>
-        <div className="space-y-1">
-          {users.map((usr) => {
-            const isSelected = currentUser.id === usr.id;
-            return (
-              <button
-                key={usr.id}
-                onClick={() => setCurrentUser(usr)}
-                className={`w-full text-left p-1.5 rounded-lg text-xs flex items-center justify-between transition ${
-                  isSelected
-                    ? 'bg-indigo-50 border border-indigo-300 text-indigo-900 font-semibold'
-                    : 'text-slate-600 hover:bg-slate-200 hover:text-slate-900'
-                }`}
-              >
-                <div className="flex items-center gap-2">
-                  <img src={usr.avatar} alt={usr.name} className="w-5 h-5 rounded-full object-cover border border-slate-300" />
-                  <div className="truncate max-w-[110px]">
-                    <div className="font-medium truncate text-[11px]">{usr.name}</div>
-                    <div className="text-[9px] text-slate-500 truncate">{usr.title}</div>
-                  </div>
-                </div>
-                <span className={`text-[8px] px-1 py-0.5 rounded font-mono uppercase ${
-                  usr.role === 'admin' ? 'bg-purple-100 text-purple-700 border border-purple-200' : 'bg-cyan-100 text-cyan-700 border border-cyan-200'
-                }`}>
-                  {usr.role}
-                </span>
-              </button>
-            );
-          })}
+        <div className="p-2.5 rounded-xl bg-white border border-slate-200 shadow-sm">
+          <div className="flex items-center gap-2.5">
+            <div className="relative shrink-0">
+              <img src={currentUser.avatar} alt={currentUser.name} className="w-9 h-9 rounded-full object-cover border-2 border-indigo-600" />
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white absolute -bottom-0.5 -right-0.5"></span>
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="text-xs font-bold text-slate-900 truncate">{currentUser.name}</div>
+              <div className="text-[10px] text-slate-500 truncate">{currentUser.title || currentUser.subRole || 'Developer'}</div>
+            </div>
+            <span className={`text-[8px] px-1.5 py-0.5 rounded font-bold uppercase shrink-0 ${
+              currentUser.role === 'admin' ? 'bg-purple-100 text-purple-700 border border-purple-200' : 'bg-emerald-100 text-emerald-700 border border-emerald-200'
+            }`}>
+              {currentUser.role === 'admin' ? 'Admin' : 'Dev'}
+            </span>
+          </div>
         </div>
       </div>
     </aside>
   );
 };
+

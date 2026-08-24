@@ -6,10 +6,14 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": "node server/server.js",
+    "db:setup": "node server/init-db.js"
   },
   "dependencies": {
+    "dotenv": "^17.4.2",
     "lucide-react": "^0.344.0",
+    "pg": "^8.23.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

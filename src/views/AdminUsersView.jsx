@@ -110,7 +110,7 @@ export const AdminUsersView = () => {
           <div>
             <div className="text-xs font-bold text-amber-900">Developer View Only (Read-Only Mode)</div>
             <div className="text-[11px] text-amber-800">
-              Only Agency Admin (Alex Vance) can modify developer credentials, edit sub-roles, or change team passwords.
+              Only the Agency Admin can modify developer credentials, edit sub-roles, or change team passwords.
             </div>
           </div>
         </div>
@@ -168,23 +168,29 @@ export const AdminUsersView = () => {
                 </div>
               </div>
 
-              {/* Password Indicator Box */}
+              {/* Password Indicator Box - Restricted to Admin Only */}
               <div className="p-2.5 rounded-lg bg-slate-900 text-white flex items-center justify-between text-xs font-mono">
                 <div className="flex items-center gap-2">
                   <Key className="w-3.5 h-3.5 text-amber-400" />
                   <span className="text-[10px] text-slate-400 uppercase font-bold">Password:</span>
                   <span className="font-bold text-emerald-400">
-                    {showPasswordMap[usr.id] ? (usr.password || 'dev123') : '••••••••'}
+                    {isAdmin
+                      ? (showPasswordMap[usr.id] ? (usr.password || 'dev123') : '••••••••')
+                      : '•••••••• (Protected)'}
                   </span>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => togglePasswordVisibility(usr.id)}
-                  className="text-slate-400 hover:text-white transition"
-                  title="Toggle Password Preview"
-                >
-                  {showPasswordMap[usr.id] ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                </button>
+                {isAdmin ? (
+                  <button
+                    type="button"
+                    onClick={() => togglePasswordVisibility(usr.id)}
+                    className="text-slate-400 hover:text-white transition"
+                    title="Toggle Password Preview (Admin Only)"
+                  >
+                    {showPasswordMap[usr.id] ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                  </button>
+                ) : (
+                  <span className="text-[10px] text-slate-500 font-sans italic">Admin Only</span>
+                )}
               </div>
 
               <div className="flex items-center justify-between text-xs text-slate-600 pt-1">

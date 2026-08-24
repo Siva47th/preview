@@ -276,7 +276,7 @@ export const TasksView = () => {
                             <div className="flex items-center justify-between text-[10px] text-slate-600 pt-0.5 border-t border-indigo-100">
                               <span className="font-semibold text-slate-500">Client:</span>
                               <strong className="text-indigo-700 bg-white px-1.5 py-0.5 rounded border border-indigo-200">
-                                {proj ? proj.clientName : 'Apex Corporation'}
+                                {proj ? (proj.clientName || 'Client') : 'Client'}
                               </strong>
                             </div>
                           </div>

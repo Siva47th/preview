@@ -9,36 +9,42 @@ import {
   INITIAL_SHOWCASE,
   INITIAL_ACTIVITIES
 } from '../data/initialData';
+import storageService, { FW_STORAGE_KEYS } from '../services/storageService';
+import dbService from '../services/dbService';
 
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   // Authentication & Active User State
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return localStorage.getItem('fw_authed_v7') === 'true';
+    return storageService.getItem(FW_STORAGE_KEYS.AUTHED, false) === true;
   });
 
   const [users, setUsers] = useState(() => {
-    const saved = localStorage.getItem('fw_users_v7');
-    return saved ? JSON.parse(saved) : INITIAL_USERS;
+    const loaded = storageService.getItem(FW_STORAGE_KEYS.USERS, INITIAL_USERS);
+    if (!loaded || !Array.isArray(loaded) || loaded.length === 0) {
+      return INITIAL_USERS;
+    }
+    return loaded;
   });
 
   const [currentUser, setCurrentUser] = useState(() => {
-    const saved = localStorage.getItem('fw_user_v7');
-    return saved ? JSON.parse(saved) : INITIAL_USERS[0]; // Default: Alex Vance (Admin)
+    const loaded = storageService.getItem(FW_STORAGE_KEYS.CURRENT_USER, null);
+    if (!loaded || !loaded.id || !loaded.email) {
+      return INITIAL_USERS[0];
+    }
+    return loaded;
   });
 
-  const login = (email, password) => {
-    const user = users.find(u =>
-      u.email.toLowerCase() === email.trim().toLowerCase() &&
-      (u.password || 'admin123') === password
-    );
+  const login = async (email, password) => {
+    const authResult = await dbService.authenticateUser(email, password, users);
 
-    if (user) {
+    if (authResult.success && authResult.user) {
+      const user = authResult.user;
       setCurrentUser(user);
       setIsAuthenticated(true);
-      localStorage.setItem('fw_authed_v7', 'true');
-      localStorage.setItem('fw_user_v7', JSON.stringify(user));
+      storageService.setItem(FW_STORAGE_KEYS.AUTHED, true);
+      storageService.setItem(FW_STORAGE_KEYS.CURRENT_USER, user);
       setActivities(prev => [{
         id: `act_${Date.now()}`,
         user: user.name,
@@ -48,12 +54,12 @@ export const AppProvider = ({ children }) => {
       }, ...prev]);
       return { success: true, user };
     }
-    return { success: false, error: 'Invalid email address or password' };
+    return { success: false, error: authResult.error || 'Invalid email address or password' };
   };
 
   const logout = () => {
     setIsAuthenticated(false);
-    localStorage.removeItem('fw_authed_v7');
+    storageService.removeItem(FW_STORAGE_KEYS.AUTHED);
     setActivities(prev => [{
       id: `act_${Date.now()}`,
       user: currentUser ? currentUser.name : 'User',
@@ -68,8 +74,8 @@ export const AppProvider = ({ children }) => {
     if (targetUser) {
       setCurrentUser(targetUser);
       setIsAuthenticated(true);
-      localStorage.setItem('fw_authed_v7', 'true');
-      localStorage.setItem('fw_user_v7', JSON.stringify(targetUser));
+      storageService.setItem(FW_STORAGE_KEYS.AUTHED, true);
+      storageService.setItem(FW_STORAGE_KEYS.CURRENT_USER, targetUser);
     }
   };
 
@@ -82,41 +88,33 @@ export const AppProvider = ({ children }) => {
 
   // Core Data Stores
   const [projects, setProjects] = useState(() => {
-    const saved = localStorage.getItem('fw_projects_v6');
-    return saved ? JSON.parse(saved) : INITIAL_PROJECTS;
+    return storageService.getItem(FW_STORAGE_KEYS.PROJECTS, INITIAL_PROJECTS);
   });
 
   const [tasks, setTasks] = useState(() => {
-    const saved = localStorage.getItem('fw_tasks_v6');
-    return saved ? JSON.parse(saved) : INITIAL_TASKS;
+    return storageService.getItem(FW_STORAGE_KEYS.TASKS, INITIAL_TASKS);
   });
 
   const [timeLogs, setTimeLogs] = useState(() => {
-    const saved = localStorage.getItem('fw_timelogs_v6');
-    return saved ? JSON.parse(saved) : INITIAL_TIME_LOGS;
+    return storageService.getItem(FW_STORAGE_KEYS.TIME_LOGS, INITIAL_TIME_LOGS);
   });
 
   const [invoices, setInvoices] = useState(() => {
-    const saved = localStorage.getItem('fw_invoices_v6');
-    return saved ? JSON.parse(saved) : INITIAL_INVOICES;
+    return storageService.getItem(FW_STORAGE_KEYS.INVOICES, INITIAL_INVOICES);
   });
 
   const [showcase, setShowcase] = useState(() => {
-    const saved = localStorage.getItem('fw_showcase_v6');
-    return saved ? JSON.parse(saved) : INITIAL_SHOWCASE;
+    return storageService.getItem(FW_STORAGE_KEYS.SHOWCASE, INITIAL_SHOWCASE);
   });
-  const [activities, setActivities] = useState(INITIAL_ACTIVITIES);
 
-  useEffect(() => {
-    localStorage.setItem('fw_showcase_v6', JSON.stringify(showcase));
-  }, [showcase]);
+  const [activities, setActivities] = useState(() => {
+    return storageService.getItem(FW_STORAGE_KEYS.ACTIVITIES, INITIAL_ACTIVITIES);
+  });
 
   // INDIVIDUAL PER-TASK STOPWATCHES MAP
   // Key: taskId -> { isRunning: boolean, elapsedSeconds: number, startTime: number }
   const [taskTimers, setTaskTimers] = useState(() => {
-    const saved = localStorage.getItem('fw_task_timers_v6');
-    if (saved) return JSON.parse(saved);
-    return {
+    const defaultTimers = {
       'tsk_100': { isRunning: false, elapsedSeconds: 960, startTime: null },
       'tsk_101': { isRunning: false, elapsedSeconds: 2450, startTime: null },
       'tsk_102': { isRunning: false, elapsedSeconds: 1820, startTime: null },
@@ -125,7 +123,15 @@ export const AppProvider = ({ children }) => {
       'tsk_301': { isRunning: false, elapsedSeconds: 600, startTime: null },
       'tsk_201': { isRunning: false, elapsedSeconds: 3100, startTime: null }
     };
+    return storageService.getItem(FW_STORAGE_KEYS.TASK_TIMERS, defaultTimers);
   });
+
+  // Storage Metrics Diagnostics
+  const [storageMetrics, setStorageMetrics] = useState(() => storageService.getStorageMetrics());
+
+  const updateMetrics = () => {
+    setStorageMetrics(storageService.getStorageMetrics());
+  };
 
   // AI Chatbot State
   const [chatMessages, setChatMessages] = useState([
@@ -139,32 +145,102 @@ export const AppProvider = ({ children }) => {
 
   // Persistence Effects
   useEffect(() => {
-    localStorage.setItem('fw_users_v6', JSON.stringify(users));
+    dbService.persistEntityToDb('users', users);
+    updateMetrics();
   }, [users]);
 
   useEffect(() => {
-    localStorage.setItem('fw_user_v6', JSON.stringify(currentUser));
+    dbService.persistEntityToDb('currentUser', currentUser);
+    updateMetrics();
   }, [currentUser]);
 
   useEffect(() => {
-    localStorage.setItem('fw_projects_v6', JSON.stringify(projects));
+    dbService.persistEntityToDb('projects', projects);
+    updateMetrics();
   }, [projects]);
 
   useEffect(() => {
-    localStorage.setItem('fw_tasks_v6', JSON.stringify(tasks));
+    dbService.persistEntityToDb('tasks', tasks);
+    updateMetrics();
   }, [tasks]);
 
   useEffect(() => {
-    localStorage.setItem('fw_timelogs_v6', JSON.stringify(timeLogs));
+    dbService.persistEntityToDb('timeLogs', timeLogs);
+    updateMetrics();
   }, [timeLogs]);
 
   useEffect(() => {
-    localStorage.setItem('fw_invoices_v6', JSON.stringify(invoices));
+    dbService.persistEntityToDb('invoices', invoices);
+    updateMetrics();
   }, [invoices]);
 
   useEffect(() => {
-    localStorage.setItem('fw_task_timers_v6', JSON.stringify(taskTimers));
+    dbService.persistEntityToDb('showcase', showcase);
+    updateMetrics();
+  }, [showcase]);
+
+  useEffect(() => {
+    dbService.persistEntityToDb('activities', activities);
+    updateMetrics();
+  }, [activities]);
+
+  useEffect(() => {
+    dbService.persistEntityToDb('taskTimers', taskTimers);
+    updateMetrics();
   }, [taskTimers]);
+
+  // Workspace Backup & Storage Management Handlers
+  const exportWorkspace = () => {
+    return storageService.exportWorkspaceData({
+      users,
+      projects,
+      tasks,
+      timeLogs,
+      invoices,
+      showcase,
+      taskTimers,
+      activities
+    });
+  };
+
+  const importWorkspace = (jsonString) => {
+    const res = storageService.importWorkspaceData(jsonString);
+    if (res.success && res.importedData) {
+      const data = res.importedData;
+      if (data.users) setUsers(data.users);
+      if (data.projects) setProjects(data.projects);
+      if (data.tasks) setTasks(data.tasks);
+      if (data.timeLogs) setTimeLogs(data.timeLogs);
+      if (data.invoices) setInvoices(data.invoices);
+      if (data.showcase) setShowcase(data.showcase);
+      if (data.taskTimers) setTaskTimers(data.taskTimers);
+      if (data.activities) setActivities(data.activities);
+      updateMetrics();
+    }
+    return res;
+  };
+
+  const resetWorkspace = () => {
+    storageService.resetStorage();
+    setUsers(INITIAL_USERS);
+    setCurrentUser(INITIAL_USERS[0]);
+    setProjects(INITIAL_PROJECTS);
+    setTasks(INITIAL_TASKS);
+    setTimeLogs(INITIAL_TIME_LOGS);
+    setInvoices(INITIAL_INVOICES);
+    setShowcase(INITIAL_SHOWCASE);
+    setActivities(INITIAL_ACTIVITIES);
+    setTaskTimers({
+      'tsk_100': { isRunning: false, elapsedSeconds: 960, startTime: null },
+      'tsk_101': { isRunning: false, elapsedSeconds: 2450, startTime: null },
+      'tsk_102': { isRunning: false, elapsedSeconds: 1820, startTime: null },
+      'tsk_103': { isRunning: false, elapsedSeconds: 900, startTime: null },
+      'tsk_104': { isRunning: false, elapsedSeconds: 0, startTime: null },
+      'tsk_301': { isRunning: false, elapsedSeconds: 600, startTime: null },
+      'tsk_201': { isRunning: false, elapsedSeconds: 3100, startTime: null }
+    });
+    updateMetrics();
+  };
 
   // INDIVIDUAL TASK TIMERS TICKER EFFECT
   useEffect(() => {
@@ -276,27 +352,44 @@ export const AppProvider = ({ children }) => {
     }, ...prev]);
   };
 
-  // User Management Handlers (Admin Only)
-  const addUser = (userData) => {
+  // User Management & Custom Profile Handlers (Devs & Admin)
+  const addUser = async (userData) => {
     const newUser = {
       id: `usr_${Date.now()}`,
       role: 'dev',
       avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80',
-      hourlyRate: 120,
-      specialization: 'Full-Stack Web Development',
-      subRole: 'Frontend Engineering',
+      hourlyRate: 10500,
+      specialization: 'Web Development',
+      subRole: 'Frontend',
+      password: 'dev123',
       ...userData
     };
     setUsers(prev => [...prev, newUser]);
+    await dbService.createUser(newUser);
+    return newUser;
   };
 
   const updateUser = (userId, updatedFields) => {
     setUsers(prev => prev.map(u => u.id === userId ? { ...u, ...updatedFields } : u));
+    
+    // If updating currently logged in user, synchronize currentUser state
+    if (currentUser && currentUser.id === userId) {
+      const updatedCurrent = { ...currentUser, ...updatedFields };
+      setCurrentUser(updatedCurrent);
+      storageService.setItem(FW_STORAGE_KEYS.CURRENT_USER, updatedCurrent);
+    }
+
+    // Sync password updates with DB backend
+    if (updatedFields.password || updatedFields.password_hash) {
+      const newPass = updatedFields.password || updatedFields.password_hash;
+      dbService.changePassword(userId, newPass);
+    }
   };
 
-  const deleteUser = (userId) => {
+  const deleteUser = async (userId) => {
     if (users.length <= 1) return;
     setUsers(prev => prev.filter(u => u.id !== userId));
+    await dbService.deleteUser(userId);
   };
 
   // Job & Project Creation Handlers
@@ -732,7 +825,7 @@ export const AppProvider = ({ children }) => {
       if (textLower.includes('service') || textLower.includes('hierarch')) {
         botResponse += `Freewheel provides 3 primary services: Full-Stack Web Development, App Development, and AI & Cloud Automation. Each service expands into sub-service layers (e.g. Frontend, Backend, Database, QA) with layer-by-layer task stopwatches.`;
       } else if (textLower.includes('admin') || textLower.includes('stopwatch')) {
-        botResponse += `Agency Admin (Alex Vance) has exclusive access controls to assign tasks layer-by-layer across the 9 dev team members and manage individual task stopwatches.`;
+        botResponse += `The Agency Admin has exclusive access controls to assign tasks layer-by-layer across the 9 dev team members and manage individual task stopwatches.`;
       } else {
         botResponse += `As your Freewheel agentic assistant, I can help you navigate hierarchical service layers, review dev role assignments, or inspect active task stopwatches.`;
       }
@@ -790,7 +883,11 @@ export const AppProvider = ({ children }) => {
       showcase,
       activities,
       chatMessages,
-      sendChatMessage
+      sendChatMessage,
+      storageMetrics,
+      exportWorkspace,
+      importWorkspace,
+      resetWorkspace
     }}>
       {children}
     </AppContext.Provider>

@@ -27,25 +27,24 @@ export const ProjectsView = () => {
 
   // Form State
   const [newProjName, setNewProjName] = useState('');
-  const [newCategory, setNewCategory] = useState('Full-Stack Web Development');
-  const [newClientName, setNewClientName] = useState('Apex Corporation');
-  const [newBudget, setNewBudget] = useState(65000);
-  const [newRate, setNewRate] = useState(135);
+  const [newCategory, setNewCategory] = useState('Web Development');
+  const [newClientName, setNewClientName] = useState('');
+  const [newBudget, setNewBudget] = useState(500000);
+  const [newRate, setNewRate] = useState(10500);
   const [newDeadline, setNewDeadline] = useState('2026-10-31');
   const [newDesc, setNewDesc] = useState('');
 
   // Sub-Role Dev Assignments Map
   const [assignedDevs, setAssignedDevs] = useState({
-    'Frontend Engineering': 'usr_2',
-    'Backend Architecture': 'usr_4',
-    'Database & DevOps': 'usr_5',
-    'QA & Automation': 'usr_9'
+    'Frontend': 'usr_2',
+    'Backend': 'usr_5',
+    'Database': 'usr_3',
+    'DevOps/Deployment': 'usr_7'
   });
 
   const filteredProjects = projects.filter(p => {
-    const matchesService = selectedServiceId === 'All' || p.service === selectedServiceId;
-    const matchesStatus = filterStatus === 'All' || p.status === filterStatus;
-    return matchesService && matchesStatus;
+    if (selectedServiceId === 'All') return true;
+    return p.service === selectedServiceId;
   });
 
   const handleSubmit = (e) => {
@@ -55,24 +54,20 @@ export const ProjectsView = () => {
     addProject({
       name: newProjName,
       service: newCategory,
-      clientName: newClientName,
+      clientName: newClientName || 'Client Project',
       description: newDesc || 'Full-stack software deliverable with assigned dev roles',
       status: 'In Progress',
       budget: Number(newBudget),
       hourlyRate: Number(newRate),
       startDate: new Date().toISOString().split('T')[0],
       deadline: newDeadline,
-      assignedDevs: {
-        'Frontend Engineering': [assignedDevs['Frontend Engineering'] || 'usr_2'],
-        'Backend Architecture': [assignedDevs['Backend Architecture'] || 'usr_4'],
-        'Database & DevOps': [assignedDevs['Database & DevOps'] || 'usr_5'],
-        'QA & Automation': [assignedDevs['QA & Automation'] || 'usr_9']
-      },
-      tags: ['Full-Stack', 'React', 'Node.js', 'PostgreSQL']
+      assignedDevs: assignedDevs,
+      tags: ['Full-Stack', 'Engineering']
     });
 
     setShowAddModal(false);
     setNewProjName('');
+    setNewClientName('');
     setNewDesc('');
   };
 
@@ -270,7 +265,7 @@ export const ProjectsView = () => {
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   {subRoles.map((role) => {
                     const devList = project.assignedDevs?.[role] || [];
-                    const assignedDevName = users.find(u => devList.includes(u.id))?.name || (role === 'Frontend Engineering' ? 'Sarah Jenkins' : role === 'Backend Architecture' ? 'David Chen' : role === 'Database & DevOps' ? 'Priya Sharma' : 'Ananya Gupta');
+                    const assignedDevName = users.find(u => devList.includes(u.id))?.name || 'Unassigned';
 
                     return (
                       <div key={role} className="p-2 rounded bg-slate-50 border border-slate-200 space-y-0.5">
@@ -328,6 +323,18 @@ export const ProjectsView = () => {
                   placeholder="e.g. Full-Stack SaaS Automation Suite"
                   value={newProjName}
                   onChange={(e) => setNewProjName(e.target.value)}
+                  className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-indigo-600"
+                />
+              </div>
+
+              <div>
+                <label className="block text-slate-700 font-semibold mb-1">Client / Company Name</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Acme Corp / Global Logistics / Client Name"
+                  value={newClientName}
+                  onChange={(e) => setNewClientName(e.target.value)}
                   className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-indigo-600"
                 />
               </div>

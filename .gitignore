@@ -11,9 +11,12 @@ node_modules
 dist
 dist-isolation
 .vite
+# Environment secrets
 .env
 .env.local
 .env.*.local
+server/.env
+*.env
 
 # Editor directories and files
 .vscode/*
@@ -25,3 +28,4 @@ dist-isolation
 *.njsproj
 *.sln
 *.sw?
+~$*.docx

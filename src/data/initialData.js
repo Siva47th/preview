@@ -22,111 +22,111 @@ export const SERVICES_CATALOG = [
 export const INITIAL_USERS = [
   {
     id: 'usr_1',
-    name: 'Alex Vance',
-    email: 'alex@freewheel.io',
+    name: 'Krishna Hari I',
+    email: 'ikrishnaharipro@gmail.com',
     password: 'admin123',
     role: 'admin',
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-    title: 'Lead Architect & Agency Founder',
+    title: 'Agency Manager (Admin)',
     specialization: 'Web Development',
     subRole: 'Backend',
     hourlyRate: 12500
   },
   {
     id: 'usr_2',
-    name: 'Sarah Jenkins',
-    email: 'sarah.j@freewheel.io',
+    name: 'Keshavraj C',
+    email: 'keshavrajc2006@gmail.com',
     password: 'dev123',
     role: 'dev',
-    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80',
-    title: 'Senior Frontend Engineer',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+    title: 'Frontend Developer',
     specialization: 'Web Development',
     subRole: 'Frontend',
     hourlyRate: 10500
   },
   {
     id: 'usr_3',
-    name: 'Marcus Reed',
-    email: 'marcus@freewheel.io',
-    password: 'dev123',
-    role: 'dev',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
-    title: 'Automation & AI Specialist',
-    specialization: 'AI & Cloud Automation',
-    subRole: 'AI Bot Pipeline',
-    hourlyRate: 11300
-  },
-  {
-    id: 'usr_4',
-    name: 'David Chen',
-    email: 'david.c@freewheel.io',
+    name: 'Meenatchisundaram S',
+    email: 'meenatchisundaram0309@gmail.com',
     password: 'dev123',
     role: 'dev',
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
-    title: 'Senior Backend Engineer',
+    title: 'Database Architect',
+    specialization: 'Web Development',
+    subRole: 'Database',
+    hourlyRate: 11500
+  },
+  {
+    id: 'usr_4',
+    name: 'Mohamed Asif A N',
+    email: 'mohamedasifan06@gmail.com',
+    password: 'dev123',
+    role: 'dev',
+    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&auto=format&fit=crop&q=80',
+    title: 'UI/UX Designer',
+    specialization: 'Web Development',
+    subRole: 'UI/UX Design',
+    hourlyRate: 9800
+  },
+  {
+    id: 'usr_5',
+    name: 'Hariprasanth M',
+    email: 'hariprasanthM60@gmail.com',
+    password: 'dev123',
+    role: 'dev',
+    avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop&q=80',
+    title: 'Backend Specialist',
     specialization: 'Web Development',
     subRole: 'Backend',
     hourlyRate: 10900
   },
   {
-    id: 'usr_5',
-    name: 'Priya Sharma',
-    email: 'priya.s@freewheel.io',
-    password: 'dev123',
-    role: 'dev',
-    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
-    title: 'Database Architect & DevOps',
-    specialization: 'Web Development',
-    subRole: 'Database',
-    hourlyRate: 11700
-  },
-  {
     id: 'usr_6',
-    name: 'James Wilson',
-    email: 'james.w@freewheel.io',
+    name: 'Mukilan P',
+    email: 'mukil3826@gmail.com',
     password: 'dev123',
     role: 'dev',
     avatar: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=150&auto=format&fit=crop&q=80',
-    title: 'React Native & Mobile Specialist',
-    specialization: 'App Development',
-    subRole: 'iOS & Android UI',
-    hourlyRate: 10000
+    title: 'Backend Specialist',
+    specialization: 'Web Development',
+    subRole: 'Backend',
+    hourlyRate: 10800
   },
   {
     id: 'usr_7',
-    name: 'Elena Rostova',
-    email: 'elena.r@freewheel.io',
+    name: 'Gunabalan P',
+    email: 'gunag4659@gmail.com',
     password: 'dev123',
     role: 'dev',
-    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
-    title: 'API & Security Engineer',
-    specialization: 'Web Development',
-    subRole: 'Backend',
-    hourlyRate: 11300
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80',
+    title: 'DevOps Lead',
+    specialization: 'AI & Cloud Automation',
+    subRole: 'DevOps/Deployment',
+    hourlyRate: 11200
   },
   {
     id: 'usr_8',
-    name: 'Carlos Mendez',
-    email: 'carlos.m@freewheel.io',
+    name: 'Lakshmana Narayanan S',
+    email: 'narayananlakshmana5@gmail.com',
     password: 'dev123',
     role: 'dev',
-    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&auto=format&fit=crop&q=80',
-    title: 'UI/UX & Design Specialist',
+    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80',
+    title: 'Frontend Developer',
     specialization: 'Web Development',
-    subRole: 'UI/UX Design',
-    hourlyRate: 9600
+    subRole: 'Frontend',
+    hourlyRate: 10200
   },
   {
     id: 'usr_9',
-    name: 'Ananya Gupta',
-    email: 'ananya.g@freewheel.io',
+    name: 'Sivasankaran E',
+    email: 'sivasanakaranelu2006@gmail.com',
     password: 'dev123',
     role: 'dev',
-    avatar: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=150&auto=format&fit=crop&q=80',
-    title: 'DevOps & Test Automation Specialist',
+    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
+    title: 'QA & Testing Engineer',
     specialization: 'Web Development',
     subRole: 'DevOps/Deployment',
-    hourlyRate: 9200
+    hourlyRate: 9500
   }
 ];
 
@@ -149,11 +149,11 @@ export const INITIAL_PROJECT_HISTORY = [
     ],
     techStack: ['React', 'Node.js', 'PostgreSQL', 'Docker'],
     layerBreakdown: [
-      { layer: 'UI/UX Design', hours: 80, dev: 'Carlos Mendez' },
-      { layer: 'Frontend', hours: 180, dev: 'Sarah Jenkins' },
-      { layer: 'Backend', hours: 210, dev: 'David Chen' },
-      { layer: 'Database', hours: 110, dev: 'Priya Sharma' },
-      { layer: 'DevOps/Deployment', hours: 80, dev: 'Ananya Gupta' }
+      { layer: 'UI/UX Design', hours: 80, dev: 'Mohamed Asif A N' },
+      { layer: 'Frontend', hours: 180, dev: 'Keshavraj C' },
+      { layer: 'Backend', hours: 210, dev: 'Hariprasanth M' },
+      { layer: 'Database', hours: 110, dev: 'Meenatchisundaram S' },
+      { layer: 'DevOps/Deployment', hours: 80, dev: 'Gunabalan P' }
     ],
     deliverables: [
       'Figma Web App Design Tokens & Wireframes',
@@ -181,9 +181,9 @@ export const INITIAL_PROJECT_HISTORY = [
     ],
     techStack: ['Python FastAPI', 'Kubernetes', 'AWS', 'Docker'],
     layerBreakdown: [
-      { layer: 'AI Bot Pipeline', hours: 160, dev: 'Marcus Reed' },
-      { layer: 'Cloud Orchestration', hours: 140, dev: 'Priya Sharma' },
-      { layer: 'CI/CD Test Automation', hours: 90, dev: 'Ananya Gupta' }
+      { layer: 'AI Bot Pipeline', hours: 160, dev: 'Meenatchisundaram S' },
+      { layer: 'Cloud Orchestration', hours: 140, dev: 'Mukilan P' },
+      { layer: 'CI/CD Test Automation', hours: 90, dev: 'Sivasankaran E' }
     ],
     deliverables: [
       'FastAPI Async Telemetry Stream Endpoints',
@@ -210,9 +210,9 @@ export const INITIAL_PROJECT_HISTORY = [
     ],
     techStack: ['React Native', 'WebRTC', 'Node.js', 'AWS Health'],
     layerBreakdown: [
-      { layer: 'iOS & Android UI', hours: 150, dev: 'James Wilson' },
-      { layer: 'Mobile API Services', hours: 110, dev: 'Elena Rostova' },
-      { layer: 'App Store & Deployment', hours: 60, dev: 'Alex Vance' }
+      { layer: 'iOS & Android UI', hours: 150, dev: 'Lakshmana Narayanan S' },
+      { layer: 'Mobile API Services', hours: 110, dev: 'Mukilan P' },
+      { layer: 'App Store & Deployment', hours: 60, dev: 'Krishna Hari I' }
     ],
     deliverables: [
       'Encrypted WebRTC Video Consultation Module',
@@ -299,7 +299,7 @@ export const INITIAL_TASKS = [
     status: 'Done',
     priority: 'High',
     assigneeId: 'usr_8',
-    assigneeName: 'Carlos Mendez',
+    assigneeName: 'Mohamed Asif A N',
     estimatedHours: 16,
     loggedHours: 16.0,
     progress: 100,
@@ -317,7 +317,7 @@ export const INITIAL_TASKS = [
     status: 'Done',
     priority: 'High',
     assigneeId: 'usr_2',
-    assigneeName: 'Sarah Jenkins',
+    assigneeName: 'Keshavraj C',
     estimatedHours: 24,
     loggedHours: 12.0,
     progress: 100,
@@ -335,7 +335,7 @@ export const INITIAL_TASKS = [
     status: 'Done',
     priority: 'Urgent',
     assigneeId: 'usr_4',
-    assigneeName: 'David Chen',
+    assigneeName: 'Hariprasanth M',
     estimatedHours: 20,
     loggedHours: 14.5,
     progress: 100,
@@ -353,7 +353,7 @@ export const INITIAL_TASKS = [
     status: 'Done',
     priority: 'High',
     assigneeId: 'usr_5',
-    assigneeName: 'Priya Sharma',
+    assigneeName: 'Meenatchisundaram S',
     estimatedHours: 16,
     loggedHours: 16.0,
     progress: 100,
@@ -371,7 +371,7 @@ export const INITIAL_TASKS = [
     status: 'Done',
     priority: 'Medium',
     assigneeId: 'usr_9',
-    assigneeName: 'Ananya Gupta',
+    assigneeName: 'Gunabalan P',
     estimatedHours: 18,
     loggedHours: 4.0,
     progress: 100,
@@ -390,7 +390,7 @@ export const INITIAL_TASKS = [
     status: 'In Progress',
     priority: 'High',
     assigneeId: 'usr_6',
-    assigneeName: 'James Wilson',
+    assigneeName: 'Lakshmana Narayanan S',
     estimatedHours: 25,
     loggedHours: 10.0,
     progress: 40,
@@ -409,7 +409,7 @@ export const INITIAL_TASKS = [
     status: 'In Progress',
     priority: 'Urgent',
     assigneeId: 'usr_3',
-    assigneeName: 'Marcus Reed',
+    assigneeName: 'Meenatchisundaram S',
     estimatedHours: 30,
     loggedHours: 18.0,
     progress: 40,
@@ -429,7 +429,7 @@ export const INITIAL_TIME_LOGS = [
     taskId: 'tsk_101',
     taskTitle: 'Develop Responsive Web Shopping Cart & Stripe Payment SDK',
     userId: 'usr_2',
-    userName: 'Sarah Jenkins',
+    userName: 'Keshavraj C',
     durationMinutes: 720,
     hourlyRate: 10500,
     billable: true,
@@ -446,7 +446,7 @@ export const INITIAL_TIME_LOGS = [
     taskId: 'tsk_102',
     taskTitle: 'Build OAuth JWT Session Authentication & RBAC Middleware',
     userId: 'usr_4',
-    userName: 'David Chen',
+    userName: 'Hariprasanth M',
     durationMinutes: 870,
     hourlyRate: 10900,
     billable: true,
@@ -463,7 +463,7 @@ export const INITIAL_TIME_LOGS = [
     taskId: 'tsk_201',
     taskTitle: 'FastAPI Async Telemetry Stream & AI Predictive Bot Dispatcher',
     userId: 'usr_3',
-    userName: 'Marcus Reed',
+    userName: 'Meenatchisundaram S',
     durationMinutes: 1080,
     hourlyRate: 11300,
     billable: true,
@@ -480,7 +480,7 @@ export const INITIAL_TIME_LOGS = [
     taskId: 'tsk_301',
     taskTitle: 'React Native iOS & Android Consultation App UI',
     userId: 'usr_6',
-    userName: 'James Wilson',
+    userName: 'Lakshmana Narayanan S',
     durationMinutes: 600,
     hourlyRate: 10000,
     billable: true,
@@ -556,7 +556,7 @@ export const INITIAL_INVOICES = [
 ];
 
 export const INITIAL_ACTIVITIES = [
-  { id: 'act_1', user: 'Alex Vance (Admin)', action: 'started task stopwatch on:', target: 'React Shopping Cart (Frontend Engineering)', time: '5 mins ago' },
-  { id: 'act_2', user: 'Alex Vance (Admin)', action: 'assigned task in Database & DevOps to:', target: 'Priya Sharma', time: '1 hour ago' },
-  { id: 'act_3', user: 'Alex Vance (Admin)', action: 'created Full-Stack Service Job:', target: 'Full-Stack E-Commerce Platform', time: 'Yesterday' }
+  { id: 'act_1', user: 'Krishna Hari I (Admin)', action: 'started task stopwatch on:', target: 'React Shopping Cart (Frontend)', time: '5 mins ago' },
+  { id: 'act_2', user: 'Krishna Hari I (Admin)', action: 'assigned task in Database & DevOps to:', target: 'Meenatchisundaram S', time: '1 hour ago' },
+  { id: 'act_3', user: 'Krishna Hari I (Admin)', action: 'created Full-Stack Service Job:', target: 'Full-Stack E-Commerce Platform', time: 'Yesterday' }
 ];
