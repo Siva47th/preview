@@ -17,7 +17,7 @@ const defaultDbConfig = {
   driver: 'local', // 'local' | 'indexeddb' | 'rest' | 'supabase'
   apiUrl: 'http://localhost:4000/api/v1',
   apiKey: '',
-  supabaseUrl: 'https://xyzcompany.supabase.co',
+  supabaseUrl: 'https://tahtxuztjhjochkeebxu.supabase.co',
   supabaseAnonKey: '',
   lastConnected: null,
   status: 'disconnected'
