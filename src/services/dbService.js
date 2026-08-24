@@ -15,7 +15,7 @@ const DB_CONFIG_KEY = 'fw_db_config_v1';
 
 const defaultDbConfig = {
   driver: 'local', // 'local' | 'indexeddb' | 'rest' | 'supabase'
-  apiUrl: 'http://localhost:4000/api/v1',
+  apiUrl: 'https://preview-he3j.onrender.com/api/v1',
   apiKey: '',
   supabaseUrl: 'https://tahtxuztjhjochkeebxu.supabase.co',
   supabaseAnonKey: 'sb_publishable_aXdCZNGR_-GedQAjT2B31A_B7ENL-JD',
