@@ -45,18 +45,12 @@ export const Sidebar = () => {
       <div>
         {/* Top Header */}
         <div className="p-4 border-b border-slate-200 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="h-9 px-2 bg-slate-900 rounded-xl flex items-center justify-center shadow-sm">
-              <img
-                src={logoImg}
-                alt="Freewheel"
-                className="h-6 w-auto object-contain brightness-110"
-              />
-            </div>
-            <div>
-              <h1 className="font-bold text-xs text-slate-900 tracking-tight leading-none">FREEWHEEL</h1>
-              <span className="text-[9px] text-indigo-600 font-semibold uppercase tracking-wider">Tech Solutions</span>
-            </div>
+          <div className="h-10 px-3 py-1 bg-white border border-slate-200 rounded-xl flex items-center shadow-sm w-full">
+            <img
+              src={logoImg}
+              alt="Freewheel Technology Solutions"
+              className="h-7 w-auto object-contain mx-auto"
+            />
           </div>
         </div>
 

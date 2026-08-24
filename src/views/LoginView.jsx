@@ -34,11 +34,11 @@ export const LoginView = () => {
       {/* Top Header Branding */}
       <header className="p-6 max-w-7xl mx-auto w-full flex items-center justify-between z-10 border-b border-[#e2d8f2]">
         <div className="flex items-center gap-3">
-          <div className="h-9 px-3 py-1 bg-white border border-[#ded5f2] rounded-xl flex items-center justify-center shadow-sm">
+          <div className="h-10 px-3 py-1.5 bg-white border border-[#ded5f2] rounded-xl flex items-center justify-center shadow-sm">
             <img
               src={logoImg}
               alt="Freewheel Technology Solutions"
-              className="h-6 w-auto object-contain"
+              className="h-7 w-auto object-contain"
             />
           </div>
           <div>
@@ -61,11 +61,11 @@ export const LoginView = () => {
             
             {/* Logo & Headline */}
             <div className="text-center space-y-4">
-              <div className="inline-block p-4 bg-[#faf9fe] rounded-2xl shadow-sm border border-[#e5ddf5]">
+              <div className="p-4 bg-white rounded-2xl shadow-sm border border-[#ded5f2] flex items-center justify-center">
                 <img
                   src={logoImg}
                   alt="Freewheel Technology Solutions"
-                  className="h-12 w-auto object-contain mx-auto"
+                  className="h-16 w-auto max-w-full object-contain mx-auto"
                 />
               </div>
 
