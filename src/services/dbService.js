@@ -18,7 +18,7 @@ const defaultDbConfig = {
   apiUrl: 'http://localhost:4000/api/v1',
   apiKey: '',
   supabaseUrl: 'https://tahtxuztjhjochkeebxu.supabase.co',
-  supabaseAnonKey: '',
+  supabaseAnonKey: 'sb_publishable_aXdCZNGR_-GedQAjT2B31A_B7ENL-JD',
   lastConnected: null,
   status: 'disconnected'
 };
