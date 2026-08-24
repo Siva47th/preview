@@ -27,7 +27,7 @@ export const AppProvider = ({ children }) => {
     }
     return INITIAL_USERS.map(initU => {
       const existing = loaded.find(u => u.id === initU.id || u.email.toLowerCase() === initU.email.toLowerCase());
-      return existing ? { ...existing, ...initU, avatar: existing.avatar || initU.avatar } : initU;
+      return existing ? { ...initU, ...existing } : initU;
     });
   });
 
@@ -373,8 +373,12 @@ export const AppProvider = ({ children }) => {
     return newUser;
   };
 
-  const updateUser = (userId, updatedFields) => {
-    setUsers(prev => prev.map(u => u.id === userId ? { ...u, ...updatedFields } : u));
+  const updateUser = async (userId, updatedFields) => {
+    setUsers(prev => {
+      const nextUsers = prev.map(u => u.id === userId ? { ...u, ...updatedFields } : u);
+      storageService.setItem(FW_STORAGE_KEYS.USERS, nextUsers);
+      return nextUsers;
+    });
     
     // If updating currently logged in user, synchronize currentUser state
     if (currentUser && currentUser.id === userId) {
@@ -386,7 +390,7 @@ export const AppProvider = ({ children }) => {
     // Sync password updates with DB backend
     if (updatedFields.password || updatedFields.password_hash) {
       const newPass = updatedFields.password || updatedFields.password_hash;
-      dbService.changePassword(userId, newPass);
+      await dbService.changePassword(userId, newPass);
     }
   };
 

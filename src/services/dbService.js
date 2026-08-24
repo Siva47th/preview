@@ -224,13 +224,15 @@ export const authenticateUser = async (email, password, localUsers = []) => {
 export const changePassword = async (userId, newPassword) => {
   const config = getDbConfig();
 
-  if (config.driver === 'rest' && config.status === 'connected') {
+  if (config.apiUrl) {
     try {
-      await fetch(`${config.apiUrl.replace(/\/$/, '')}/auth/change-password`, {
+      const response = await fetch(`${config.apiUrl.replace(/\/$/, '')}/auth/change-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, newPassword })
       });
+      const data = await response.json();
+      return data;
     } catch (err) {
       console.warn('[dbService] Password update server sync failed:', err.message);
     }
