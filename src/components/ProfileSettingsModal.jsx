@@ -12,8 +12,10 @@ import {
   IndianRupee,
   Layers,
   Save,
-  Upload
+  Upload,
+  Crop
 } from 'lucide-react';
+import { ImageAdjusterModal } from './ImageAdjusterModal';
 
 const PRESET_AVATARS = [
   'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=250&auto=format&fit=crop&q=80',
@@ -41,6 +43,8 @@ export const ProfileSettingsModal = ({ isOpen, onClose }) => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showCustomAvatarInput, setShowCustomAvatarInput] = useState(false);
+  const [showAdjusterModal, setShowAdjusterModal] = useState(false);
+  const [adjustingImageSrc, setAdjustingImageSrc] = useState(null);
   const [statusMessage, setStatusMessage] = useState(null);
 
   useEffect(() => {
@@ -71,11 +75,18 @@ export const ProfileSettingsModal = ({ isOpen, onClose }) => {
     const reader = new FileReader();
     reader.onload = (event) => {
       if (event.target?.result) {
-        setAvatar(event.target.result);
-        setStatusMessage({ type: 'success', text: 'New profile photo loaded! Click "Save Custom Profile" to apply.' });
+        setAdjustingImageSrc(event.target.result);
+        setShowAdjusterModal(true);
+        if (avatarFileInputRef.current) avatarFileInputRef.current.value = '';
       }
     };
     reader.readAsDataURL(file);
+  };
+
+  const handleSaveAdjustedAvatar = (croppedDataUrl) => {
+    setAvatar(croppedDataUrl);
+    setShowAdjusterModal(false);
+    setStatusMessage({ type: 'success', text: 'Photo adjusted and cropped! Click "Save Custom Profile" to apply.' });
   };
 
   if (!isOpen || !currentUser) return null;
@@ -204,6 +215,19 @@ export const ProfileSettingsModal = ({ isOpen, onClose }) => {
                   >
                     <Upload className="w-3.5 h-3.5" />
                     <span>Upload Photo</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAdjustingImageSrc(avatar);
+                      setShowAdjusterModal(true);
+                    }}
+                    className="px-2.5 py-1 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg border border-slate-300 shrink-0 flex items-center gap-1 transition"
+                    title="Crop, zoom or reposition current photo"
+                  >
+                    <Crop className="w-3.5 h-3.5 text-indigo-600" />
+                    <span>Adjust Photo</span>
                   </button>
 
                   {PRESET_AVATARS.map((url, idx) => (
@@ -392,6 +416,17 @@ export const ProfileSettingsModal = ({ isOpen, onClose }) => {
         </form>
 
       </div>
+
+      {/* Interactive Photo Cropper & Adjuster Modal */}
+      <ImageAdjusterModal
+        imageSrc={adjustingImageSrc}
+        isOpen={showAdjusterModal}
+        onCancel={() => {
+          setShowAdjusterModal(false);
+          setAdjustingImageSrc(null);
+        }}
+        onSave={handleSaveAdjustedAvatar}
+      />
     </div>
   );
 };
