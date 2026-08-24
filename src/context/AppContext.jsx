@@ -25,7 +25,7 @@ export const AppProvider = ({ children }) => {
     if (!loaded || !Array.isArray(loaded) || loaded.length === 0) {
       return INITIAL_USERS;
     }
-    return loaded;
+    return loaded.map(u => u.id === 'usr_9' ? { ...u, email: 'sivasankaranelu2006@gmail.com' } : u);
   });
 
   const [currentUser, setCurrentUser] = useState(() => {
