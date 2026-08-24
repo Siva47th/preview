@@ -16,6 +16,7 @@ import {
   ZoomIn
 } from 'lucide-react';
 import { AvatarZoomModal } from './AvatarZoomModal';
+import logoImg from '../assets/freewheel-logo.png';
 
 export const Sidebar = () => {
   const {
@@ -45,12 +46,16 @@ export const Sidebar = () => {
         {/* Top Header */}
         <div className="p-4 border-b border-slate-200 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white">
-              <Zap className="w-4 h-4 fill-current" />
+            <div className="h-9 px-2 bg-slate-900 rounded-xl flex items-center justify-center shadow-sm">
+              <img
+                src={logoImg}
+                alt="Freewheel"
+                className="h-6 w-auto object-contain brightness-110"
+              />
             </div>
             <div>
-              <h1 className="font-bold text-sm text-slate-900 tracking-tight leading-none">FREEWHEEL</h1>
-              <span className="text-[10px] text-indigo-600 font-semibold uppercase">Agency OS v1.0</span>
+              <h1 className="font-bold text-xs text-slate-900 tracking-tight leading-none">FREEWHEEL</h1>
+              <span className="text-[9px] text-indigo-600 font-semibold uppercase tracking-wider">Tech Solutions</span>
             </div>
           </div>
         </div>
