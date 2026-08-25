@@ -99,7 +99,7 @@ export const ProfileSettingsModal = ({ isOpen, onClose }) => {
 
   const isAdmin = currentUser?.role === 'admin';
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setStatusMessage(null);
 
@@ -122,12 +122,18 @@ export const ProfileSettingsModal = ({ isOpen, onClose }) => {
       updatedFields.password_hash = newPassword;
     }
 
-    updateUser(currentUser.id, updatedFields);
-    setStatusMessage({ type: 'success', text: 'Profile & credentials updated and saved successfully!' });
+    setStatusMessage({ type: 'info', text: newPassword ? 'Saving profile & syncing new password to server...' : 'Saving profile changes...' });
+
+    try {
+      await updateUser(currentUser.id, updatedFields);
+      setStatusMessage({ type: 'success', text: newPassword ? '✅ Profile & password saved and synced to server permanently!' : '✅ Profile updated and saved successfully!' });
+    } catch (err) {
+      setStatusMessage({ type: 'error', text: `Profile saved locally but server sync failed: ${err.message}` });
+    }
 
     setTimeout(() => {
       onClose();
-    }, 1200);
+    }, 1500);
   };
 
   return (
