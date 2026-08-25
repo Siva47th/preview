@@ -338,6 +338,125 @@ export const changePassword = async (userId, newPassword) => {
 };
 
 /**
+ * Fetch all users from live database (Supabase PostgreSQL / Backend)
+ */
+export const fetchUsers = async () => {
+  const config = getDbConfig();
+
+  // 1. Direct Supabase PostgREST
+  if (config.supabaseUrl && config.supabaseAnonKey) {
+    try {
+      const supabaseRestUrl = `${config.supabaseUrl}/rest/v1/users?select=id,name,email,role,sub_role,avatar,hourly_rate,password_hash&order=created_at.asc`;
+      const response = await fetch(supabaseRestUrl, {
+        method: 'GET',
+        headers: {
+          'apikey': config.supabaseAnonKey,
+          'Authorization': `Bearer ${config.supabaseAnonKey}`
+        }
+      });
+
+      if (response.ok) {
+        const rows = await response.json();
+        if (rows && rows.length > 0) {
+          return rows.map(r => ({
+            id: r.id,
+            name: r.name,
+            email: r.email,
+            role: r.role,
+            subRole: r.sub_role,
+            avatar: r.avatar,
+            hourlyRate: Number(r.hourly_rate) || 10500,
+            password: r.password_hash
+          }));
+        }
+      }
+    } catch (err) {
+      console.warn('[dbService] Supabase fetchUsers note:', err.message);
+    }
+  }
+
+  // 2. Render backend REST API
+  if (config.apiUrl) {
+    try {
+      const response = await fetch(`${config.apiUrl.replace(/\/$/, '')}/users`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.users) {
+          return data.users;
+        }
+      }
+    } catch (err) {
+      console.warn('[dbService] Backend fetchUsers note:', err.message);
+    }
+  }
+
+  return null;
+};
+
+/**
+ * Update any user fields in backend database permanently (avatar, hourlyRate, name, subRole, title, password)
+ */
+export const updateUser = async (userId, updatedFields) => {
+  const config = getDbConfig();
+  const dbPayload = {};
+  
+  if (updatedFields.name) dbPayload.name = updatedFields.name;
+  if (updatedFields.email) dbPayload.email = updatedFields.email;
+  if (updatedFields.role) dbPayload.role = updatedFields.role;
+  if (updatedFields.subRole || updatedFields.sub_role) {
+    dbPayload.sub_role = updatedFields.subRole || updatedFields.sub_role;
+  }
+  if (updatedFields.avatar) dbPayload.avatar = updatedFields.avatar;
+  if (updatedFields.hourlyRate !== undefined || updatedFields.hourly_rate !== undefined) {
+    dbPayload.hourly_rate = Number(updatedFields.hourlyRate !== undefined ? updatedFields.hourlyRate : updatedFields.hourly_rate);
+  }
+  if (updatedFields.password || updatedFields.password_hash) {
+    dbPayload.password_hash = updatedFields.password || updatedFields.password_hash;
+  }
+
+  // 1. Direct Supabase PostgREST update (Instant & Permanent in PostgreSQL)
+  if (config.supabaseUrl && config.supabaseAnonKey) {
+    try {
+      const supabaseRestUrl = `${config.supabaseUrl}/rest/v1/users?id=eq.${userId}`;
+      const response = await fetch(supabaseRestUrl, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': config.supabaseAnonKey,
+          'Authorization': `Bearer ${config.supabaseAnonKey}`,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(dbPayload)
+      });
+      if (response.ok || response.status === 204) {
+        console.log('[dbService] User profile fields updated permanently in Supabase PostgreSQL!');
+      }
+    } catch (err) {
+      console.warn('[dbService] Supabase direct user update error:', err.message);
+    }
+  }
+
+  // 2. Also notify Render backend in parallel
+  if (config.apiUrl) {
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 4000);
+      await fetch(`${config.apiUrl.replace(/\/$/, '')}/users/${userId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...updatedFields, ...dbPayload }),
+        signal: controller.signal
+      });
+      clearTimeout(timeout);
+    } catch (err) {
+      console.warn('[dbService] Backend user sync note:', err.message);
+    }
+  }
+
+  return { success: true };
+};
+
+/**
  * Create a new user in backend database
  */
 export const createUser = async (userData) => {
@@ -385,6 +504,8 @@ export const dbService = {
   persistEntityToDb,
   authenticateUser,
   changePassword,
+  fetchUsers,
+  updateUser,
   createUser,
   deleteUser
 };

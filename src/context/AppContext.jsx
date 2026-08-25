@@ -36,9 +36,40 @@ export const AppProvider = ({ children }) => {
     if (!loaded || !loaded.id || !loaded.email) {
       return INITIAL_USERS[0];
     }
-    const matching = INITIAL_USERS.find(u => u.id === loaded.id || u.email.toLowerCase() === loaded.email.toLowerCase());
-    return matching ? { ...loaded, title: matching.title, subRole: matching.subRole, role: matching.role } : loaded;
+    return loaded;
   });
+
+  // Sync latest live user profiles, avatars, and hourly rates from Supabase on mount
+  useEffect(() => {
+    const loadLiveState = async () => {
+      try {
+        const liveUsers = await dbService.fetchUsers();
+        if (liveUsers && liveUsers.length > 0) {
+          setUsers(prev => {
+            const merged = liveUsers.map(liveU => {
+              const local = prev.find(p => p.id === liveU.id);
+              return local ? { ...local, ...liveU } : liveU;
+            });
+            storageService.setItem(FW_STORAGE_KEYS.USERS, merged);
+            return merged;
+          });
+
+          const currentSaved = storageService.getItem(FW_STORAGE_KEYS.CURRENT_USER, null);
+          if (currentSaved && currentSaved.id) {
+            const matchingLive = liveUsers.find(u => u.id === currentSaved.id);
+            if (matchingLive) {
+              const updated = { ...currentSaved, ...matchingLive };
+              setCurrentUser(updated);
+              storageService.setItem(FW_STORAGE_KEYS.CURRENT_USER, updated);
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('[AppContext] Live cloud sync note:', err.message);
+      }
+    };
+    loadLiveState();
+  }, []);
 
   const login = async (email, password) => {
     const authResult = await dbService.authenticateUser(email, password, users);
@@ -388,11 +419,8 @@ export const AppProvider = ({ children }) => {
       storageService.setItem(FW_STORAGE_KEYS.CURRENT_USER, updatedCurrent);
     }
 
-    // Sync password updates with DB backend
-    if (updatedFields.password || updatedFields.password_hash) {
-      const newPass = updatedFields.password || updatedFields.password_hash;
-      await dbService.changePassword(userId, newPass);
-    }
+    // Sync all updated fields (avatar, hourlyRate, title, subRole, name, password) to live PostgreSQL permanently!
+    await dbService.updateUser(userId, updatedFields);
   };
 
   const deleteUser = async (userId) => {
