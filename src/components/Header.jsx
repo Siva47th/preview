@@ -1,15 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
-import { Search, Plus, Bell, Shield, Sparkles, Clock, CheckCircle2, LogOut, Database, UserCheck, Settings, Menu } from 'lucide-react';
+import { Search, Plus, Bell, Shield, Sparkles, Clock, CheckCircle2, LogOut, Database, UserCheck, Settings, Menu, Command } from 'lucide-react';
 import { StorageManagerModal } from './StorageManagerModal';
 import { ProfileSettingsModal } from './ProfileSettingsModal';
+import { GlobalSearchModal } from './GlobalSearchModal';
 
 export const Header = () => {
   const { activeTab, setActiveTab, currentUser, taskTimers, logout, isMobileMenuOpen, setIsMobileMenuOpen } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
+  const [showSearchModal, setShowSearchModal] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showStorageManager, setShowStorageManager] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
+
+  // Global Ctrl+K / Cmd+K shortcut listener
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        setShowSearchModal(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const getTitle = () => {
     switch (activeTab) {
@@ -58,17 +72,30 @@ export const Header = () => {
 
       {/* Right Controls */}
       <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
-        {/* Search Input (Desktop) */}
-        <div className="relative hidden lg:block">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            placeholder="Search projects, tasks, invoices..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-56 pl-9 pr-4 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-600 focus:bg-white transition"
-          />
+        {/* Dynamic Global Search Trigger Button / Input (Desktop) */}
+        <div
+          onClick={() => setShowSearchModal(true)}
+          className="relative hidden lg:flex items-center cursor-pointer group"
+          title="Search anything (Ctrl + K)"
+        >
+          <Search className="w-4 h-4 text-slate-400 group-hover:text-indigo-600 absolute left-3 top-1/2 -translate-y-1/2 transition" />
+          <div className="w-64 pl-9 pr-12 py-1.5 bg-slate-50 group-hover:bg-white border border-slate-200 group-hover:border-indigo-500 rounded-xl text-xs text-slate-400 select-none transition flex items-center justify-between shadow-xs">
+            <span className="truncate">Search projects, tasks, devs...</span>
+            <kbd className="text-[10px] font-mono bg-slate-200/80 group-hover:bg-indigo-50 text-slate-600 group-hover:text-indigo-600 px-1.5 py-0.5 rounded border border-slate-300 group-hover:border-indigo-200">
+              ⌘K
+            </kbd>
+          </div>
         </div>
+
+        {/* Mobile Search Icon Trigger (< lg screens) */}
+        <button
+          onClick={() => setShowSearchModal(true)}
+          className="lg:hidden p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
+          title="Search Workspace (Projects, Tasks, Devs)"
+          aria-label="Search"
+        >
+          <Search className="w-4 h-4 text-indigo-600" />
+        </button>
 
         {/* Quick Task Timers Trigger */}
         <button
@@ -161,6 +188,13 @@ export const Header = () => {
         </div>
       </div>
 
+      {/* Global Omnisearch Modal */}
+      <GlobalSearchModal
+        isOpen={showSearchModal}
+        onClose={() => setShowSearchModal(false)}
+        initialQuery={searchQuery}
+      />
+
       {/* Storage Manager Modal */}
       <StorageManagerModal
         isOpen={showStorageManager}
@@ -175,3 +209,5 @@ export const Header = () => {
     </header>
   );
 };
+
+export default Header;
