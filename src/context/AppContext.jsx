@@ -87,8 +87,9 @@ export const AppProvider = ({ children }) => {
   const [servicesCatalog] = useState(SERVICES_CATALOG);
   const [selectedServiceId, setSelectedServiceId] = useState('All');
 
-  // Active View Tab
+  // Active View Tab & Mobile Drawer
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Core Data Stores
   const [projects, setProjects] = useState(() => {
@@ -866,6 +867,8 @@ export const AppProvider = ({ children }) => {
       setSelectedServiceId,
       activeTab,
       setActiveTab,
+      isMobileMenuOpen,
+      setIsMobileMenuOpen,
       projects,
       addProject,
       updateProject,

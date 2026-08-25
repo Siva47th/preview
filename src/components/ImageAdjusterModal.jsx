@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { X, ZoomIn, ZoomOut, RotateCw, Check, Move, Crop, Maximize, RefreshCw } from 'lucide-react';
 
-const VIEWPORT_SIZE = 360;  // Viewport box width & height in px
-const CROP_CIRCLE_SIZE = 260; // Diameter of the circle crop guide in px
+const VIEWPORT_SIZE = 300;  // Viewport box width & height in px (mobile friendly)
+const CROP_CIRCLE_SIZE = 240; // Diameter of the circle crop guide in px
 const OUTPUT_SIZE = 600;    // Canvas output dimension in px
 
 export const ImageAdjusterModal = ({ imageSrc, isOpen, onCancel, onSave }) => {

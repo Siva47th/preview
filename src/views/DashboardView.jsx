@@ -44,12 +44,12 @@ export const DashboardView = () => {
   const activeProjectsCount = projects.filter(p => p.status === 'In Progress').length;
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-6">
+    <div className="p-3.5 sm:p-6 max-w-7xl mx-auto space-y-4 sm:space-y-6">
       {/* Welcome Banner */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-6 rounded-xl bg-white border border-slate-200 shadow-sm">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
         <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <h1 className="text-xl font-bold text-slate-900">Welcome back, {currentUser.name}</h1>
+          <div className="flex items-center gap-2 flex-wrap">
+            <h1 className="text-lg sm:text-xl font-bold text-slate-900">Welcome back, {currentUser.name}</h1>
             <span className="text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold px-2.5 py-0.5 rounded">
               Phase 1 Squad Build
             </span>
@@ -59,20 +59,20 @@ export const DashboardView = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto flex-wrap">
           <button
             onClick={() => setActiveTab('showcase')}
-            className="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center gap-2 transition"
+            className="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center justify-center gap-2 transition"
           >
-            <History className="w-4 h-4 text-indigo-600" />
-            <span>Project History Archive</span>
+            <History className="w-4 h-4 text-indigo-600 shrink-0" />
+            <span>History Archive</span>
           </button>
           <button
             onClick={() => setActiveTab('tasks')}
-            className="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center gap-1.5 transition shadow-sm"
+            className="flex-1 sm:flex-initial px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition shadow-sm"
           >
-            <Plus className="w-4 h-4" />
-            <span>Kanban Board</span>
+            <Plus className="w-4 h-4 shrink-0" />
+            <span>Tasks Board</span>
           </button>
         </div>
       </div>

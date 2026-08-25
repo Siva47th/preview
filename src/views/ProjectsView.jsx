@@ -72,14 +72,14 @@ export const ProjectsView = () => {
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-6">
+    <div className="p-3.5 sm:p-6 max-w-7xl mx-auto space-y-4 sm:space-y-6">
       {/* Header Bar */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-            <FolderKanban className="w-6 h-6 text-indigo-600" /> Full-Stack Projects & Sub-Role Matrix
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
+            <FolderKanban className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-600 shrink-0" /> Full-Stack Projects & Sub-Role Matrix
           </h1>
-          <p className="text-xs text-slate-500">Admin assigns sub-roles (Frontend, Backend, DB, QA) across the 9-member dev team with per-task individual stopwatches</p>
+          <p className="text-xs text-slate-500">Admin assigns sub-roles across the 9-member dev team with per-task individual stopwatches</p>
         </div>
 
         {isAdmin && (

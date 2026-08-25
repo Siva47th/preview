@@ -84,14 +84,14 @@ export const TimeTrackingView = () => {
   const activeTimerTaskIds = Object.keys(taskTimers || {}).filter(id => taskTimers[id]?.isRunning);
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-6">
+    <div className="p-3.5 sm:p-6 max-w-7xl mx-auto space-y-4 sm:space-y-6">
       {/* Header & Status Banner */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-            <Clock className="w-6 h-6 text-indigo-600" /> Time Tracking & Task Stopwatches
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
+            <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-600 shrink-0" /> Time Tracking & Field Audit
           </h1>
-          <p className="text-xs text-slate-500">Per-task individual stopwatches managed by Admin across sub-role layers (Frontend, Backend, DB, QA)</p>
+          <p className="text-xs text-slate-500">Audit per-task individual stopwatches and billable developer hours</p>
         </div>
 
         <button

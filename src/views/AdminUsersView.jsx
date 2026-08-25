@@ -84,14 +84,14 @@ export const AdminUsersView = () => {
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-6">
+    <div className="p-3.5 sm:p-6 max-w-7xl mx-auto space-y-4 sm:space-y-6">
       {/* Header Bar */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-            <Users className="w-6 h-6 text-indigo-600" /> Admin Developer Team & Credentials Portal
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
+            <Users className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-600 shrink-0" /> Dev Team Management (9 Members)
           </h1>
-          <p className="text-xs text-slate-500">Manage developer sub-role layers, passwords, hourly rates, and workspace authentication credentials</p>
+          <p className="text-xs text-slate-500">Admin control for 9-member dev roster, roles, passwords, and hourly rates</p>
         </div>
 
         {isAdmin && (

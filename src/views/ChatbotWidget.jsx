@@ -30,20 +30,21 @@ export const ChatbotWidget = () => {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="p-3.5 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white shadow-xl transition flex items-center gap-2 border border-indigo-400/30"
+          className="p-3 sm:p-3.5 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white shadow-xl transition flex items-center gap-2 border border-indigo-400/30"
+          aria-label="Open AI Assistant"
         >
-          <Bot className="w-6 h-6 text-white" />
+          <Bot className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
           <span className="hidden sm:inline text-xs font-bold pr-1">Freewheel AI Assistant</span>
-          <span className="w-3 h-3 rounded-full bg-emerald-500 absolute top-0 right-0 ring-4 ring-white"></span>
+          <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-emerald-500 absolute top-0 right-0 ring-2 sm:ring-4 ring-white"></span>
         </button>
       )}
 
       {isOpen && (
-        <div className="bg-white border border-slate-200 rounded-2xl w-[360px] sm:w-[420px] h-[520px] shadow-2xl flex flex-col justify-between overflow-hidden">
+        <div className="bg-white border border-slate-200 rounded-2xl w-[calc(100vw-32px)] max-w-sm sm:max-w-none sm:w-[420px] h-[480px] sm:h-[520px] shadow-2xl flex flex-col justify-between overflow-hidden">
           {/* Header */}
           <div className="p-4 bg-slate-900 text-white flex items-center justify-between">
             <div className="flex items-center gap-3">

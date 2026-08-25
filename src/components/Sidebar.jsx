@@ -13,7 +13,8 @@ import {
   Layers,
   History,
   CircleUser,
-  ZoomIn
+  ZoomIn,
+  X
 } from 'lucide-react';
 import { AvatarZoomModal } from './AvatarZoomModal';
 import logoImg from '../assets/freewheel-logo.png';
@@ -22,6 +23,8 @@ export const Sidebar = () => {
   const {
     activeTab,
     setActiveTab,
+    isMobileMenuOpen,
+    setIsMobileMenuOpen,
     currentUser,
     servicesCatalog,
     selectedServiceId,
@@ -40,18 +43,34 @@ export const Sidebar = () => {
     { id: 'showcase', label: 'Project History', icon: History }
   ];
 
-  return (
-    <aside className="w-64 bg-white border-r border-slate-200 flex flex-col justify-between shrink-0 min-h-screen select-none">
+  const handleNavClick = (id) => {
+    setActiveTab(id);
+    if (isMobileMenuOpen) {
+      setIsMobileMenuOpen(false);
+    }
+  };
+
+  const renderSidebarContent = (isMobile = false) => (
+    <div className="flex flex-col justify-between h-full">
       <div>
         {/* Top Header */}
         <div className="p-4 border-b border-slate-200 flex items-center justify-between">
-          <div className="h-10 px-3 py-1 bg-white border border-slate-200 rounded-xl flex items-center shadow-sm w-full">
+          <div className="h-10 px-3 py-1 bg-white border border-slate-200 rounded-xl flex items-center shadow-sm flex-1 mr-2">
             <img
               src={logoImg}
               alt="Freewheel Technology Solutions"
               className="h-7 w-auto object-contain mx-auto"
             />
           </div>
+          {isMobile && (
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="p-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition"
+              aria-label="Close Menu"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          )}
         </div>
 
         {/* Job Fields Category Menu */}
@@ -61,8 +80,11 @@ export const Sidebar = () => {
           </div>
           <div className="space-y-0.5 mt-1">
             <button
-              onClick={() => setSelectedServiceId('All')}
-              className={`w-full text-left px-2.5 py-1 rounded text-xs font-medium transition ${
+              onClick={() => {
+                setSelectedServiceId('All');
+                if (isMobile) setIsMobileMenuOpen(false);
+              }}
+              className={`w-full text-left px-2.5 py-1.5 rounded text-xs font-medium transition ${
                 selectedServiceId === 'All'
                   ? 'bg-indigo-50 text-indigo-700 font-semibold'
                   : 'text-slate-600 hover:bg-slate-100'
@@ -73,8 +95,11 @@ export const Sidebar = () => {
             {servicesCatalog.map((service) => (
               <button
                 key={service.id}
-                onClick={() => setSelectedServiceId(service.name)}
-                className={`w-full text-left px-2.5 py-1 rounded text-xs font-medium transition ${
+                onClick={() => {
+                  setSelectedServiceId(service.name);
+                  if (isMobile) setIsMobileMenuOpen(false);
+                }}
+                className={`w-full text-left px-2.5 py-1.5 rounded text-xs font-medium transition ${
                   selectedServiceId === service.name
                     ? 'bg-indigo-50 text-indigo-700 font-semibold'
                     : 'text-slate-600 hover:bg-slate-100'
@@ -97,15 +122,15 @@ export const Sidebar = () => {
             return (
               <button
                 key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                onClick={() => handleNavClick(item.id)}
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
                   isActive
                     ? 'bg-indigo-600 text-white font-semibold shadow-sm'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                 }`}
               >
                 <div className="flex items-center gap-2.5">
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-slate-500'}`} />
+                  <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-500'}`} />
                   <span>{item.label}</span>
                 </div>
                 {item.badge && (
@@ -148,6 +173,30 @@ export const Sidebar = () => {
           </div>
         </div>
       </div>
+    </div>
+  );
+
+  return (
+    <>
+      {/* 1. Desktop Persistent Sidebar (md: and above) */}
+      <aside className="hidden md:flex w-64 bg-white border-r border-slate-200 flex-col justify-between shrink-0 min-h-screen select-none sticky top-0 h-screen">
+        {renderSidebarContent(false)}
+      </aside>
+
+      {/* 2. Mobile Drawer Navigation (< md screens) */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden fixed inset-0 z-50 flex">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm transition-opacity animate-fade-in"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+          {/* Drawer Sheet */}
+          <div className="relative w-4/5 max-w-xs bg-white h-full shadow-2xl flex flex-col justify-between z-10 overflow-y-auto animate-slide-right select-none">
+            {renderSidebarContent(true)}
+          </div>
+        </div>
+      )}
 
       {/* Avatar Zoom Lightbox Modal */}
       <AvatarZoomModal
@@ -155,7 +204,6 @@ export const Sidebar = () => {
         isOpen={showZoom}
         onClose={() => setShowZoom(false)}
       />
-    </aside>
+    </>
   );
 };
-

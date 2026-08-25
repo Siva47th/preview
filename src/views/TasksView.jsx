@@ -89,14 +89,14 @@ export const TasksView = () => {
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-6">
+    <div className="p-3.5 sm:p-6 max-w-7xl mx-auto space-y-4 sm:space-y-6">
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-            <CheckSquare className="w-6 h-6 text-indigo-600" /> Hierarchical Task Board & Sub-Role Layers
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
+            <CheckSquare className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-600 shrink-0" /> Tasks Board & Stopwatches
           </h1>
-          <p className="text-xs text-slate-500">Service-based hierarchical breakdown with layer-by-layer dev assignment and individual task stopwatches</p>
+          <p className="text-xs text-slate-500">Service breakdown with layer assignments and individual task stopwatches</p>
         </div>
 
         <div className="flex items-center gap-3">

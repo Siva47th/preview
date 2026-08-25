@@ -32,32 +32,32 @@ export const LoginView = () => {
     <div className="min-h-screen w-full bg-[#f2effb] flex flex-col justify-between relative text-[#2d2252] selection:bg-[#6e48e5] selection:text-white">
       
       {/* Top Header Branding */}
-      <header className="p-6 max-w-7xl mx-auto w-full flex items-center justify-between z-10 border-b border-[#e2d8f2]">
-        <div className="flex items-center gap-3">
-          <div className="h-10 px-3 py-1.5 bg-white border border-[#ded5f2] rounded-xl flex items-center justify-center shadow-sm">
+      <header className="p-4 sm:p-6 max-w-7xl mx-auto w-full flex items-center justify-between z-10 border-b border-[#e2d8f2]">
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          <div className="h-10 px-2.5 sm:px-3 py-1.5 bg-white border border-[#ded5f2] rounded-xl flex items-center justify-center shadow-sm">
             <img
               src={logoImg}
               alt="Freewheel Technology Solutions"
-              className="h-7 w-auto object-contain"
+              className="h-6 sm:h-7 w-auto object-contain"
             />
           </div>
           <div>
-            <span className="font-extrabold text-sm text-[#2d2252] tracking-tight block leading-tight">FREEWHEEL</span>
-            <span className="text-[10px] text-[#716196] font-mono tracking-wider uppercase">Agency Operating System</span>
+            <span className="font-extrabold text-xs sm:text-sm text-[#2d2252] tracking-tight block leading-tight">FREEWHEEL</span>
+            <span className="text-[9px] sm:text-[10px] text-[#716196] font-mono tracking-wider uppercase">Agency Operating System</span>
           </div>
         </div>
-        <div className="flex items-center gap-2 text-xs text-[#5a4880] bg-white border border-[#ded5f2] px-3.5 py-1.5 rounded-full shadow-sm">
-          <ShieldCheck className="w-4 h-4 text-emerald-600" />
-          <span className="font-semibold">Secured Portal</span>
+        <div className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-[#5a4880] bg-white border border-[#ded5f2] px-2.5 sm:px-3.5 py-1.5 rounded-full shadow-sm">
+          <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600 shrink-0" />
+          <span className="font-semibold hidden xs:inline sm:inline">Secured Portal</span>
         </div>
       </header>
 
       {/* Main Login Card Area */}
-      <div className="flex-1 flex items-center justify-center p-4 z-10 my-8">
-        <div className="w-full max-w-md space-y-6">
+      <div className="flex-1 flex items-center justify-center p-3 sm:p-4 z-10 my-4 sm:my-8">
+        <div className="w-full max-w-md space-y-4 sm:space-y-6">
 
           {/* Login Card */}
-          <div className="bg-white border border-[#ded5f2] rounded-3xl p-8 shadow-xl shadow-[#4a3575]/5 space-y-6">
+          <div className="bg-white border border-[#ded5f2] rounded-3xl p-5 sm:p-8 shadow-xl shadow-[#4a3575]/5 space-y-5 sm:space-y-6">
             
             {/* Logo & Headline */}
             <div className="text-center space-y-4">

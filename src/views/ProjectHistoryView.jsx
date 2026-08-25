@@ -25,14 +25,14 @@ export const ProjectHistoryView = () => {
   const totalHoursAll = historyItems.reduce((acc, item) => acc + (item.totalLoggedHours || 500), 0);
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-6">
+    <div className="p-3.5 sm:p-6 max-w-7xl mx-auto space-y-4 sm:space-y-6">
       {/* Top Header Banner */}
-      <div className="rounded-xl bg-white p-6 border border-slate-200 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div className="rounded-2xl bg-white p-4 sm:p-6 border border-slate-200 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sm:gap-6">
         <div className="max-w-2xl space-y-2">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
-            <History className="w-3.5 h-3.5 text-indigo-600" /> Internal Management Operating Archive
+            <History className="w-3.5 h-3.5 text-indigo-600" /> Management Operating Archive
           </span>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
             Project History & Archived Deliverables
           </h1>
           <p className="text-xs text-slate-600 leading-relaxed">
