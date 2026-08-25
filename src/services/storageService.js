@@ -11,6 +11,7 @@
 
 export const FW_STORAGE_KEYS = {
   AUTHED: 'fw_v2_authed',
+  REMEMBER_ME: 'fw_v2_remember_me',
   USERS: 'fw_v2_users',
   CURRENT_USER: 'fw_v2_user',
   PROJECTS: 'fw_v2_projects',
@@ -40,7 +41,23 @@ export const isLocalStorageAvailable = () => {
   }
 };
 
+/**
+ * Checks if window.sessionStorage is accessible and writable
+ */
+export const isSessionStorageAvailable = () => {
+  try {
+    if (typeof window === 'undefined' || !window.sessionStorage) return false;
+    const testKey = '__fw_session_test__';
+    window.sessionStorage.setItem(testKey, '1');
+    window.sessionStorage.removeItem(testKey);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
 const hasLocalStorage = isLocalStorageAvailable();
+const hasSessionStorage = isSessionStorageAvailable();
 
 /**
  * Legacy key mapping for seamless migration
@@ -143,6 +160,118 @@ export const removeItem = (key) => {
 };
 
 /**
+ * Session-based authentication helpers
+ * By default, session is retained only while the browser tab/window is open.
+ * If rememberMe is true, session persists across browser restarts in localStorage.
+ */
+export const getAuthSession = () => {
+  try {
+    // 1. Check active browser tab session first (sessionStorage)
+    if (hasSessionStorage) {
+      const sessionAuthed = window.sessionStorage.getItem(FW_STORAGE_KEYS.AUTHED);
+      if (sessionAuthed === 'true') {
+        const sessionUser = window.sessionStorage.getItem(FW_STORAGE_KEYS.CURRENT_USER);
+        return {
+          isAuthenticated: true,
+          currentUser: sessionUser ? JSON.parse(sessionUser) : null,
+          isRemembered: false
+        };
+      }
+    }
+
+    // 2. Check localStorage ONLY if Remember Me was explicitly enabled
+    if (hasLocalStorage) {
+      const isRemembered = window.localStorage.getItem(FW_STORAGE_KEYS.REMEMBER_ME) === 'true';
+      const localAuthed = window.localStorage.getItem(FW_STORAGE_KEYS.AUTHED) === 'true';
+
+      if (isRemembered && localAuthed) {
+        const localUser = window.localStorage.getItem(FW_STORAGE_KEYS.CURRENT_USER);
+        const parsedUser = localUser ? JSON.parse(localUser) : null;
+        
+        // Also populate current tab's sessionStorage for fast reads
+        if (hasSessionStorage) {
+          window.sessionStorage.setItem(FW_STORAGE_KEYS.AUTHED, 'true');
+          if (parsedUser) {
+            window.sessionStorage.setItem(FW_STORAGE_KEYS.CURRENT_USER, JSON.stringify(parsedUser));
+          }
+        }
+
+        return {
+          isAuthenticated: true,
+          currentUser: parsedUser,
+          isRemembered: true
+        };
+      } else {
+        // Clear any old un-remembered persistent auth flags in localStorage
+        window.localStorage.removeItem(FW_STORAGE_KEYS.AUTHED);
+        window.localStorage.removeItem(FW_STORAGE_KEYS.REMEMBER_ME);
+      }
+    } else if (memoryStore[FW_STORAGE_KEYS.AUTHED] === 'true') {
+      return {
+        isAuthenticated: true,
+        currentUser: memoryStore[FW_STORAGE_KEYS.CURRENT_USER] ? JSON.parse(memoryStore[FW_STORAGE_KEYS.CURRENT_USER]) : null,
+        isRemembered: false
+      };
+    }
+  } catch (err) {
+    console.error('[StorageService] Error getting auth session:', err);
+  }
+
+  return {
+    isAuthenticated: false,
+    currentUser: null,
+    isRemembered: false
+  };
+};
+
+export const saveAuthSession = (user, rememberMe = false) => {
+  try {
+    const userStr = JSON.stringify(user);
+
+    // Always store in sessionStorage for the active browser session
+    if (hasSessionStorage) {
+      window.sessionStorage.setItem(FW_STORAGE_KEYS.AUTHED, 'true');
+      window.sessionStorage.setItem(FW_STORAGE_KEYS.CURRENT_USER, userStr);
+    }
+
+    // If rememberMe is requested, store in localStorage as well
+    if (hasLocalStorage) {
+      if (rememberMe) {
+        window.localStorage.setItem(FW_STORAGE_KEYS.AUTHED, 'true');
+        window.localStorage.setItem(FW_STORAGE_KEYS.REMEMBER_ME, 'true');
+        window.localStorage.setItem(FW_STORAGE_KEYS.CURRENT_USER, userStr);
+      } else {
+        window.localStorage.removeItem(FW_STORAGE_KEYS.AUTHED);
+        window.localStorage.removeItem(FW_STORAGE_KEYS.REMEMBER_ME);
+        window.localStorage.setItem(FW_STORAGE_KEYS.CURRENT_USER, userStr);
+      }
+    } else {
+      memoryStore[FW_STORAGE_KEYS.AUTHED] = 'true';
+      memoryStore[FW_STORAGE_KEYS.CURRENT_USER] = userStr;
+    }
+  } catch (err) {
+    console.error('[StorageService] Error saving auth session:', err);
+  }
+};
+
+export const clearAuthSession = () => {
+  try {
+    if (hasSessionStorage) {
+      window.sessionStorage.removeItem(FW_STORAGE_KEYS.AUTHED);
+      window.sessionStorage.removeItem(FW_STORAGE_KEYS.CURRENT_USER);
+    }
+    if (hasLocalStorage) {
+      window.localStorage.removeItem(FW_STORAGE_KEYS.AUTHED);
+      window.localStorage.removeItem(FW_STORAGE_KEYS.REMEMBER_ME);
+    }
+    delete memoryStore[FW_STORAGE_KEYS.AUTHED];
+    delete memoryStore[FW_STORAGE_KEYS.CURRENT_USER];
+  } catch (err) {
+    console.error('[StorageService] Error clearing auth session:', err);
+  }
+};
+
+/**
  * Export complete workspace state as a JSON object / string
  */
 export const exportWorkspaceData = (currentState) => {
@@ -196,6 +325,7 @@ export const importWorkspaceData = (jsonString) => {
  */
 export const resetStorage = () => {
   try {
+    clearAuthSession();
     Object.values(FW_STORAGE_KEYS).forEach(key => {
       removeItem(key);
     });
@@ -244,6 +374,7 @@ export const getStorageMetrics = () => {
   return {
     engine: hasLocalStorage ? 'Browser LocalStorage' : 'In-Memory Store (Restricted Environment)',
     hasLocalStorage,
+    hasSessionStorage,
     totalBytes,
     totalKB: (totalBytes / 1024).toFixed(2),
     itemCount,
@@ -255,10 +386,14 @@ export const getStorageMetrics = () => {
 export const storageService = {
   KEYS: FW_STORAGE_KEYS,
   isLocalStorageAvailable,
+  isSessionStorageAvailable,
   migrateLegacyData,
   getItem,
   setItem,
   removeItem,
+  getAuthSession,
+  saveAuthSession,
+  clearAuthSession,
   exportWorkspaceData,
   importWorkspaceData,
   resetStorage,

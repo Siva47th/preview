@@ -8,6 +8,7 @@ export const LoginView = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -17,7 +18,7 @@ export const LoginView = () => {
     setIsSubmitting(true);
 
     try {
-      const result = await login(email, password);
+      const result = await login(email, password, rememberMe);
       if (!result.success) {
         setErrorMessage(result.error);
         setIsSubmitting(false);
@@ -121,6 +122,22 @@ export const LoginView = () => {
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
+              </div>
+
+              {/* Keep me signed in / Session Control */}
+              <div className="flex items-center justify-between px-0.5 pt-0.5">
+                <label className="flex items-center gap-2 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="w-4 h-4 rounded border-[#d8cee8] text-[#6e48e5] focus:ring-[#6e48e5] cursor-pointer"
+                  />
+                  <span className="text-xs text-[#524177] font-medium">Keep me signed in</span>
+                </label>
+                <span className="text-[10px] text-[#8e81ad] font-medium">
+                  {rememberMe ? 'Remembered' : 'Session only'}
+                </span>
               </div>
 
               <button

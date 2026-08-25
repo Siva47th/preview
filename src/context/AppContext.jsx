@@ -16,9 +16,8 @@ const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   // Authentication & Active User State
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return storageService.getItem(FW_STORAGE_KEYS.AUTHED, false) === true;
-  });
+  const initialAuth = storageService.getAuthSession();
+  const [isAuthenticated, setIsAuthenticated] = useState(() => initialAuth.isAuthenticated);
 
   const [users, setUsers] = useState(() => {
     const loaded = storageService.getItem(FW_STORAGE_KEYS.USERS, INITIAL_USERS);
@@ -32,6 +31,9 @@ export const AppProvider = ({ children }) => {
   });
 
   const [currentUser, setCurrentUser] = useState(() => {
+    if (initialAuth.currentUser && initialAuth.currentUser.id) {
+      return initialAuth.currentUser;
+    }
     const loaded = storageService.getItem(FW_STORAGE_KEYS.CURRENT_USER, null);
     if (!loaded || !loaded.id || !loaded.email) {
       return INITIAL_USERS[0];
@@ -71,15 +73,14 @@ export const AppProvider = ({ children }) => {
     loadLiveState();
   }, []);
 
-  const login = async (email, password) => {
+  const login = async (email, password, rememberMe = false) => {
     const authResult = await dbService.authenticateUser(email, password, users);
 
     if (authResult.success && authResult.user) {
       const user = authResult.user;
       setCurrentUser(user);
       setIsAuthenticated(true);
-      storageService.setItem(FW_STORAGE_KEYS.AUTHED, true);
-      storageService.setItem(FW_STORAGE_KEYS.CURRENT_USER, user);
+      storageService.saveAuthSession(user, rememberMe);
       setActivities(prev => [{
         id: `act_${Date.now()}`,
         user: user.name,
@@ -94,7 +95,7 @@ export const AppProvider = ({ children }) => {
 
   const logout = () => {
     setIsAuthenticated(false);
-    storageService.removeItem(FW_STORAGE_KEYS.AUTHED);
+    storageService.clearAuthSession();
     setActivities(prev => [{
       id: `act_${Date.now()}`,
       user: currentUser ? currentUser.name : 'User',
@@ -109,8 +110,8 @@ export const AppProvider = ({ children }) => {
     if (targetUser) {
       setCurrentUser(targetUser);
       setIsAuthenticated(true);
-      storageService.setItem(FW_STORAGE_KEYS.AUTHED, true);
-      storageService.setItem(FW_STORAGE_KEYS.CURRENT_USER, targetUser);
+      const isRemembered = storageService.getItem(FW_STORAGE_KEYS.REMEMBER_ME, false) === true;
+      storageService.saveAuthSession(targetUser, isRemembered);
     }
   };
 
